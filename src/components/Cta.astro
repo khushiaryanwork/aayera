@@ -1,0 +1,15 @@
+---
+import type { Home } from '../lib/types';
+import { Rich } from './Rich';
+const { cta } = Astro.props as { cta: Home['cta'] };
+---
+<section class="cta" id="contact">
+  <div class="cta-bg" id="ctaBg">{cta.image && <img src={cta.image.src} alt={cta.image.alt} loading="lazy">}</div>
+  <div class="cta-in rv">
+    <p class="eyebrow">{cta.eyebrow}</p>
+    <h2><Rich text={cta.heading} /></h2>
+    <div class="cta-actions">
+      {cta.buttons.map((b) => <a class={`btn btn-${b.style === 'ghost' ? 'ghost' : 'gold'}`} href={b.href}>{b.label}</a>)}
+    </div>
+  </div>
+</section>

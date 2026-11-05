@@ -1,0 +1,12 @@
+---
+import type { Site } from '../lib/types';
+const { site } = Astro.props as { site: Site };
+---
+<footer>
+  <img src={site.logo.src} alt={site.logo.alt || 'Aayera'}>
+  <span>{site.address}</span>
+  <span>
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+    {site.phones.map((p) => <> · <a href={`tel:${p.number}`}>{p.label}</a></>)}
+  </span>
+</footer>

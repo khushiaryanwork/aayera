@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+import type { Site } from '../lib/types';
+interface Props { site: Site; noindex?: boolean }
+const { site, noindex } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{site.title}</title>
+  <meta name="description" content={site.description}>
+  {noindex && <meta name="robots" content="noindex, nofollow">}
+  <meta property="og:title" content={site.title}>
+  <meta property="og:description" content={site.description}>
+  {site.shareImage && <meta property="og:image" content={site.shareImage}>}
+  <link rel="icon" href={site.logo.src}>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+  <slot />
+  <script>
+    // Small page-wide behaviours that don't belong to a single React island:
+    // solid nav after the hero, reveal-on-scroll (.rv), CTA background parallax.
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nav = document.getElementById('nav');
+    const hero = document.getElementById('top');
+    const cta = document.getElementById('contact');
+    const ctaBg = document.getElementById('ctaBg');
+    const io = new IntersectionObserver(
+      (es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
+      { threshold: 0.2 },
+    );
+    document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+    const onScroll = () => {
+      const y = scrollY, vh = innerHeight;
+      if (nav && hero) nav.classList.toggle('solid', y > hero.offsetHeight - vh * 1.2);
+      if (!reduce && cta && ctaBg) {
+        const r = cta.getBoundingClientRect(), p = (vh - r.top) / (vh + r.height);
+        ctaBg.style.transform = `translate3d(0,${(p - 0.5) * -120}px,0)`;
+      }
+    };
+    let ticking = false;
+    addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { onScroll(); ticking = false; });
+    }, { passive: true });
+    addEventListener('resize', onScroll);
+    onScroll();
+  </script>
+</body>
+</html>

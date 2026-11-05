@@ -1,0 +1,32 @@
+import { defineField, defineType } from 'sanity'
+import { CogIcon } from '@sanity/icons/Cog'
+
+export const siteSettings = defineType({
+  name: 'siteSettings',
+  title: 'Site settings',
+  type: 'document',
+  icon: CogIcon,
+  groups: [{ name: 'brand', title: 'Brand & navigation', default: true }, { name: 'contact', title: 'Contact' }, { name: 'seo', title: 'SEO & sharing' }],
+  fields: [
+    defineField({ name: 'logo', type: 'imageWithAlt', group: 'brand', description: 'Light logo for the dark background (nav and footer).' }),
+    defineField({ name: 'nav', title: 'Navigation links', type: 'array', of: [{ type: 'link' }], group: 'brand' }),
+    defineField({ name: 'navCta', title: 'Navigation button', type: 'link', group: 'brand' }),
+    defineField({ name: 'email', type: 'string', group: 'contact' }),
+    defineField({ name: 'phones', type: 'array', of: [{ type: 'phone' }], group: 'contact' }),
+    defineField({
+      name: 'address', type: 'object', group: 'contact', options: { columns: 2 },
+      fields: ['street', 'area', 'city', 'postalCode', 'country', 'countryCode'].map((name) => defineField({ name, type: 'string' })),
+    }),
+    defineField({ name: 'footerTagline', type: 'string', group: 'contact', hidden: true }),
+    defineField({ name: 'title', title: 'Page title', type: 'string', group: 'seo' }),
+    defineField({ name: 'description', title: 'Meta description', type: 'text', rows: 3, group: 'seo' }),
+    defineField({ name: 'shareImage', title: 'Social share image', type: 'image', group: 'seo' }),
+    defineField({ name: 'shareTitle', type: 'string', group: 'seo', hidden: true }),
+    defineField({ name: 'shareDescription', type: 'text', group: 'seo', hidden: true }),
+    defineField({
+      name: 'searchVisibility', title: 'Search engines', type: 'string', group: 'seo', initialValue: 'visible',
+      options: { list: [{ title: 'Visible', value: 'visible' }, { title: 'Hidden (noindex)', value: 'hidden' }], layout: 'radio', direction: 'horizontal' },
+    }),
+  ],
+  preview: { prepare: () => ({ title: 'Site settings' }) },
+})

@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Marquee from '../components/Marquee.astro';
+import Moments from '../components/Moments.astro';
+import IndustriesSection from '../components/IndustriesSection.astro';
+import Filmstrip from '../components/Filmstrip.astro';
+import Cta from '../components/Cta.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero';
+import EventsTrack from '../components/EventsTrack';
+import Statement from '../components/Statement';
+import Stats from '../components/Stats';
+import Clients from '../components/Clients';
+import { getContent } from '../lib/content';
+
+const { site, home, noindex } = await getContent();
+---
+<Base site={site} noindex={noindex}>
+  <Nav site={site} />
+  <Hero client:load {...home.hero} />
+  <Marquee words={home.marquee} />
+  <EventsTrack client:load {...home.events} />
+  <Statement client:load {...home.statement} />
+  <Stats client:load items={home.stats} />
+  <Moments moments={home.moments} />
+  <IndustriesSection industries={home.industries} />
+  <Filmstrip images={home.filmstrip} />
+  <Clients client:load {...home.clients} />
+  <Cta cta={home.cta} />
+  <Footer site={site} />
+</Base>

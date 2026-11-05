@@ -1,0 +1,13 @@
+---
+import type { Home } from '../lib/types';
+import { Rich } from './Rich';
+import PhotoWall from './PhotoWall';
+const { moments } = Astro.props as { moments: Home['moments'] };
+---
+<section class="wall" id="moments">
+  <div class="wall-head rv">
+    <p class="eyebrow">{moments.eyebrow}</p>
+    <h2><Rich text={moments.heading} /></h2>
+  </div>
+  <PhotoWall client:load tiles={moments.tiles} />
+</section>

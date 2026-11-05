@@ -1,0 +1,13 @@
+---
+import type { Home } from '../lib/types';
+import { Rich } from './Rich';
+import Industries from './Industries';
+const { industries } = Astro.props as { industries: Home['industries'] };
+---
+<section class="industries" id="industries">
+  <div class="ind-head rv">
+    <h2><Rich text={industries.heading} /></h2>
+    <p class="eyebrow">{industries.eyebrow}</p>
+  </div>
+  <Industries client:visible items={industries.items} />
+</section>

@@ -1,0 +1,11 @@
+---
+import type { Site } from '../lib/types';
+const { site } = Astro.props as { site: Site };
+---
+<header class="nav" id="nav">
+  <a href="#top" aria-label="Aayera home"><img src={site.logo.src} alt={site.logo.alt || 'Aayera'}></a>
+  <ul>
+    {site.nav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+  </ul>
+  <a class="btn btn-gold" href={site.navCta.href}>{site.navCta.label}</a>
+</header>

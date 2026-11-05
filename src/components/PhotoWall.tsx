@@ -1,0 +1,79 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { WallTile } from '../lib/types';
+
+const SPEEDS = [0.12, -0.08, 0.16, -0.05];
+
+/** Four parallax columns of photos; clicking one opens a lightbox. */
+export default function PhotoWall({ tiles }: { tiles: WallTile[] }) {
+  const wall = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState<number | null>(null);
+
+  // split the flat list into 4 columns, top-to-bottom then left-to-right
+  const per = Math.ceil(tiles.length / 4) || 1;
+  const cols = [0, 1, 2, 3].map((c) => tiles.slice(c * per, c * per + per).map((t, j) => ({ t, i: c * per + j })));
+
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const colEls = [...wall.current!.children] as HTMLElement[];
+    const onScroll = () => {
+      const vh = innerHeight, wr = wall.current!.getBoundingClientRect(), wp = (vh - wr.top) / (vh + wr.height);
+      colEls.forEach((c, i) => (c.style.transform = `translate3d(0,${(wp - 0.5) * SPEEDS[i] * -900}px,0)`));
+    };
+    let ticking = false;
+    const scroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { onScroll(); ticking = false; });
+    };
+    onScroll();
+    addEventListener('scroll', scroll, { passive: true });
+    addEventListener('resize', onScroll);
+    return () => { removeEventListener('scroll', scroll); removeEventListener('resize', onScroll); };
+  }, []);
+
+  const show = useCallback((i: number) => setOpen(((i % tiles.length) + tiles.length) % tiles.length), [tiles.length]);
+  const close = () => setOpen(null);
+
+  useEffect(() => {
+    if (open === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') close();
+      if (e.key === 'ArrowLeft') show(open - 1);
+      if (e.key === 'ArrowRight') show(open + 1);
+    };
+    addEventListener('keydown', onKey);
+    return () => removeEventListener('keydown', onKey);
+  }, [open, show]);
+
+  const cur = open !== null ? tiles[open] : null;
+
+  return (
+    <>
+      <div className="wall-grid" ref={wall}>
+        {cols.map((col, c) => (
+          <div className="wall-col" key={c}>
+            {col.map(({ t, i }) => (
+              <figure className="tile" key={i} style={{ ['--ar' as any]: t.ratio }} onClick={() => show(i)}>
+                <img src={t.image.src} alt={t.caption} loading="lazy" />
+                <span>{t.caption}</span>
+              </figure>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div className={'lb' + (cur ? ' on' : '')} role="dialog" aria-modal="true" aria-label="Photo viewer" onClick={(e) => e.target === e.currentTarget && close()}>
+        <button className="icon-btn" aria-label="Close" onClick={close}>
+          <svg viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.6"><path d="M3 3l10 10M13 3L3 13" /></svg>
+        </button>
+        <button className="icon-btn nav-l" aria-label="Previous" onClick={() => open !== null && show(open - 1)}>
+          <svg viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.6" fill="none"><path d="M10 3L5 8l5 5" /></svg>
+        </button>
+        {cur && <img src={cur.full} alt={cur.caption} />}
+        <button className="icon-btn nav-r" aria-label="Next" onClick={() => open !== null && show(open + 1)}>
+          <svg viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.6" fill="none"><path d="M6 3l5 5-5 5" /></svg>
+        </button>
+      </div>
+    </>
+  );
+}
