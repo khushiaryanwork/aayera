@@ -450,9 +450,7 @@
       },
       "sections": [
         {
-          "_type": "clientsSection",
-          "eyebrow": "In good company",
-          "heading": "{count} *organisations.*"
+          "_type": "clientsSection"
         }
       ]
     },

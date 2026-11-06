@@ -94,8 +94,8 @@ export const eventsSection = defineType({
 })
 
 export const clientsSection = defineType({
-  name: 'clientsSection', title: 'Client logos', type: 'object',
-  description: 'Grid of every published Client. {count} in the heading becomes the number of logos.',
+  name: 'clientsSection', title: 'Client logos (moving rows)', type: 'object',
+  description: 'The homepage\'s moving rows of client logos, showing every published Client. Leave the fields empty to use the homepage text. {count} in the heading becomes the number of logos.',
   fields: [...head, intro],
   preview: preview('Client logos'),
 })

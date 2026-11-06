@@ -137,9 +137,6 @@ html.menu-open .nav{background:var(--black)}
 .erow-link:hover{color:var(--on);border-color:var(--on)}
 @media (max-width:760px){.erow{grid-template-columns:1fr}}
 
-/* clients grid (reuses .lcard from global.css) */
-.cgrid{list-style:none;display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(46%,190px),1fr))}
-.cgrid .lcard{width:auto}
 
 /* contact */
 .csec-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,6vw,96px);align-items:start}
@@ -171,5 +168,4 @@ html.menu-open .nav{background:var(--black)}
 .foot-links a{color:var(--on);opacity:.8}
 .foot-links a:hover{opacity:1}
 .foot-contact{align-self:flex-start}
-@media (min-width:1000px){.cgrid{grid-template-columns:repeat(5,1fr)}}
 .cmap{background:var(--raised)}

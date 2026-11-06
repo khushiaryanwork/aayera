@@ -10,7 +10,7 @@ import ListSection from '../components/page/ListSection.astro';
 import FeaturesSection from '../components/page/FeaturesSection.astro';
 import LinkCards from '../components/page/LinkCards.astro';
 import EventsList from '../components/page/EventsList.astro';
-import ClientsGrid from '../components/page/ClientsGrid.astro';
+import Clients from '../components/Clients';
 import ContactSection from '../components/page/ContactSection.astro';
 import { getContent } from '../lib/content';
 import type { Page } from '../lib/types';
@@ -45,7 +45,17 @@ const crumbs = [
         case 'featuresSection': return <FeaturesSection s={s} />;
         case 'linkCardsSection': return <LinkCards s={s} />;
         case 'eventsSection': return <EventsList s={s} events={eventList} />;
-        case 'clientsSection': return <ClientsGrid s={s} logos={allLogos} />;
+        case 'clientsSection':
+          // the homepage's animated logo rows; empty fields fall back to the homepage text
+          return (
+            <Clients
+              client:load
+              eyebrow={s.eyebrow || home.clients.eyebrow}
+              heading={s.heading || home.clients.heading}
+              intro={s.intro || home.clients.intro}
+              logos={allLogos}
+            />
+          );
         case 'contactSection': return <ContactSection s={s} site={site} topics={enquiryTopics} />;
       }
     })}
