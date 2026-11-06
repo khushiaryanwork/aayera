@@ -171,7 +171,7 @@ html.menu-open .nav{background:var(--black)}
 .cmap{background:var(--raised)}
 
 /* ---------- announcement bar (above the nav; slides away once the page scrolls) ---------- */
-.abar{position:fixed;inset:0 0 auto;z-index:51;height:38px;display:flex;align-items:center;justify-content:space-between;gap:20px;
+.abar{position:fixed;inset:0 0 auto;z-index:51;height:38px;display:flex;align-items:center;justify-content:center;gap:22px;
   padding:0 var(--gutter);font-size:12.5px;color:oklch(86% .008 260);background:oklch(10% .012 260 / .92);border-bottom:1px solid oklch(30% .018 260 / .6);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .4s cubic-bezier(.2,.7,.2,1)}
 .abar ul{list-style:none;display:flex;align-items:center}
@@ -180,9 +180,9 @@ html.menu-open .nav{background:var(--black)}
 .abar-contact a,.abar-hours{display:inline-flex;align-items:center;gap:7px}
 .abar svg{flex:none;color:var(--gold)}
 .abar a:hover{color:var(--gold)}
-.abar-msg{flex:1;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.abar-msg{order:-1;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:22px;border-right:1px solid var(--rule)}
 .abar-msg strong{margin-left:10px;color:var(--gold);font-weight:500}
-.abar-social{gap:4px;margin-left:auto}
+.abar-social{gap:2px;padding-left:16px;border-left:1px solid var(--rule)}
 .abar-social a{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;transition:background .2s}
 .abar-social a:hover{background:oklch(81% .155 82 / .14)}
 .abar-social svg{color:currentColor}
@@ -196,5 +196,6 @@ html.menu-open .abar{transform:translateY(-100%)}
   .abar{font-size:12px;gap:10px}
   .abar-contact{gap:14px;overflow:hidden}
   .abar-contact li:not(:first-child) span{display:none} /* phone shows as an icon */
+  .abar-social{padding-left:8px}
   .abar-social a{width:26px}
 }

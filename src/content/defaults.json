@@ -64,7 +64,16 @@
       "linkLabel": "",
       "href": ""
     },
-    "socials": []
+    "socials": [
+      {
+        "platform": "linkedin",
+        "url": "#"
+      },
+      {
+        "platform": "x",
+        "url": "#"
+      }
+    ]
   },
   "home": {
     "hero": {
