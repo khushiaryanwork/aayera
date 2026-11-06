@@ -200,20 +200,36 @@ html.menu-open .abar{transform:translateY(-100%)}
   .abar-social a{width:26px}
 }
 
-/* ---------- floating social buttons (bottom-right, like a chat button) ---------- */
-.fsoc{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:45;list-style:none;display:flex;flex-direction:column;gap:12px}
-.fsoc li{opacity:0;transform:translateY(16px) scale(.8);animation:fsocIn .55s cubic-bezier(.2,.7,.2,1.3) forwards;animation-delay:calc(.8s + var(--i) * .12s)}
-@keyframes fsocIn{to{opacity:1;transform:none}}
-.fsoc a{position:relative;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--bg);color:var(--fg);
-  box-shadow:0 10px 28px -8px oklch(0% 0 0 / .65),0 0 0 1px oklch(100% 0 0 / .14) inset;transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s}
-.fsoc a:hover,.fsoc a:focus-visible{transform:translateY(-3px) scale(1.06);box-shadow:0 16px 34px -10px oklch(0% 0 0 / .7),0 0 0 2px var(--gold)}
-.fsoc a:focus-visible{outline:none}
+/* ---------- floating "Follow us" button: opens LinkedIn / X above it (hover or tap) ---------- */
+.fsoc{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:45;display:flex;flex-direction:column;align-items:center;gap:12px;
+  transition:opacity .35s,transform .35s;animation:fsocIn .55s cubic-bezier(.2,.7,.2,1.3) .8s both}
+@keyframes fsocIn{from{opacity:0;transform:translateY(16px) scale(.8)}}
+.fsoc-main,.fsoc-list a{position:relative;display:grid;place-items:center;border-radius:50%;transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s}
+.fsoc-main{width:60px;height:60px;background:var(--gold);color:var(--black);box-shadow:0 12px 30px -8px oklch(0% 0 0 / .7),0 0 0 6px oklch(81% .155 82 / .16)}
+.fsoc-main:hover,.fsoc-main:focus-visible{transform:scale(1.06);box-shadow:0 16px 34px -10px oklch(0% 0 0 / .75),0 0 0 8px oklch(81% .155 82 / .22)}
+.fsoc-main:focus-visible{outline:2px solid var(--on);outline-offset:3px}
+.fsoc-main svg{grid-area:1/1;transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .2s}
+.fsoc-ico-close{opacity:0;transform:rotate(-90deg) scale(.6)}
+.fsoc.open .fsoc-ico-open{opacity:0;transform:rotate(90deg) scale(.6)}
+.fsoc.open .fsoc-ico-close{opacity:1;transform:none}
+/* soft pulse on the closed button so it reads as interactive */
+.fsoc:not(.open) .fsoc-main::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--gold);animation:fsocPulse 2.8s ease-out 2s infinite;pointer-events:none}
+@keyframes fsocPulse{0%{transform:scale(1);opacity:.7}70%,100%{transform:scale(1.55);opacity:0}}
+
+.fsoc-list{list-style:none;display:flex;flex-direction:column;align-items:center;gap:12px}
+.fsoc-list li{opacity:0;transform:translateY(18px) scale(.6);pointer-events:none;
+  transition:opacity .22s,transform .3s cubic-bezier(.2,.7,.2,1.3);transition-delay:calc(var(--i) * 45ms)}
+.fsoc.open .fsoc-list li{opacity:1;transform:none;pointer-events:auto}
+.fsoc-list a{width:50px;height:50px;background:var(--bg);color:var(--fg);box-shadow:0 10px 24px -8px oklch(0% 0 0 / .7),0 0 0 1px oklch(100% 0 0 / .16) inset}
+.fsoc-list a:hover,.fsoc-list a:focus-visible{transform:translateY(-2px) scale(1.08);box-shadow:0 14px 30px -10px oklch(0% 0 0 / .75),0 0 0 2px var(--gold)}
+.fsoc-list a:focus-visible{outline:none}
+
 .fsoc-tip{position:absolute;right:calc(100% + 12px);top:50%;transform:translate(6px,-50%);padding:7px 12px;border-radius:999px;white-space:nowrap;
   font-size:13px;font-weight:500;background:var(--on);color:var(--black);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
-.fsoc a:hover .fsoc-tip,.fsoc a:focus-visible .fsoc-tip{opacity:1;transform:translate(0,-50%)}
+.fsoc-list a:hover .fsoc-tip,.fsoc-list a:focus-visible .fsoc-tip,.fsoc:not(.open) .fsoc-main:hover .fsoc-tip{opacity:1;transform:translate(0,-50%)}
+
 html.menu-open .fsoc{display:none}
-@media (max-width:600px){.fsoc{gap:10px}.fsoc a{width:50px;height:50px}.fsoc a svg{width:22px;height:22px}.fsoc-tip{display:none}}
-@media (prefers-reduced-motion:reduce){.fsoc li{animation:none;opacity:1;transform:none}}
-.fsoc{transition:opacity .35s,transform .35s}
 /* homepage: stay out of the way of the slider arrows while they are showing */
 html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-events:none}
+@media (max-width:600px){.fsoc{gap:10px}.fsoc-main{width:54px;height:54px}.fsoc-list a{width:46px;height:46px}.fsoc-tip{display:none}}
+@media (prefers-reduced-motion:reduce){.fsoc,.fsoc-list li,.fsoc-main svg{animation:none;transition:none}.fsoc-main::after{display:none}}

@@ -20,18 +20,48 @@ const BRANDS: Record<string, { name: string; bg: string; fg: string; d: string }
 const items = site.floatingSocials ? site.socials.filter((s) => BRANDS[s.platform]) : [];
 ---
 {items.length > 0 && (
-  <ul class="fsoc" aria-label="Follow Aayera">
-    {items.map((s, i) => {
-      const b = BRANDS[s.platform];
-      return (
-        <li style={`--i:${i}`}>
-          <a href={s.url} style={`--bg:${b.bg};--fg:${b.fg}`} aria-label={`Aayera on ${b.name}`}
-             {...(s.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>
-            <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d={b.d} /></svg>
-            <span class="fsoc-tip">{b.name}</span>
-          </a>
-        </li>
-      );
-    })}
-  </ul>
+  <div class="fsoc" id="fsoc">
+    <ul class="fsoc-list" id="fsoc-list" aria-label="Follow Aayera">
+      {items.map((s, i) => {
+        const b = BRANDS[s.platform];
+        return (
+          <li style={`--i:${items.length - 1 - i}`}>
+            <a href={s.url} style={`--bg:${b.bg};--fg:${b.fg}`} aria-label={`Aayera on ${b.name}`} tabindex="-1"
+               {...(s.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>
+              <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d={b.d} /></svg>
+              <span class="fsoc-tip">{b.name}</span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+    <button class="fsoc-main" type="button" aria-expanded="false" aria-controls="fsoc-list" aria-label="Follow Aayera on social media">
+      <svg class="fsoc-ico-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="m8.3 10.8 7.4-4.4M8.3 13.2l7.4 4.4"/>
+      </svg>
+      <svg class="fsoc-ico-close" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      <span class="fsoc-tip">Follow us</span>
+    </button>
+  </div>
 )}
+
+<script>
+  // one button that opens the social links: hover on desktop, tap/click everywhere
+  const root = document.getElementById('fsoc');
+  if (root) {
+    const btn = root.querySelector<HTMLButtonElement>('.fsoc-main')!;
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('.fsoc-list a')];
+    const hover = matchMedia('(hover:hover) and (pointer:fine)');
+    let pinned = false; // opened by click/tap stays open until closed
+    const set = (open: boolean) => {
+      root.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      links.forEach((a) => (a.tabIndex = open ? 0 : -1));
+    };
+    btn.addEventListener('click', () => { pinned = !root.classList.contains('open') || !pinned; set(pinned); });
+    root.addEventListener('mouseenter', () => { if (hover.matches) set(true); });
+    root.addEventListener('mouseleave', () => { if (hover.matches && !pinned) set(false); });
+    document.addEventListener('click', (e) => { if (!root.contains(e.target as Node)) { pinned = false; set(false); } });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('open')) { pinned = false; set(false); btn.focus(); } });
+  }
+</script>
