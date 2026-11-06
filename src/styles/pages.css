@@ -208,7 +208,9 @@ html.menu-open .abar{transform:translateY(-100%)}
 .fsoc-main{width:60px;height:60px;background:var(--gold);color:var(--black);box-shadow:0 12px 30px -8px oklch(0% 0 0 / .7),0 0 0 6px oklch(81% .155 82 / .16)}
 .fsoc-main:hover,.fsoc-main:focus-visible{transform:scale(1.06);box-shadow:0 16px 34px -10px oklch(0% 0 0 / .75),0 0 0 8px oklch(81% .155 82 / .22)}
 .fsoc-main:focus-visible{outline:2px solid var(--on);outline-offset:3px}
-.fsoc-main svg{grid-area:1/1;transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .2s}
+.fsoc-main svg,.fsoc-main .fsoc-ico-open{grid-area:1/1;transition:transform .3s cubic-bezier(.2,.7,.2,1),opacity .2s}
+/* message icon: the supplied artwork used as a mask so it takes the button's text colour */
+.fsoc-ico-open{width:28px;height:28px;background:currentColor;-webkit-mask:url(/assets/icons/message.png) center/contain no-repeat;mask:url(/assets/icons/message.png) center/contain no-repeat}
 .fsoc-ico-close{opacity:0;transform:rotate(-90deg) scale(.6)}
 .fsoc.open .fsoc-ico-open{opacity:0;transform:rotate(90deg) scale(.6)}
 .fsoc.open .fsoc-ico-close{opacity:1;transform:none}
@@ -231,5 +233,5 @@ html.menu-open .abar{transform:translateY(-100%)}
 html.menu-open .fsoc{display:none}
 /* homepage: stay out of the way of the slider arrows while they are showing */
 html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-events:none}
-@media (max-width:600px){.fsoc{gap:10px}.fsoc-main{width:54px;height:54px}.fsoc-list a{width:46px;height:46px}.fsoc-tip{display:none}}
-@media (prefers-reduced-motion:reduce){.fsoc,.fsoc-list li,.fsoc-main svg{animation:none;transition:none}.fsoc-main::after{display:none}}
+@media (max-width:600px){.fsoc{gap:10px}.fsoc-main{width:54px;height:54px}.fsoc-ico-open{width:26px;height:26px}.fsoc-list a{width:46px;height:46px}.fsoc-tip{display:none}}
+@media (prefers-reduced-motion:reduce){.fsoc,.fsoc-list li,.fsoc-main svg,.fsoc-main .fsoc-ico-open{animation:none;transition:none}.fsoc-main::after{display:none}}
