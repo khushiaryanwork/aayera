@@ -1,0 +1,11 @@
+---
+import { Rich } from '../Rich';
+const { eyebrow, heading, intro, center } = Astro.props as { eyebrow?: string; heading?: string; intro?: string; center?: boolean };
+---
+{(eyebrow || heading || intro) && (
+  <div class={'sec-head rv' + (center ? ' center' : '')}>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    {heading && <h2><Rich text={heading} /></h2>}
+    {intro && <p class="sec-intro">{intro}</p>}
+  </div>
+)}

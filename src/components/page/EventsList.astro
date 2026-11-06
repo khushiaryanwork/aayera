@@ -1,0 +1,31 @@
+---
+import type { EventItem } from '../../lib/types';
+import SecHead from './SecHead.astro';
+const { s, events } = Astro.props as { s: any; events: EventItem[] };
+const upcoming = events.filter((e) => e.upcoming).reverse(); // soonest first
+const past = events.filter((e) => !e.upcoming);
+const groups = [
+  { label: 'Upcoming events', items: upcoming },
+  { label: upcoming.length ? 'Previous events' : '', items: past },
+].filter((g) => g.items.length);
+const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+---
+<section class="sec esec">
+  <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
+  {groups.map((g) => (
+    <div class="egroup">
+      {g.label && <h3 class="egroup-title">{g.label}</h3>}
+      {g.items.map((e) => (
+        <article class={'erow rv' + (s.showSummaries && e.summary ? '' : ' compact')}>
+          <div class="erow-img">{e.image && <img src={e.image.src} alt={e.title} loading="lazy">}</div>
+          <div class="erow-txt">
+            <p class="erow-meta"><span class="pill">{e.tag}</span>{e.date}{e.location && <> · {e.location}</>}</p>
+            <h3>{e.title}</h3>
+            {s.showSummaries && e.summary && e.summary.split(/\n\s*\n/).map((p) => <p class="erow-sum">{p}</p>)}
+            {e.website && <a class="erow-link" href={e.website} target="_blank" rel="noopener">{host(e.website)} <span aria-hidden="true">↗</span></a>}
+          </div>
+        </article>
+      ))}
+    </div>
+  ))}
+</section>

@@ -1,0 +1,19 @@
+---
+import type { Logo } from '../../lib/types';
+import { Rich } from '../Rich';
+const { s, logos } = Astro.props as { s: any; logos: Logo[] };
+---
+<section class="sec cgsec">
+  <div class="sec-head center rv">
+    {s.eyebrow && <p class="eyebrow">{s.eyebrow}</p>}
+    {s.heading && <h2><Rich text={s.heading} tokens={{ count: String(logos.length) }} /></h2>}
+    {s.intro && <p class="sec-intro">{s.intro}</p>}
+  </div>
+  <ul class="cgrid rv">
+    {logos.map((l, i) => (
+      <li class={'lcard' + (l.plain ? ' plain' : '')} style={`--d:${(i * 0.55) % 7}s`}>
+        <img src={l.src} alt={l.alt} loading="lazy">
+      </li>
+    ))}
+  </ul>
+</section>

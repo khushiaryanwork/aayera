@@ -1,19 +1,22 @@
 ---
 import '../styles/global.css';
+import '../styles/pages.css';
 import type { Site } from '../lib/types';
-interface Props { site: Site; noindex?: boolean }
+interface Props { site: Site; noindex?: boolean; title?: string; description?: string }
 const { site, noindex } = Astro.props;
+const title = Astro.props.title || site.title;
+const description = Astro.props.description || site.description;
 ---
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{site.title}</title>
-  <meta name="description" content={site.description}>
+  <title>{title}</title>
+  <meta name="description" content={description}>
   {noindex && <meta name="robots" content="noindex, nofollow">}
-  <meta property="og:title" content={site.title}>
-  <meta property="og:description" content={site.description}>
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
   {site.shareImage && <meta property="og:image" content={site.shareImage}>}
   <link rel="icon" href={site.logo.src}>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,8 +30,9 @@ const { site, noindex } = Astro.props;
     // solid nav after the hero, reveal-on-scroll (.rv), CTA background parallax.
     const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const nav = document.getElementById('nav');
-    const hero = document.getElementById('top');
-    const cta = document.getElementById('contact');
+    const hero = document.getElementById('top');   // home: tall scroll-driven hero
+    const phero = document.getElementById('phero'); // inner pages: image header
+    const cta = document.querySelector<HTMLElement>('.cta');
     const ctaBg = document.getElementById('ctaBg');
     const io = new IntersectionObserver(
       (es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }),
@@ -38,6 +42,7 @@ const { site, noindex } = Astro.props;
     const onScroll = () => {
       const y = scrollY, vh = innerHeight;
       if (nav && hero) nav.classList.toggle('solid', y > hero.offsetHeight - vh * 1.2);
+      else if (nav) nav.classList.toggle('solid', y > (phero ? phero.offsetHeight * 0.55 : 10));
       if (!reduce && cta && ctaBg) {
         const r = cta.getBoundingClientRect(), p = (vh - r.top) / (vh + r.height);
         ctaBg.style.transform = `translate3d(0,${(p - 0.5) * -120}px,0)`;

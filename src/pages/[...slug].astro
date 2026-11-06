@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Cta from '../components/Cta.astro';
+import Footer from '../components/Footer.astro';
+import PageHero from '../components/page/PageHero.astro';
+import TextSection from '../components/page/TextSection.astro';
+import GroupsSection from '../components/page/GroupsSection.astro';
+import ListSection from '../components/page/ListSection.astro';
+import FeaturesSection from '../components/page/FeaturesSection.astro';
+import LinkCards from '../components/page/LinkCards.astro';
+import EventsList from '../components/page/EventsList.astro';
+import ClientsGrid from '../components/page/ClientsGrid.astro';
+import ContactSection from '../components/page/ContactSection.astro';
+import { getContent } from '../lib/content';
+import type { Page } from '../lib/types';
+
+export async function getStaticPaths() {
+  const { pages } = await getContent();
+  return pages.map((page) => ({ params: { slug: page.slug }, props: { slug: page.slug } }));
+}
+
+const { slug } = Astro.props as { slug: string };
+const { site, home, noindex, pages, eventList, allLogos, enquiryTopics } = await getContent();
+const page = pages.find((p) => p.slug === slug) as Page;
+
+// breadcrumb: Home / parent page (if any) / this page
+const parentSlug = slug.includes('/') ? slug.slice(0, slug.lastIndexOf('/')) : '';
+const parent = parentSlug ? pages.find((p) => p.slug === parentSlug) : undefined;
+const crumbs = [
+  { label: 'Home', href: '/' },
+  ...(parent ? [{ label: parent.title, href: `/${parent.slug}/` }] : []),
+  { label: page.title },
+];
+---
+<Base site={site} noindex={noindex} title={`${page.title} | Aayera`} description={page.description || site.description}>
+  <Nav site={site} />
+  <main>
+    <PageHero page={page} crumbs={crumbs} />
+    {page.sections.map((s) => {
+      switch (s._type) {
+        case 'textSection': return <TextSection s={s} />;
+        case 'groupsSection': return <GroupsSection s={s} />;
+        case 'listSection': return <ListSection s={s} />;
+        case 'featuresSection': return <FeaturesSection s={s} />;
+        case 'linkCardsSection': return <LinkCards s={s} />;
+        case 'eventsSection': return <EventsList s={s} events={eventList} />;
+        case 'clientsSection': return <ClientsGrid s={s} logos={allLogos} />;
+        case 'contactSection': return <ContactSection s={s} site={site} topics={enquiryTopics} />;
+      }
+    })}
+  </main>
+  {page.showCta && <Cta cta={home.cta} />}
+  <Footer site={site} />
+</Base>

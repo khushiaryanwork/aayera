@@ -25,6 +25,7 @@ if (!token) {
 }
 const client = createClient({ projectId, dataset, apiVersion, token, useCdn: false });
 const D = JSON.parse(readFileSync(join(root, 'src/content/defaults.json'), 'utf8'));
+const PD = JSON.parse(readFileSync(join(root, 'src/content/pages.json'), 'utf8'));
 
 const key = () => randomUUID().replace(/-/g, '').slice(0, 12);
 const cache = new Map();
@@ -57,6 +58,9 @@ async function main() {
     if (!doc.cardImage) set.cardImage = await image(def.cardImage, def.title);
     if (!doc.city) set.city = def.city;
     if (def.displayDate) set.displayDate = def.displayDate;
+    const extra = PD.events[def.startDate] || {};
+    if (extra.summary) set.summary = extra.summary;
+    if (extra.website) set.website = extra.website;
     if (Object.keys(set).length) await client.patch(doc._id).setIfMissing(set).commit();
   }
 
@@ -71,8 +75,50 @@ async function main() {
       navCta: link(S.navCta),
       email: S.email,
       phones: S.phones.map((p) => ({ _key: key(), _type: 'phone', ...p })),
+      hours: PD.contact.hours,
+      mapQuery: PD.contact.mapQuery,
+      enquiryTopics: PD.contact.interests,
     })
     .commit();
+  // the menu used to be plain links; replace it only if it is still empty
+  const navNow = await client.fetch(`*[_id=="siteSettings"][0].nav`);
+  if (!navNow?.length) {
+    await client.patch('siteSettings').set({
+      nav: S.nav.map((n) => ({ _key: key(), _type: 'navItem', label: n.label, href: n.href, ...(n.children ? { children: n.children.map((c) => ({ _key: key(), ...link(c) })) } : {}) })),
+      navCta: link(S.navCta),
+    }).commit();
+  }
+
+  /* ---- inner pages (About, Events, Training, …): created if missing ---- */
+  const existingPages = new Set(await client.fetch(`*[_type=="page"].slug.current`));
+  // array-item type names from sanity/schemas/page.ts, keyed by the array field they live in
+  const ITEM_TYPE = { groups: 'group', items: 'feature', cards: 'linkCard' };
+  const toSanity = async (v, field = '') => {
+    if (Array.isArray(v))
+      return Promise.all(v.map(async (x) => (x && typeof x === 'object'
+        ? { _key: key(), ...(ITEM_TYPE[field] && !x._type ? { _type: ITEM_TYPE[field] } : {}), ...(await toSanity(x)) }
+        : x)));
+    if (v && typeof v === 'object') {
+      if (v.src) return image(v);
+      const out = {};
+      for (const [k, val] of Object.entries(v)) out[k] = await toSanity(val, k);
+      return out;
+    }
+    return v;
+  };
+  for (const pg of PD.pages) {
+    if (existingPages.has(pg.slug) && !force) continue;
+    const { slug, sections, ...rest } = pg;
+    const doc = {
+      _id: `page-${slug.replace(/\//g, '-')}`,
+      _type: 'page',
+      ...(await toSanity(rest)),
+      slug: { _type: 'slug', current: slug },
+      sections: await toSanity(sections, 'sections'),
+    };
+    await client.createOrReplace(doc);
+    process.stdout.write('p');
+  }
 
   /* ---- home page ---- */
   const existing = await client.fetch(`*[_id=="home"][0]._id`);

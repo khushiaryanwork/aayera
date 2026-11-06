@@ -18,6 +18,7 @@ export default defineConfig({
           .items([
             S.listItem().title('Home page').icon(HomeIcon).child(S.document().schemaType('home').documentId('home')),
             S.listItem().title('Site settings').icon(CogIcon).child(S.document().schemaType('siteSettings').documentId('siteSettings')),
+            S.documentTypeListItem('page').title('Pages'),
             S.divider(),
             S.documentTypeListItem('event').title('Events'),
             S.documentTypeListItem('client').title('Clients'),

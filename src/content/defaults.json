@@ -2,18 +2,60 @@
   "settings": {
     "title": "Aayera | Moments That Move Industry",
     "description": "Aayera brings industry together through conferences, summits, training and exhibitions.",
-    "logo": { "src": "/assets/logo-on-dark.png", "alt": "Aayera" },
+    "logo": {
+      "src": "/assets/logo-on-dark.png",
+      "alt": "Aayera"
+    },
     "nav": [
-      { "label": "Events", "href": "#events" },
-      { "label": "Moments", "href": "#moments" },
-      { "label": "Industries", "href": "#industries" },
-      { "label": "Clients", "href": "#clients" }
+      {
+        "label": "About us",
+        "href": "/about/"
+      },
+      {
+        "label": "Events",
+        "href": "/events/",
+        "children": [
+          {
+            "label": "Training",
+            "href": "/events/training/"
+          },
+          {
+            "label": "Conference",
+            "href": "/events/conference/"
+          },
+          {
+            "label": "Webinar",
+            "href": "/events/webinar/"
+          }
+        ]
+      },
+      {
+        "label": "Networking",
+        "href": "/networking/"
+      },
+      {
+        "label": "Clients",
+        "href": "/clients/"
+      },
+      {
+        "label": "News & Events",
+        "href": "/news-and-events/"
+      }
     ],
-    "navCta": { "label": "Get in touch", "href": "#contact" },
+    "navCta": {
+      "label": "Contact",
+      "href": "/contact/"
+    },
     "email": "info@aayera.com",
     "phones": [
-      { "label": "+91 80 4853 6267", "number": "+918048536267" },
-      { "label": "+44 20 8068 2248", "number": "+442080682248" }
+      {
+        "label": "+91 80 4853 6267",
+        "number": "+918048536267"
+      },
+      {
+        "label": "+44 20 8068 2248",
+        "number": "+442080682248"
+      }
     ],
     "address": "47, 3rd floor, Wheelers Road, Cox Town, Bangalore 560005"
   },
@@ -21,89 +63,411 @@
     "hero": {
       "eyebrow": "Conferences · Summits · Training · Exhibitions",
       "heading": "Where industry *meets.*",
-      "primaryCta": { "label": "Explore our events →", "href": "#events" },
-      "secondaryCta": { "label": "Partner with us", "href": "#contact" },
-      "slideCta": { "label": "Explore our events →", "href": "#events" },
+      "primaryCta": {
+        "label": "Explore our events →",
+        "href": "#events"
+      },
+      "secondaryCta": {
+        "label": "Partner with us",
+        "href": "/contact/"
+      },
+      "slideCta": {
+        "label": "Explore our events →",
+        "href": "#events"
+      },
       "slides": [
-        { "image": { "src": "/assets/img/01-opening/02-energy-summit.jpg", "alt": "" }, "tag": "Energy", "title": "Smart Meter Summit", "meta": "Bengaluru · June 2021" },
-        { "image": { "src": "/assets/img/01-opening/01-keynote-auditorium.jpg", "alt": "" }, "tag": "Healthcare", "title": "Turkey Healthcare Project Delivery Conference", "short": "Turkey Healthcare Conference", "meta": "Ankara · April 2020" },
-        { "image": { "src": "/assets/img/01-opening/03-mobility-forum.jpg", "alt": "" }, "tag": "Mobility", "title": "EV Charging Summit", "meta": "Bengaluru · June 2021" },
-        { "image": { "src": "/assets/img/01-opening/05-technology-confex.jpg", "alt": "" }, "tag": "Technology", "title": "IoT India Confex", "meta": "Bengaluru · August 2017" }
+        {
+          "image": {
+            "src": "/assets/img/01-opening/02-energy-summit.jpg",
+            "alt": ""
+          },
+          "tag": "Energy",
+          "title": "Smart Meter Summit",
+          "meta": "Bengaluru · June 2021"
+        },
+        {
+          "image": {
+            "src": "/assets/img/01-opening/01-keynote-auditorium.jpg",
+            "alt": ""
+          },
+          "tag": "Healthcare",
+          "title": "Turkey Healthcare Project Delivery Conference",
+          "short": "Turkey Healthcare Conference",
+          "meta": "Ankara · April 2020"
+        },
+        {
+          "image": {
+            "src": "/assets/img/01-opening/03-mobility-forum.jpg",
+            "alt": ""
+          },
+          "tag": "Mobility",
+          "title": "EV Charging Summit",
+          "meta": "Bengaluru · June 2021"
+        },
+        {
+          "image": {
+            "src": "/assets/img/01-opening/05-technology-confex.jpg",
+            "alt": ""
+          },
+          "tag": "Technology",
+          "title": "IoT India Confex",
+          "meta": "Bengaluru · August 2017"
+        }
       ],
       "mosaic": []
     },
     "marquee": [
-      { "text": "Conferences" }, { "text": "Summits", "serif": true }, { "text": "Exhibitions" }, { "text": "Training", "serif": true },
-      { "text": "Energy" }, { "text": "Mobility", "serif": true }, { "text": "Healthcare" }, { "text": "Technology", "serif": true }
+      {
+        "text": "Conferences"
+      },
+      {
+        "text": "Summits",
+        "serif": true
+      },
+      {
+        "text": "Exhibitions"
+      },
+      {
+        "text": "Training",
+        "serif": true
+      },
+      {
+        "text": "Energy"
+      },
+      {
+        "text": "Mobility",
+        "serif": true
+      },
+      {
+        "text": "Healthcare"
+      },
+      {
+        "text": "Technology",
+        "serif": true
+      }
     ],
     "events": {
       "heading": "The rooms\nwe've *filled.*",
       "intro": "Seven flagship events across three continents. Keep scrolling.",
       "items": [
-        { "title": "EV Charging Summit", "sector": "mobility", "city": "Bengaluru", "startDate": "2021-06-21", "endDate": "2021-06-22", "cardImage": { "src": "/assets/img/02-event-cards/01-ev-charging-summit.jpg" } },
-        { "title": "Smart Meter Summit", "sector": "energy", "city": "Bengaluru", "startDate": "2021-06-07", "endDate": "2021-06-08", "cardImage": { "src": "/assets/img/02-event-cards/02-smart-meter-summit.jpg" } },
-        { "title": "Turkey Healthcare Project Delivery Conference", "sector": "health", "city": "Ankara", "startDate": "2020-04-08", "endDate": "2020-04-09", "cardImage": { "src": "/assets/img/02-event-cards/03-turkey-healthcare.jpg" } },
-        { "title": "Africa Healthcare Manufacturers & Distributors Summit", "sector": "health", "city": "Cape Town", "startDate": "2020-03-24", "endDate": "2020-03-25", "cardImage": { "src": "/assets/img/02-event-cards/04-africa-manufacturers.jpg" } },
-        { "title": "Africa Healthcare Development & Project Delivery", "sector": "health", "city": "Johannesburg", "startDate": "2019-09-11", "endDate": "2019-09-12", "displayDate": "11–12 Sept 2019", "cardImage": { "src": "/assets/img/02-event-cards/05-africa-development.jpg" } },
-        { "title": "Hybrid & Electric Vehicle Confex", "sector": "mobility", "city": "Pune", "startDate": "2018-08-09", "endDate": "2018-08-10", "cardImage": { "src": "/assets/img/02-event-cards/06-hybrid-electric-confex.jpg" } },
-        { "title": "IoT India Confex", "sector": "tech", "city": "Bengaluru", "startDate": "2017-08-24", "endDate": "2017-08-25", "cardImage": { "src": "/assets/img/02-event-cards/07-iot-india.jpg" } }
+        {
+          "title": "EV Charging Summit",
+          "sector": "mobility",
+          "city": "Bengaluru",
+          "startDate": "2021-06-21",
+          "endDate": "2021-06-22",
+          "cardImage": {
+            "src": "/assets/img/02-event-cards/01-ev-charging-summit.jpg"
+          }
+        },
+        {
+          "title": "Smart Meter Summit",
+          "sector": "energy",
+          "city": "Bengaluru",
+          "startDate": "2021-06-07",
+          "endDate": "2021-06-08",
+          "cardImage": {
+            "src": "/assets/img/02-event-cards/02-smart-meter-summit.jpg"
+          }
+        },
+        {
+          "title": "Turkey Healthcare Project Delivery Conference",
+          "sector": "health",
+          "city": "Ankara",
+          "startDate": "2020-04-08",
+          "endDate": "2020-04-09",
+          "cardImage": {
+            "src": "/assets/img/02-event-cards/03-turkey-healthcare.jpg"
+          }
+        },
+        {
+          "title": "Africa Healthcare Manufacturers & Distributors Summit",
+          "sector": "health",
+          "city": "Cape Town",
+          "startDate": "2020-03-24",
+          "endDate": "2020-03-25",
+          "cardImage": {
+            "src": "/assets/img/02-event-cards/04-africa-manufacturers.jpg"
+          }
+        },
+        {
+          "title": "Africa Healthcare Development & Project Delivery",
+          "sector": "health",
+          "city": "Johannesburg",
+          "startDate": "2019-09-11",
+          "endDate": "2019-09-12",
+          "displayDate": "11–12 Sept 2019",
+          "cardImage": {
+            "src": "/assets/img/02-event-cards/05-africa-development.jpg"
+          }
+        },
+        {
+          "title": "Hybrid & Electric Vehicle Confex",
+          "sector": "mobility",
+          "city": "Pune",
+          "startDate": "2018-08-09",
+          "endDate": "2018-08-10",
+          "cardImage": {
+            "src": "/assets/img/02-event-cards/06-hybrid-electric-confex.jpg"
+          }
+        },
+        {
+          "title": "IoT India Confex",
+          "sector": "tech",
+          "city": "Bengaluru",
+          "startDate": "2017-08-24",
+          "endDate": "2017-08-25",
+          "cardImage": {
+            "src": "/assets/img/02-event-cards/07-iot-india.jpg"
+          }
+        }
       ]
     },
     "statement": {
-      "image": { "src": "/assets/img/03-growing/01-sea-of-possibility.jpg", "alt": "Delegates in a packed conference hall" },
-      "words": ["People.", "*Knowledge.*", "Possibility."]
+      "image": {
+        "src": "/assets/img/03-growing/01-sea-of-possibility.jpg",
+        "alt": "Delegates in a packed conference hall"
+      },
+      "words": [
+        "People.",
+        "*Knowledge.*",
+        "Possibility."
+      ]
     },
     "stats": [
-      { "value": 7, "suffix": "", "label": "Flagship events", "image": { "src": "/assets/img/04-numbers/01-events.jpg" } },
-      { "value": 5, "suffix": "", "label": "Host cities", "image": { "src": "/assets/img/04-numbers/02-cities.jpg" } },
-      { "value": 25, "suffix": "+", "label": "Client organisations", "image": { "src": "/assets/img/04-numbers/03-clients.jpg" } },
-      { "value": 6, "suffix": "", "label": "Countries", "image": { "src": "/assets/img/04-numbers/04-countries.jpg" } }
+      {
+        "value": 7,
+        "suffix": "",
+        "label": "Flagship events",
+        "image": {
+          "src": "/assets/img/04-numbers/01-events.jpg"
+        }
+      },
+      {
+        "value": 5,
+        "suffix": "",
+        "label": "Host cities",
+        "image": {
+          "src": "/assets/img/04-numbers/02-cities.jpg"
+        }
+      },
+      {
+        "value": 25,
+        "suffix": "+",
+        "label": "Client organisations",
+        "image": {
+          "src": "/assets/img/04-numbers/03-clients.jpg"
+        }
+      },
+      {
+        "value": 6,
+        "suffix": "",
+        "label": "Countries",
+        "image": {
+          "src": "/assets/img/04-numbers/04-countries.jpg"
+        }
+      }
     ],
     "moments": {
       "eyebrow": "Moments",
       "heading": "Pictures say it *better.*",
       "tiles": [
-        { "image": { "src": "/assets/img/05-photo-wall/01-keynote.jpg" }, "ratio": "4/5", "caption": "Keynote" },
-        { "image": { "src": "/assets/img/05-photo-wall/05-networking.jpg" }, "ratio": "3/2", "caption": "Networking" },
-        { "image": { "src": "/assets/img/05-photo-wall/09-name-badges.jpg" }, "ratio": "4/5", "caption": "Registration" },
-        { "image": { "src": "/assets/img/05-photo-wall/03-packed-room.jpg" }, "ratio": "3/2", "caption": "Full house" },
-        { "image": { "src": "/assets/img/05-photo-wall/04-focused-faces.jpg" }, "ratio": "4/5", "caption": "In the room" },
-        { "image": { "src": "/assets/img/05-photo-wall/08-workshop.jpg" }, "ratio": "3/2", "caption": "Workshops" },
-        { "image": { "src": "/assets/img/05-photo-wall/06-coffee-break.jpg" }, "ratio": "4/5", "caption": "Coffee break" },
-        { "image": { "src": "/assets/img/05-photo-wall/02-panel.jpg" }, "ratio": "3/2", "caption": "Panel debate" },
-        { "image": { "src": "/assets/img/05-photo-wall/12-group.jpg" }, "ratio": "3/2", "caption": "Delegates" },
-        { "image": { "src": "/assets/img/05-photo-wall/07-exhibition.jpg" }, "ratio": "3/2", "caption": "Exhibition floor" },
-        { "image": { "src": "/assets/img/05-photo-wall/10-awards.jpg" }, "ratio": "4/5", "caption": "Awards" },
-        { "image": { "src": "/assets/img/05-photo-wall/11-gala.jpg" }, "ratio": "3/2", "caption": "Gala evening" }
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/01-keynote.jpg"
+          },
+          "ratio": "4/5",
+          "caption": "Keynote"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/05-networking.jpg"
+          },
+          "ratio": "3/2",
+          "caption": "Networking"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/09-name-badges.jpg"
+          },
+          "ratio": "4/5",
+          "caption": "Registration"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/03-packed-room.jpg"
+          },
+          "ratio": "3/2",
+          "caption": "Full house"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/04-focused-faces.jpg"
+          },
+          "ratio": "4/5",
+          "caption": "In the room"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/08-workshop.jpg"
+          },
+          "ratio": "3/2",
+          "caption": "Workshops"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/06-coffee-break.jpg"
+          },
+          "ratio": "4/5",
+          "caption": "Coffee break"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/02-panel.jpg"
+          },
+          "ratio": "3/2",
+          "caption": "Panel debate"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/12-group.jpg"
+          },
+          "ratio": "3/2",
+          "caption": "Delegates"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/07-exhibition.jpg"
+          },
+          "ratio": "3/2",
+          "caption": "Exhibition floor"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/10-awards.jpg"
+          },
+          "ratio": "4/5",
+          "caption": "Awards"
+        },
+        {
+          "image": {
+            "src": "/assets/img/05-photo-wall/11-gala.jpg"
+          },
+          "ratio": "3/2",
+          "caption": "Gala evening"
+        }
       ]
     },
     "industries": {
       "eyebrow": "Industries in focus",
       "heading": "Four worlds.\n*One stage.*",
       "items": [
-        { "name": "Energy", "text": "Smart metering, utilities and the distribution companies powering what's next.", "count": "1 event", "image": { "src": "/assets/img/06-industries/01-energy.jpg" } },
-        { "name": "Mobility", "text": "EV charging infrastructure and hybrid & electric vehicles.", "count": "2 events", "image": { "src": "/assets/img/06-industries/02-mobility.jpg" } },
-        { "name": "Healthcare", "text": "Project delivery, manufacturing and distribution across Africa and Turkey.", "count": "3 events", "image": { "src": "/assets/img/06-industries/03-healthcare.jpg" } },
-        { "name": "Technology", "text": "The Internet of Things and commercialising new research.", "count": "1 event", "image": { "src": "/assets/img/06-industries/04-technology.jpg" } }
+        {
+          "name": "Energy",
+          "text": "Smart metering, utilities and the distribution companies powering what's next.",
+          "count": "1 event",
+          "image": {
+            "src": "/assets/img/06-industries/01-energy.jpg"
+          }
+        },
+        {
+          "name": "Mobility",
+          "text": "EV charging infrastructure and hybrid & electric vehicles.",
+          "count": "2 events",
+          "image": {
+            "src": "/assets/img/06-industries/02-mobility.jpg"
+          }
+        },
+        {
+          "name": "Healthcare",
+          "text": "Project delivery, manufacturing and distribution across Africa and Turkey.",
+          "count": "3 events",
+          "image": {
+            "src": "/assets/img/06-industries/03-healthcare.jpg"
+          }
+        },
+        {
+          "name": "Technology",
+          "text": "The Internet of Things and commercialising new research.",
+          "count": "1 event",
+          "image": {
+            "src": "/assets/img/06-industries/04-technology.jpg"
+          }
+        }
       ]
     },
     "filmstrip": [
-      "01-arrivals", "02-registration", "03-stage-preparation", "04-soundcheck", "05-notebook", "06-question", "07-listening", "08-hallway", "09-speaker-prep", "10-tech-desk",
-      "11-exhibit-detail", "12-coffee-pour", "13-business-cards", "14-roundtable", "15-wayfinding", "16-exhibition-aisle", "17-workshop-laughter", "18-venue-detail", "19-stage-exit", "20-team-moment"
+      "01-arrivals",
+      "02-registration",
+      "03-stage-preparation",
+      "04-soundcheck",
+      "05-notebook",
+      "06-question",
+      "07-listening",
+      "08-hallway",
+      "09-speaker-prep",
+      "10-tech-desk",
+      "11-exhibit-detail",
+      "12-coffee-pour",
+      "13-business-cards",
+      "14-roundtable",
+      "15-wayfinding",
+      "16-exhibition-aisle",
+      "17-workshop-laughter",
+      "18-venue-detail",
+      "19-stage-exit",
+      "20-team-moment"
     ],
     "clients": {
       "eyebrow": "In good company",
       "heading": "{count} organisations.\n*One room.*",
       "intro": "Industry leaders across energy, mobility, healthcare and technology have shared our stages.",
-      "logos": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+      "logos": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ]
     },
     "cta": {
       "eyebrow": "Your next event",
       "heading": "Let's fill\nthe *next room.*",
-      "image": { "src": "/assets/img/08-closing/01-standing-ovation.jpg", "alt": "" },
+      "image": {
+        "src": "/assets/img/08-closing/01-standing-ovation.jpg",
+        "alt": ""
+      },
       "buttons": [
-        { "label": "info@aayera.com →", "href": "mailto:info@aayera.com", "style": "gold" },
-        { "label": "+91 80 4853 6267", "href": "tel:+918048536267", "style": "ghost" }
+        {
+          "label": "info@aayera.com →",
+          "href": "mailto:info@aayera.com",
+          "style": "gold"
+        },
+        {
+          "label": "+91 80 4853 6267",
+          "href": "tel:+918048536267",
+          "style": "ghost"
+        }
       ]
     }
   }

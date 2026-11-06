@@ -1,0 +1,23 @@
+---
+import type { Page } from '../../lib/types';
+import { Rich } from '../Rich';
+interface Props { page: Page; crumbs: { label: string; href?: string }[] }
+const { page, crumbs } = Astro.props;
+const { hero } = page;
+---
+<section class="phero" id="phero">
+  <div class="phero-bg" aria-hidden="true">{hero.image && <img src={hero.image.src} alt="" fetchpriority="high">}</div>
+  <div class="phero-in">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      {crumbs.map((c, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true">/</span>}
+          {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+        </>
+      ))}
+    </nav>
+    {hero.eyebrow && <p class="eyebrow">{hero.eyebrow}</p>}
+    <h1><Rich text={hero.heading} /></h1>
+    {hero.intro && <p class="phero-intro">{hero.intro}</p>}
+  </div>
+</section>

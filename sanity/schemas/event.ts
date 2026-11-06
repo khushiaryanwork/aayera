@@ -17,6 +17,8 @@ export const event = defineType({
     defineField({ name: 'displayDate', title: 'Date text override', type: 'string', description: 'Optional. Replaces the auto-formatted date, e.g. "11–12 Sept 2019".' }),
     defineField({ name: 'location', type: 'string', description: 'Venue / city / country, e.g. "Le Méridien, Bengaluru, India".' }),
     defineField({ name: 'city', title: 'City shown on the card', type: 'string', description: 'Optional. Defaults to the city in Location.' }),
+    defineField({ name: 'summary', title: 'Description', type: 'text', rows: 6, description: 'Shown on the News & Events page. Leave a blank line between paragraphs.' }),
+    defineField({ name: 'website', title: 'Event website', type: 'url', validation: (r) => r.uri({ scheme: ['http', 'https'] }) }),
     defineField({ name: 'cardImage', title: 'Card photo', type: 'imageWithAlt', description: 'Tall photo used on the home page event cards and hero wall.' }),
     defineField({ name: 'image', title: 'Event artwork', type: 'imageWithAlt', description: 'Original event banner. Used as the card photo if none is set.' }),
   ],

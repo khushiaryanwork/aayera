@@ -47,3 +47,15 @@ export const phone = defineType({
   ],
   preview: { select: { title: 'label' } },
 })
+
+export const navItem = defineType({
+  name: 'navItem',
+  title: 'Menu item',
+  type: 'object',
+  fields: [
+    defineField({ name: 'label', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'href', title: 'URL', type: 'string', description: 'e.g. /about/', validation: (r) => r.required() }),
+    defineField({ name: 'children', title: 'Dropdown links', type: 'array', of: [{ type: 'link' }] }),
+  ],
+  preview: { select: { title: 'label', subtitle: 'href', children: 'children' }, prepare: ({ title, subtitle, children }) => ({ title, subtitle: children?.length ? `${subtitle} · ${children.length} dropdown links` : subtitle }) },
+})

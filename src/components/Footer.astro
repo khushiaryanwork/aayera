@@ -1,11 +1,17 @@
 ---
 import type { Site } from '../lib/types';
 const { site } = Astro.props as { site: Site };
+const links = site.nav.flatMap((n) => [n, ...(n.children ?? [])]).concat(site.navCta);
 ---
 <footer>
-  <img src={site.logo.src} alt={site.logo.alt || 'Aayera'}>
-  <span>{site.address}</span>
-  <span>
+  <div class="foot-brand">
+    <a href="/" aria-label="Aayera home"><img src={site.logo.src} alt={site.logo.alt || 'Aayera'}></a>
+    <span>{site.address}</span>
+  </div>
+  <nav class="foot-links" aria-label="Footer">
+    {links.map((l) => <a href={l.href}>{l.label}</a>)}
+  </nav>
+  <span class="foot-contact">
     <a href={`mailto:${site.email}`}>{site.email}</a>
     {site.phones.map((p) => <> · <a href={`tel:${p.number}`}>{p.label}</a></>)}
   </span>

@@ -1,0 +1,23 @@
+---
+import { Rich } from '../Rich';
+const { s } = Astro.props as { s: any };
+---
+<section class="sec tsec">
+  <div class="tsec-grid">
+    <div class="tsec-head rv">
+      {s.eyebrow && <p class="eyebrow">{s.eyebrow}</p>}
+      {s.heading && <h2><Rich text={s.heading} /></h2>}
+    </div>
+    <div class="tsec-body rv">
+      {s.intro && <p class="lede">{s.intro}</p>}
+      {s.paragraphs.map((p: string) => <p>{p}</p>)}
+      {s.chips.length > 0 && (
+        <div class="chips">
+          {s.chipsLabel && <p class="eyebrow">{s.chipsLabel}</p>}
+          <ul>{s.chips.map((c: string) => <li>{c}</li>)}</ul>
+        </div>
+      )}
+    </div>
+  </div>
+  {s.image && <figure class="tsec-img rv"><img src={s.image.src} alt={s.image.alt} loading="lazy"></figure>}
+</section>

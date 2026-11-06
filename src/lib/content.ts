@@ -6,8 +6,9 @@
 import { createClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
 import defaults from '../content/defaults.json';
+import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
-import type { Home, Img, Site, EventCard, WallTile, Logo, MosaicTile } from './types';
+import type { Home, Img, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section } from './types';
 
 const client = createClient({
   projectId,
@@ -21,14 +22,15 @@ const builder = createImageUrlBuilder({ projectId, dataset });
 
 const QUERY = /* groq */ `{
   "settings": *[_id == "siteSettings"][0]{
-    title, description, shareImage, searchVisibility, logo, nav, navCta, email, phones, address
+    title, description, shareImage, searchVisibility, logo, nav, navCta, email, phones, address, hours, mapQuery, enquiryTopics
   },
   "home": *[_id == "home"][0]{
     ...,
     "eventsSection": eventsSection{ ..., "events": events[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage } },
     "clientsSection": clientsSection{ ..., "clients": clients[]->{ name, logo, plainLogo } }
   },
-  "allEvents": *[_type == "event" && !(_id in path("drafts.**"))] | order(startDate desc){ title, sector, city, location, startDate, endDate, displayDate, image, cardImage },
+  "allEvents": *[_type == "event" && !(_id in path("drafts.**"))] | order(startDate desc){ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website },
+  "pages": *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{ ..., "slug": slug.current },
   "allClients": *[_type == "client" && !(_id in path("drafts.**"))] | order(name asc){ name, logo, plainLogo }
 }`;
 
@@ -87,18 +89,89 @@ function formatAddress(a: any) {
   return [a.street, a.area, [a.city, a.postalCode].filter(Boolean).join(' ')].filter(Boolean).join(', ');
 }
 
-/* ---------- main ---------- */
-export async function getContent(): Promise<{ site: Site; home: Home; noindex: boolean }> {
-  let data: any = {};
-  try {
-    // SANITY_CONTENT_FILE: build from a saved query result instead of the API (offline builds / tests)
-    const file = process.env.SANITY_CONTENT_FILE;
-    data = file
-      ? JSON.parse((await import('node:fs')).readFileSync(file, 'utf8')).result
-      : await client.fetch(QUERY);
-  } catch (err) {
-    console.warn('[content] Sanity fetch failed, using bundled defaults:', (err as Error).message);
+/* ---------- inner pages ---------- */
+const PD: any = pageDefaults;
+const today = new Date().toISOString().slice(0, 10);
+
+function toEventItem(e: any): EventItem {
+  const extra = PD.events[e.startDate] || {};
+  return {
+    title: e.title,
+    tag: SECTOR[e.sector] || e.sector || '',
+    date: e.displayDate || dateRange(e.startDate, e.endDate),
+    location: e.location || extra.location || e.city || '',
+    summary: e.summary || extra.summary || '',
+    website: e.website || extra.website || '',
+    image: img(cardSource(e), 1000, e.title),
+    upcoming: (e.endDate || e.startDate || '') >= today,
+  };
+}
+
+const strs = (v: any) => (Array.isArray(v) ? v.filter((x) => typeof x === 'string' && x.trim()) : []);
+
+function normSection(x: any): Section | null {
+  const base = { eyebrow: x.eyebrow || '', heading: x.heading || '', intro: x.intro || '' };
+  switch (x._type) {
+    case 'textSection':
+      return { _type: 'textSection', ...base, paragraphs: strs(x.paragraphs), chipsLabel: x.chipsLabel || '', chips: strs(x.chips), image: img(x.image, 1800) };
+    case 'groupsSection':
+      return { _type: 'groupsSection', ...base, groups: (x.groups || []).map((g: any) => ({ title: g.title || '', items: strs(g.items) })) };
+    case 'listSection':
+      return { _type: 'listSection', ...base, items: strs(x.items) };
+    case 'featuresSection':
+      return { _type: 'featuresSection', ...base, items: (x.items || []).map((i: any) => ({ title: i.title || '', text: i.text || '', image: img(i.image, 1000, i.title) })) };
+    case 'linkCardsSection':
+      return { _type: 'linkCardsSection', ...base, cards: (x.cards || []).map((c: any) => ({ title: c.title || '', text: c.text || '', href: c.href || '#', image: img(c.image, 1000, c.title) })) };
+    case 'eventsSection':
+      return { _type: 'eventsSection', ...base, showSummaries: x.showSummaries !== false };
+    case 'clientsSection':
+      return { _type: 'clientsSection', ...base };
+    case 'contactSection':
+      return { _type: 'contactSection', ...base, formHeading: x.formHeading || '' };
+    default:
+      return null;
   }
+}
+
+function toPage(def: any, cms: any): Page {
+  const c = cms || {};
+  const ch = c.hero || {};
+  const dh = def?.hero || {};
+  const sections = has(c.sections) ? c.sections : def?.sections || [];
+  return {
+    slug: c.slug || def.slug,
+    title: pick(c.title, def?.title || ''),
+    description: pick(c.description, def?.description || ''),
+    showCta: (c.showCta ?? def?.showCta) !== false,
+    hero: {
+      eyebrow: pick(ch.eyebrow, dh.eyebrow || ''),
+      heading: pick(ch.heading, dh.heading || c.title || ''),
+      intro: pick(ch.intro, dh.intro || ''),
+      image: imgOr(ch.image, dh.image, 2400, dh.image?.alt || ''),
+    },
+    sections: sections.map(normSection).filter(Boolean) as Section[],
+  };
+}
+
+/* ---------- main ---------- */
+let cached: Promise<any> | null = null;
+function load() {
+  // one Sanity request per build, shared by every page
+  cached ??= (async () => {
+    try {
+      // SANITY_CONTENT_FILE: build from a saved query result instead of the API (offline builds / tests)
+      const file = process.env.SANITY_CONTENT_FILE;
+      return file ? JSON.parse((await import('node:fs')).readFileSync(file, 'utf8')).result : await client.fetch(QUERY);
+    } catch (err) {
+      console.warn('[content] Sanity fetch failed, using bundled defaults:', (err as Error).message);
+      return {};
+    }
+  })();
+  return cached;
+}
+
+export async function getContent(): Promise<{ site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[] }> {
+  const data: any = (await load()) || {};
   const s = data.settings || {};
   const h = data.home || {};
   const D = defaults.settings;
@@ -114,6 +187,8 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     email: pick(s.email, D.email),
     phones: pick(s.phones, D.phones),
     address: pick(formatAddress(s.address), D.address),
+    hours: pick(s.hours, PD.contact.hours),
+    mapQuery: pick(s.mapQuery, PD.contact.mapQuery),
   };
 
   /* hero */
@@ -194,5 +269,16 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     },
   };
 
-  return { site, home, noindex: s.searchVisibility === 'hidden' };
+  /* inner pages: every default page, overridden by a Sanity page with the same slug, plus any new Sanity pages */
+  const cmsPages: any[] = data.pages || [];
+  const bySlug = new Map(cmsPages.map((p) => [p.slug.replace(/^\/+|\/+$/g, ''), p]));
+  const pages: Page[] = PD.pages.map((d: any) => toPage(d, bySlug.get(d.slug)));
+  for (const [slug, p] of bySlug) if (!PD.pages.some((d: any) => d.slug === slug)) pages.push(toPage({ slug }, { ...p, slug }));
+
+  const eventList = (has(data.allEvents) ? data.allEvents : DH.events.items).map(toEventItem);
+  const allLogos: Logo[] = has(data.allClients)
+    ? data.allClients.filter((c: any) => c?.logo).map((c: any) => ({ src: (img(c.logo, 460) as Img).src, alt: c.name || 'Client logo', plain: !!c.plainLogo }))
+    : DH.clients.logos.map((n) => ({ src: `/assets/clients/${n}.png`, alt: 'Client logo', plain: false }));
+
+  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests) };
 }

@@ -1,0 +1,11 @@
+---
+import SecHead from './SecHead.astro';
+const { s } = Astro.props as { s: any };
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="sec lsec">
+  <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
+  <ol class="lsec-list rv">
+    {s.items.map((it: string, i: number) => <li><span>{pad(i + 1)}</span>{it}</li>)}
+  </ol>
+</section>

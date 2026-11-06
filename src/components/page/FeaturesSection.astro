@@ -1,0 +1,25 @@
+---
+import SecHead from './SecHead.astro';
+const { s } = Astro.props as { s: any };
+const withImages = s.items.some((i: any) => i.image);
+---
+<section class="sec fsec">
+  <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
+  {withImages ? (
+    <div class="fcards">
+      {s.items.map((it: any, i: number) => (
+        <article class="fcard rv" style={`--i:${i % 3}`}>
+          {it.image && <div class="fcard-img"><img src={it.image.src} alt={it.image.alt} loading="lazy"></div>}
+          <h3>{it.title}</h3>
+          <p>{it.text}</p>
+        </article>
+      ))}
+    </div>
+  ) : (
+    <dl class="frows">
+      {s.items.map((it: any) => (
+        <div class="frow rv"><dt>{it.title}</dt><dd>{it.text}</dd></div>
+      ))}
+    </dl>
+  )}
+</section>

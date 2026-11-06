@@ -1,0 +1,550 @@
+{
+  "pages": [
+    {
+      "slug": "about",
+      "title": "About us",
+      "description": "Aayera is a global business information firm that conducts, organises and hosts conferences, summits, trainings and exhibitions.",
+      "hero": {
+        "eyebrow": "About Aayera",
+        "heading": "Who *we are.*",
+        "intro": "On-the-ground presence in India, Saudi Arabia, Qatar, the United Arab Emirates, the United Kingdom and the United States.",
+        "image": {
+          "src": "/assets/img/01-opening/06-global-networking.jpg",
+          "alt": "Delegates in conversation at an Aayera event"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Who we are",
+          "heading": "A 360-degree partner\nfor *industry events.*",
+          "paragraphs": [
+            "Aayera is a global business information firm that conducts, organises and hosts conferences, summits, trainings and exhibitions. We have successfully conducted projects for international and local clients throughout the Middle East and the Levant. We handle a diverse portfolio, offering 360-degree solutions to a number of industries, encompassing Event Management & Promotions, Exhibitions and Marketing Communication.",
+            "Whether the ‘deal’ is capital raising, vendor sales contracts or sourcing a strategic partner, Aayera provides clients with an unprecedented, high-ROI environment for conducting business. An in-house team of experts conducts extensive research in conjunction with recognised thought leaders to ensure that all events are relevant, timely and at the forefront of market and industry trends.",
+            "Flexibility and adaptability are key concepts. Our team ensures that all events are tailored to the specific needs of our customers, providing them with a customised and truly unique experience."
+          ],
+          "chipsLabel": "On-the-ground presence",
+          "chips": [
+            "India",
+            "Saudi Arabia",
+            "Qatar",
+            "United Arab Emirates",
+            "United Kingdom",
+            "United States of America"
+          ],
+          "image": {
+            "src": "/assets/img/05-photo-wall/03-packed-room.jpg",
+            "alt": "A full conference room listening to a speaker"
+          }
+        },
+        {
+          "_type": "linkCardsSection",
+          "eyebrow": "What we do",
+          "heading": "Ways to *work with us.*",
+          "cards": [
+            {
+              "title": "Training",
+              "text": "We provide training courses based on management, functional and technical verticals.",
+              "href": "/events/training/",
+              "image": {
+                "src": "/assets/img/05-photo-wall/08-workshop.jpg"
+              }
+            },
+            {
+              "title": "Conferences",
+              "text": "We provide a variety of professional development experiences.",
+              "href": "/events/conference/",
+              "image": {
+                "src": "/assets/img/01-opening/04-healthcare-congress.jpg"
+              }
+            },
+            {
+              "title": "Webinars",
+              "text": "Come hear Aayera experts and learn more about our business and our successes.",
+              "href": "/events/webinar/",
+              "image": {
+                "src": "/assets/img/07-sliding-rows/10-tech-desk.jpg"
+              }
+            },
+            {
+              "title": "Networking",
+              "text": "A sophisticated platform to connect with experts, get your business done and position your company for future success.",
+              "href": "/networking/",
+              "image": {
+                "src": "/assets/img/05-photo-wall/05-networking.jpg"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "events",
+      "title": "Events",
+      "description": "Training, conferences and webinars from Aayera, and the events we have organised.",
+      "hero": {
+        "eyebrow": "Events",
+        "heading": "Training. Conferences.\n*Webinars.*",
+        "intro": "Professional development and industry conversations, delivered in the room and on the web.",
+        "image": {
+          "src": "/assets/img/01-opening/01-keynote-auditorium.jpg",
+          "alt": "A keynote in a packed auditorium"
+        }
+      },
+      "sections": [
+        {
+          "_type": "linkCardsSection",
+          "eyebrow": "Our services",
+          "heading": "Choose your *format.*",
+          "cards": [
+            {
+              "title": "Training",
+              "text": "We provide training courses based on management, functional and technical verticals.",
+              "href": "/events/training/",
+              "image": {
+                "src": "/assets/img/05-photo-wall/08-workshop.jpg"
+              }
+            },
+            {
+              "title": "Conferences",
+              "text": "We provide a variety of professional development experiences.",
+              "href": "/events/conference/",
+              "image": {
+                "src": "/assets/img/01-opening/04-healthcare-congress.jpg"
+              }
+            },
+            {
+              "title": "Webinars",
+              "text": "Come hear Aayera experts and learn more about our business and our successes.",
+              "href": "/events/webinar/",
+              "image": {
+                "src": "/assets/img/07-sliding-rows/10-tech-desk.jpg"
+              }
+            }
+          ]
+        },
+        {
+          "_type": "eventsSection",
+          "eyebrow": "Our event record",
+          "heading": "The rooms we've *filled.*"
+        }
+      ]
+    },
+    {
+      "slug": "events/training",
+      "title": "Training",
+      "description": "Consultancy and training courses in management, functional and technical disciplines.",
+      "hero": {
+        "eyebrow": "Events · Training",
+        "heading": "People. Performance.\n*Profits.*",
+        "intro": "Our core competency is the provision of Consultancy & Training to achieve measurable improvements in People, Performance & Profits.",
+        "image": {
+          "src": "/assets/img/05-photo-wall/08-workshop.jpg",
+          "alt": "Delegates at an interactive workshop"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Training",
+          "heading": "Practical skills\nto *take away.*",
+          "paragraphs": [
+            "Our portfolio of training courses and seminars is renowned for its breadth and depth of focus, the calibre of its speakers, its interactive, practical and result-orientated nature, and the diverse and international range of participants. It is an excellent networking opportunity.",
+            "Our training courses and seminars offer concrete toolkits of effective and practical techniques, strategies and skills to take away. The content continually evolves in response to new business challenges and new managerial agendas."
+          ]
+        },
+        {
+          "_type": "groupsSection",
+          "eyebrow": "Training categories",
+          "heading": "Four areas of *expertise.*",
+          "groups": [
+            {
+              "title": "Management",
+              "items": [
+                "Management & Leadership",
+                "Public Relations & Customer Service",
+                "Office Administration",
+                "Sales & Marketing",
+                "Human Resource Management",
+                "Quality & Productivity"
+              ]
+            },
+            {
+              "title": "Functional",
+              "items": [
+                "Project Management",
+                "Purchasing, Logistics & Supply Chain Management",
+                "Contracts Management",
+                "Finance & Budgeting"
+              ]
+            },
+            {
+              "title": "Technical",
+              "items": [
+                "Electrical Engineering",
+                "Mechanical Engineering",
+                "Maintenance Engineering",
+                "Instrumentation & Process Control",
+                "Health, Safety & Environment",
+                "Oil & Gas Technology"
+              ]
+            },
+            {
+              "title": "Others",
+              "items": [
+                "Mini MBA",
+                "10 Day Training Seminars",
+                "New Seminars & Courses"
+              ]
+            }
+          ]
+        },
+        {
+          "_type": "listSection",
+          "eyebrow": "Courses",
+          "heading": "Courses we *run.*",
+          "items": [
+            "Advanced Process HAZOP",
+            "Petroleum Project Economics & Risk Analysis",
+            "Mastering People Management & Team Leadership",
+            "Advanced Project Management",
+            "Oil & Gas Accounting & Performance Measurement",
+            "Refinery Process Yield Optimisation",
+            "Preventive & Predictive Maintenance",
+            "Fundamentals of Offshore Systems Design & Construction",
+            "Advanced Health & Safety Management",
+            "Concrete Structure Designing for Industrial Projects",
+            "FPSO Operation and Maintenance",
+            "Risk Management, Control & Compliance (Corporate Governance)",
+            "Lean Six Sigma Green Belt Program",
+            "Root Cause Failure Analysis & Construction",
+            "Maintenance Strategy Development and Cost Effective Implementation",
+            "Maintenance & Reliability Best Practices",
+            "Optimizing Equipment Maintenance & Replacement Decisions",
+            "Industry Best Practices for Improving Reliability Engineering in FPSO and FLNG Facilities",
+            "Maintenance Errors",
+            "RCM: Train The Trainer",
+            "SIMOPS (Simultaneous Operations) for Onshore and Offshore Facilities",
+            "Best Practice in Surface Production Operations Management"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "events/conference",
+      "title": "Conference",
+      "description": "Professional conference organisation: management, promotion, sponsorship and exhibits.",
+      "hero": {
+        "eyebrow": "Events · Conference",
+        "heading": "Conferences,\n*organised end to end.*",
+        "intro": "Management, promotion, sponsorship and exhibits, with a custom proposal for every event.",
+        "image": {
+          "src": "/assets/img/01-opening/04-healthcare-congress.jpg",
+          "alt": "A large conference hall during a plenary session"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Conference",
+          "heading": "Recognised for\n*what we deliver.*",
+          "paragraphs": [
+            "Aayera is an industry frontrunner in the world of professional conference organisers. We have gained both international recognition and many industry accreditations for the services that we have to offer.",
+            "This section will give you a brief overview of what we can do for you. This list is not exhaustive – we will gladly prepare a custom proposal for you upon request."
+          ]
+        },
+        {
+          "_type": "groupsSection",
+          "eyebrow": "Our services",
+          "heading": "What we can *do for you.*",
+          "groups": [
+            {
+              "title": "Management",
+              "items": [
+                "Abstracts, Posters and Paper Management",
+                "Accommodation Management",
+                "Site Selection",
+                "Committee and LOC Management",
+                "Supplier Negotiation and Management",
+                "Venue, Food and Beverage Coordination",
+                "Registration Online and Onsite",
+                "Social Functions / Transport / Tours / Accompanying Persons Program",
+                "Speaker and Program Management",
+                "Staff and Volunteer Management",
+                "Print Material",
+                "Post Evaluation and Statistics",
+                "Digital Solutions"
+              ]
+            },
+            {
+              "title": "Functional",
+              "items": [
+                "Design and Distribution of Promotional Materials",
+                "Publication Management",
+                "Social Media Toolkit",
+                "Attendance Building"
+              ]
+            },
+            {
+              "title": "Sponsorship & Exhibits",
+              "items": [
+                "Exhibition and Sponsorship Sales",
+                "Sponsorship Fulfillment",
+                "Development of Prospectus",
+                "Exhibit and Supplier Management",
+                "Design and Development of Exhibit Floorplans"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "events/webinar",
+      "title": "Webinar",
+      "description": "Live, interactive web-based seminars for engineers, scientists, faculty, students, manufacturers and consultants.",
+      "hero": {
+        "eyebrow": "Events · Webinar",
+        "heading": "Seminars,\n*on the web.*",
+        "intro": "Live, interactive online seminars: ask questions in real time, earn a Professional Development Hour, with no travel required.",
+        "image": {
+          "src": "/assets/img/01-opening/05-technology-confex.jpg",
+          "alt": "A technology conference in session"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Webinar",
+          "heading": "Live, interactive\n*learning.*",
+          "paragraphs": [
+            "Short for web-based seminar, a webinar is a presentation, lecture, workshop or seminar that's transmitted over the web. A key feature of the webinar is its interactive elements: the ability to give, receive and discuss information. Contrast this with a webcast, in which the data transmission is one way and does not allow interaction between the presenter and the audience.",
+            "These online seminars use online software to make them actual live, interactive learning experiences. Participants will be able to ask the instructor questions and get answers in real time. The instructor will be able to conduct polls and ask questions. Participants will receive course materials by email prior to the seminar and will be able to view the instructor's PowerPoint slides during the seminar. These types of online courses have a much higher impact than simply reading material on the web.",
+            "Webinars offer exceptional convenience and are very cost effective. They are ideal for brown-bag lunch training. No travel is required, and the site registration fee allows up to 12 participants to attend at each site. All participants can also earn one Professional Development Hour per seminar. This series of webinars is designed for engineers, scientists, university faculty, graduate students, manufacturers and consultants."
+          ],
+          "image": {
+            "src": "/assets/img/07-sliding-rows/10-tech-desk.jpg",
+            "alt": "A production team running a live event broadcast"
+          }
+        },
+        {
+          "_type": "featuresSection",
+          "eyebrow": "Features",
+          "heading": "Other typical features\nof a *web conference.*",
+          "items": [
+            {
+              "title": "Slide presentations",
+              "text": "Often created through PowerPoint."
+            },
+            {
+              "title": "Live video",
+              "text": "Via webcam or digital video camera."
+            },
+            {
+              "title": "VoIP",
+              "text": "Real-time audio communication through the computer via headphones and speakers."
+            },
+            {
+              "title": "Recording",
+              "text": "For viewing at a later time by anyone using a unique web address."
+            },
+            {
+              "title": "Whiteboard with annotation",
+              "text": "Allowing the presenter and/or attendees to highlight or mark items on the slide presentation, or simply make notes on a blank whiteboard."
+            },
+            {
+              "title": "Text chat",
+              "text": "For live question and answer sessions."
+            },
+            {
+              "title": "Polls and surveys",
+              "text": "Allows the presenter to conduct questions with multiple-choice answers directed to the audience."
+            },
+            {
+              "title": "Screen sharing",
+              "text": "Desktop and application sharing, where participants can view anything the presenter currently has on their screen. Some screen sharing applications allow for remote desktop control, allowing participants to manipulate the presenter's screen, although this is not widely used."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "networking",
+      "title": "Networking",
+      "description": "Receptions, lunches, breaks and sponsor breakfasts: every Aayera schedule is built for meeting the right people.",
+      "hero": {
+        "eyebrow": "Networking",
+        "heading": "Get your\nbusiness *done.*",
+        "intro": "Aayera offers a sophisticated platform to connect with industry experts, get your business done and position your company for future success.",
+        "image": {
+          "src": "/assets/img/05-photo-wall/05-networking.jpg",
+          "alt": "Delegates networking at an Aayera event"
+        }
+      },
+      "sections": [
+        {
+          "_type": "featuresSection",
+          "eyebrow": "Built into every schedule",
+          "heading": "Ample opportunities\nto *meet.*",
+          "intro": "Conference and exhibition schedules provide you with ample opportunities to meet all attendees, speakers and exhibitors, including:",
+          "items": [
+            {
+              "title": "Reception in the Exhibition Hall",
+              "text": "Mingle with peers from around the world and get the first view of the exhibition hall when you register.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/07-exhibition.jpg"
+              }
+            },
+            {
+              "title": "Networking Reception in the Exhibition Hall",
+              "text": "Network with the leaders in the industry and preview the latest products and services as you enjoy a reception with great food on the exhibition hall floor. Networking receptions run throughout the day and are included in your full conference registration.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/05-networking.jpg"
+              }
+            },
+            {
+              "title": "Opening and Closing Networking Receptions",
+              "text": "Enjoy some sweet treats and meet with peers and exhibitors before the exhibition hall closes for the year. The receptions are included in your full conference registration.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/11-gala.jpg"
+              }
+            },
+            {
+              "title": "Networking Lunch",
+              "text": "Enjoy good food and great company. Networking Lunch is included in your full conference or one-day conference registration.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/06-coffee-break.jpg"
+              }
+            },
+            {
+              "title": "Networking Breaks",
+              "text": "In between conference sessions, where you will learn from industry experts, you will have the opportunity to meet all other attendees and discuss the most burning industry issues. Networking Breaks are included in your full conference or one-day conference registration.",
+              "image": {
+                "src": "/assets/img/07-sliding-rows/08-hallway.jpg"
+              }
+            },
+            {
+              "title": "Breakfast With Sponsors",
+              "text": "Enjoy good food and network face-to-face with the conference sponsors, who are keen to meet and discuss their technology offer for the industry. Breakfast with Sponsors is included in your full conference registration.",
+              "image": {
+                "src": "/assets/img/07-sliding-rows/13-business-cards.jpg"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "clients",
+      "title": "Clients",
+      "description": "Organisations across energy, mobility, healthcare and technology that have worked with Aayera.",
+      "hero": {
+        "eyebrow": "Our clients",
+        "heading": "Good company.\n*Great connections.*",
+        "intro": "Industry leaders across energy, mobility, healthcare and technology have shared our stages.",
+        "image": {
+          "src": "/assets/img/05-photo-wall/12-group.jpg",
+          "alt": "A group of delegates together at an event"
+        }
+      },
+      "sections": [
+        {
+          "_type": "clientsSection",
+          "eyebrow": "In good company",
+          "heading": "{count} *organisations.*"
+        }
+      ]
+    },
+    {
+      "slug": "news-and-events",
+      "title": "News & Events",
+      "description": "Conferences and summits organised by Aayera, upcoming and past.",
+      "hero": {
+        "eyebrow": "News & Events",
+        "heading": "News &\n*events.*",
+        "intro": "The conferences and summits we've organised, from Bengaluru to Cape Town.",
+        "image": {
+          "src": "/assets/img/05-photo-wall/07-exhibition.jpg",
+          "alt": "A busy exhibition floor"
+        }
+      },
+      "sections": [
+        {
+          "_type": "eventsSection",
+          "eyebrow": "Events",
+          "heading": "From the *event floor.*",
+          "showSummaries": true
+        }
+      ]
+    },
+    {
+      "slug": "contact",
+      "title": "Contact",
+      "description": "Get in touch with Aayera: email, phone and our Bangalore office.",
+      "showCta": false,
+      "hero": {
+        "eyebrow": "Contact",
+        "heading": "Let's have\na *chat!*",
+        "intro": "Planning an event, a training programme or a partnership? Write to us, call, or visit our Bangalore office.",
+        "image": {
+          "src": "/assets/img/07-sliding-rows/14-roundtable.jpg",
+          "alt": "A roundtable discussion"
+        }
+      },
+      "sections": [
+        {
+          "_type": "contactSection",
+          "eyebrow": "Get in touch",
+          "heading": "We'd love to\n*hear from you.*",
+          "formHeading": "Send us a message"
+        }
+      ]
+    }
+  ],
+  "events": {
+    "2021-06-21": {
+      "location": "Bengaluru, India",
+      "website": "http://www.evchargingsummit.in/"
+    },
+    "2021-06-07": {
+      "location": "Bengaluru, India",
+      "website": "http://www.smartmetersummit.in/"
+    },
+    "2020-04-08": {
+      "location": "Ankara, Turkey",
+      "website": "http://www.turkeyhealthcarepd.com/",
+      "summary": "Turkey Healthcare Project Delivery 2020 brings together the ecosystem working on successful project delivery to share lessons learned so far. From establishing the legal framework and securing financing to operating and maintaining a profitable hospital, the event explores the entire lifecycle of the agreement from the perspective of all parties. With a local focus, the summit continues from the earlier event, looking at how the world's largest hospitals will be operated and maintained, and sharing best practices and investment opportunities for the second batch of projects in Turkey.\n\nHealth is one of the fastest growing sectors in Turkey. An important factor behind Turkey's continued healthcare budget growth is the country's enhanced health insurance coverage and the demand for new healthcare facilities across the country."
+    },
+    "2020-03-24": {
+      "location": "Cape Town, South Africa",
+      "website": "http://www.africahealthcaremds.com/",
+      "summary": "Africa being one of the largest medical devices markets in the MEA region gives distributor executives and their manufacturer partners a crucial opportunity to understand the key issues that affect their business and customers. This initiative unites the African healthcare sector under one roof, so that investment, business development, the challenges the sector faces and their solutions, healthcare policy, and innovation through technology are discussed in detail. Medical equipment manufacturers and solution providers will also have an opportunity to understand the evolving regulatory framework. The aim is to bring the African healthcare sector to an international standard.\n\nAfrica Healthcare Manufacturers & Distributors Summit 2020 is a specialty forum with an exclusive focus on the medical devices supply chain. AHMDS 2020 fosters collaboration between healthcare manufacturers around the world and the distributors present in Africa."
+    },
+    "2019-09-11": {
+      "location": "Johannesburg, South Africa",
+      "website": "http://www.ahdpdconference.com/",
+      "summary": "According to the IFC & World Bank, the African healthcare sector was valued at USD 35 billion in 2019 and is projected to grow at a CAGR of 6%, reaching USD 62 billion by 2024. Fast-growing populations, strong urbanisation, new and severe health challenges, and a growing middle class willing to pay for better treatment are among the factors driving upgrades, expansions and construction of hospitals across the continent.\n\nAt the Africa Healthcare Development & Project Delivery Conference 2019 in Johannesburg, South Africa, on 11–12 September 2019, government officials, investors, operators, architects, health bodies, NGOs and contractors meet medical device suppliers, technology and service vendors, distributors, consultants, banks and regulatory bodies."
+    },
+    "2018-08-09": {
+      "location": "Pune, India",
+      "website": "http://hybridelectricvehicle.in/",
+      "summary": "The Hybrid Electric Vehicles CONFEX 2018 is India's unique and most comprehensive HEV event, providing an unparalleled platform to address critical information on both the technical developments in hybrid electric vehicle technologies and the business decisions surrounding development and implementation. It also offers attendees the chance to meet industry experts and technology specialists from the entire EV, HEV and EREV supply chain to discuss the topics of greatest interest."
+    },
+    "2017-08-24": {
+      "location": "Le Méridien, Bengaluru, India",
+      "website": "http://iotindiaconfex.in/"
+    }
+  },
+  "contact": {
+    "hours": "Mon–Fri: 10:00am – 08:00pm",
+    "mapQuery": "47 Wheelers Road, Cox Town, Bangalore 560005",
+    "interests": [
+      "Training",
+      "Conference",
+      "Webinar",
+      "Networking",
+      "Sponsorship & exhibiting",
+      "Something else"
+    ]
+  }
+}

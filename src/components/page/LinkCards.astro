@@ -1,0 +1,18 @@
+---
+import SecHead from './SecHead.astro';
+const { s } = Astro.props as { s: any };
+---
+<section class="sec kcsec">
+  <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
+  <div class={`kcards n${Math.min(s.cards.length, 4)}`}>
+    {s.cards.map((c: any, i: number) => (
+      <a class="kcard rv" href={c.href}>
+        {c.image && <img src={c.image.src} alt="" loading="lazy">}
+        <div class="kcard-txt">
+          <h3>{c.title}<span aria-hidden="true">→</span></h3>
+          <p>{c.text}</p>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
