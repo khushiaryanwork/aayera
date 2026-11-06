@@ -22,7 +22,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'announcementOn', title: 'Show the announcement bar', type: 'boolean', group: 'bar', initialValue: true,
-      description: 'The slim bar above the menu with email, phones, opening hours and social links (from the Contact tab and below).',
+      description: 'The slim bar above the menu with email, phones and opening hours (from the Contact tab).',
     }),
     defineField({
       name: 'announcement', title: 'Message (optional)', type: 'object', group: 'bar',
@@ -35,6 +35,7 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'socials', title: 'Social media links', type: 'array', group: 'bar',
+      description: 'Shown in the floating message button (bottom-right of every page).',
       of: [{
         type: 'object', name: 'social',
         fields: [

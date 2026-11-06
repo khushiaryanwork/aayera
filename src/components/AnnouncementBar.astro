@@ -1,21 +1,14 @@
 ---
 import type { Site } from '../lib/types';
 const { site } = Astro.props as { site: Site };
-const { announcement: a, socials } = site;
+const { announcement: a } = site;
 
 // simple line icons (24×24, stroke = currentColor)
 const ICONS: Record<string, string> = {
   email: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/>',
   phone: '<path d="M6.6 3.5h2.6l1.4 4-2 1.3a12 12 0 0 0 6.6 6.6l1.3-2 4 1.4v2.6a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2z"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  linkedin: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10.5V17M8 7.2v.1M11.5 17v-6.5M11.5 13.3c0-1.7 1-2.8 2.5-2.8s2.5 1 2.5 2.8V17"/>',
-  facebook: '<path d="M14.5 21v-7.5h2.6l.4-3h-3V8.7c0-.9.3-1.5 1.6-1.5h1.6V4.5a20 20 0 0 0-2.4-.1c-2.4 0-4 1.4-4 4.1v2h-2.6v3h2.6V21"/>',
-  instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.3 6.7v.1"/>',
-  x: '<path d="M4 4h4.3L20 20h-4.3z"/><path d="M19.5 4 13.4 11M4.5 20l6.1-7"/>',
-  youtube: '<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9.2 5 2.8-5 2.8z"/>',
-  whatsapp: '<path d="M4 20l1.3-4A8.5 8.5 0 1 1 8 18.8z"/><path d="M9 8.6c0 3.4 2.9 6.3 6.3 6.3l1-1.4-1.9-1-1 .8a5 5 0 0 1-2.8-2.8l.8-1-1-1.9z"/>',
 };
-const NAMES: Record<string, string> = { linkedin: 'LinkedIn', facebook: 'Facebook', instagram: 'Instagram', x: 'X (Twitter)', youtube: 'YouTube', whatsapp: 'WhatsApp' };
 const icon = (k: string) => `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[k] ?? ''}</svg>`;
 ---
 {site.announcementOn && (
@@ -31,13 +24,6 @@ const icon = (k: string) => `<svg viewBox="0 0 24 24" width="15" height="15" fil
       <p class="abar-msg">
         {a.href ? <a href={a.href}>{a.message}{a.linkLabel && <strong>{a.linkLabel} →</strong>}</a> : a.message}
       </p>
-    )}
-    {socials.length > 0 && (
-      <ul class="abar-social" aria-label="Aayera on social media">
-        {socials.map((s) => (
-          <li><a href={s.url} {...(s.url.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})} aria-label={NAMES[s.platform] ?? s.platform}><Fragment set:html={icon(s.platform)} /></a></li>
-        ))}
-      </ul>
     )}
   </div>
 )}

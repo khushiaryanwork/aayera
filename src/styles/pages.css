@@ -182,10 +182,6 @@ html.menu-open .nav{background:var(--black)}
 .abar a:hover{color:var(--gold)}
 .abar-msg{order:-1;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:22px;border-right:1px solid var(--rule)}
 .abar-msg strong{margin-left:10px;color:var(--gold);font-weight:500}
-.abar-social{gap:2px;padding-left:16px;border-left:1px solid var(--rule)}
-.abar-social a{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;transition:background .2s}
-.abar-social a:hover{background:oklch(81% .155 82 / .14)}
-.abar-social svg{color:currentColor}
 .nav.has-bar{top:38px;transition:top .4s cubic-bezier(.2,.7,.2,1),background .4s,padding .4s,backdrop-filter .4s}
 html.bar-off .abar{transform:translateY(-100%)}
 html.bar-off .nav.has-bar,html.menu-open .nav.has-bar{top:0}
@@ -196,8 +192,6 @@ html.menu-open .abar{transform:translateY(-100%)}
   .abar{font-size:12px;gap:10px}
   .abar-contact{gap:14px;overflow:hidden}
   .abar-contact li:not(:first-child) span{display:none} /* phone shows as an icon */
-  .abar-social{padding-left:8px}
-  .abar-social a{width:26px}
 }
 
 /* ---------- floating "Follow us" button: opens LinkedIn / X above it (hover or tap) ---------- */
