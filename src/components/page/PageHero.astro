@@ -6,7 +6,7 @@ const { page, crumbs } = Astro.props;
 const { hero } = page;
 ---
 <section class="phero" id="phero">
-  <div class="phero-bg" aria-hidden="true">{hero.image && <img src={hero.image.src} alt="" fetchpriority="high">}</div>
+  <div class="phero-bg" aria-hidden="true">{hero.image && <img src={hero.image.src} alt="" fetchpriority="high" style={hero.image.pos ? `object-position:${hero.image.pos}` : undefined}>}</div>
   <div class="phero-in">
     <nav class="crumbs" aria-label="Breadcrumb">
       {crumbs.map((c, i) => (

@@ -1,4 +1,4 @@
-export type Img = { src: string; alt: string };
+export type Img = { src: string; alt: string; pos?: string }; // pos: CSS object-position (from Sanity hotspot or defaults)
 export type Link = { label: string; href: string };
 export type NavItem = Link & { children?: Link[] };
 

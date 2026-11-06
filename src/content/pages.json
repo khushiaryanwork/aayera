@@ -9,8 +9,9 @@
         "heading": "Who *we are.*",
         "intro": "On-the-ground presence in India, Saudi Arabia, Qatar, the United Arab Emirates, the United Kingdom and the United States.",
         "image": {
-          "src": "/assets/img/01-opening/06-global-networking.jpg",
-          "alt": "Delegates in conversation at an Aayera event"
+          "src": "/assets/img/04-numbers/02-cities.jpg",
+          "alt": "The Aayera convention venue in Bengaluru",
+          "position": "90% 55%"
         }
       },
       "sections": [

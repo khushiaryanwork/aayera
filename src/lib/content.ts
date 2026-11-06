@@ -42,11 +42,13 @@ const pick = <T,>(cms: any, def: T): T => (has(cms) ? cms : def);
 function img(v: any, width: number, fallbackAlt = ''): Img | null {
   if (!v) return null;
   if (typeof v === 'string') return { src: v, alt: fallbackAlt };
-  if (v.src) return { src: v.src, alt: v.alt ?? fallbackAlt };
+  if (v.src) return { src: v.src, alt: v.alt ?? fallbackAlt, ...(v.position ? { pos: v.position } : {}) };
   if (v.asset) {
+    const h = v.hotspot;
     return {
       src: builder.image(v).width(width).fit('max').auto('format').quality(78).url(),
       alt: v.alt ?? fallbackAlt,
+      ...(h && typeof h.x === 'number' ? { pos: `${Math.round(h.x * 100)}% ${Math.round(h.y * 100)}%` } : {}),
     };
   }
   return null;
