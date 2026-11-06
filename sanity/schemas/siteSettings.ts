@@ -6,7 +6,7 @@ export const siteSettings = defineType({
   title: 'Site settings',
   type: 'document',
   icon: CogIcon,
-  groups: [{ name: 'brand', title: 'Brand & navigation', default: true }, { name: 'contact', title: 'Contact' }, { name: 'seo', title: 'SEO & sharing' }],
+  groups: [{ name: 'brand', title: 'Brand & navigation', default: true }, { name: 'contact', title: 'Contact' }, { name: 'bar', title: 'Announcement bar' }, { name: 'seo', title: 'SEO & sharing' }],
   fields: [
     defineField({ name: 'logo', type: 'imageWithAlt', group: 'brand', description: 'Light logo for the dark background (nav and footer).' }),
     defineField({ name: 'nav', title: 'Menu', type: 'array', of: [{ type: 'navItem' }], group: 'brand', description: 'Leave empty to use the default menu (About us, Events ▾, Networking, Clients, News & Events).' }),
@@ -19,6 +19,36 @@ export const siteSettings = defineType({
     defineField({
       name: 'address', type: 'object', group: 'contact', options: { columns: 2 },
       fields: ['street', 'area', 'city', 'postalCode', 'country', 'countryCode'].map((name) => defineField({ name, type: 'string' })),
+    }),
+    defineField({
+      name: 'announcementOn', title: 'Show the announcement bar', type: 'boolean', group: 'bar', initialValue: true,
+      description: 'The slim bar above the menu with email, phones, opening hours and social links (from the Contact tab and below).',
+    }),
+    defineField({
+      name: 'announcement', title: 'Message (optional)', type: 'object', group: 'bar',
+      description: 'e.g. "Smart Meter Summit 2027 is open for registration" with a link. Leave empty for contact details only.',
+      fields: [
+        defineField({ name: 'message', type: 'string' }),
+        defineField({ name: 'linkLabel', title: 'Link text', type: 'string' }),
+        defineField({ name: 'href', title: 'Link', type: 'string' }),
+      ],
+    }),
+    defineField({
+      name: 'socials', title: 'Social media links', type: 'array', group: 'bar',
+      of: [{
+        type: 'object', name: 'social',
+        fields: [
+          defineField({
+            name: 'platform', type: 'string', validation: (r) => r.required(),
+            options: { list: [
+              { title: 'LinkedIn', value: 'linkedin' }, { title: 'Facebook', value: 'facebook' }, { title: 'Instagram', value: 'instagram' },
+              { title: 'X (Twitter)', value: 'x' }, { title: 'YouTube', value: 'youtube' }, { title: 'WhatsApp', value: 'whatsapp' },
+            ] },
+          }),
+          defineField({ name: 'url', title: 'URL', type: 'url', validation: (r) => r.required().uri({ scheme: ['http', 'https'] }) }),
+        ],
+        preview: { select: { title: 'platform', subtitle: 'url' } },
+      }],
     }),
     defineField({ name: 'footerTagline', type: 'string', group: 'contact', hidden: true }),
     defineField({ name: 'title', title: 'Page title', type: 'string', group: 'seo' }),

@@ -41,6 +41,7 @@ const description = Astro.props.description || site.description;
     document.querySelectorAll('.rv').forEach((el) => io.observe(el));
     const onScroll = () => {
       const y = scrollY, vh = innerHeight;
+      document.documentElement.classList.toggle('bar-off', y > 40);
       if (nav && hero) nav.classList.toggle('solid', y > hero.offsetHeight - vh * 1.2);
       else if (nav) nav.classList.toggle('solid', y > (phero ? phero.offsetHeight * 0.55 : 10));
       if (!reduce && cta && ctaBg) {

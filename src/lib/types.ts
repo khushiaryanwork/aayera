@@ -23,6 +23,9 @@ export interface Site {
   address: string;
   hours: string;
   mapQuery: string;
+  announcementOn: boolean;
+  announcement: { message: string; linkLabel: string; href: string };
+  socials: { platform: string; url: string }[];
 }
 
 export interface Home {

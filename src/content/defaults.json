@@ -57,7 +57,14 @@
         "number": "+442080682248"
       }
     ],
-    "address": "47, 3rd floor, Wheelers Road, Cox Town, Bangalore 560005"
+    "address": "47, 3rd floor, Wheelers Road, Cox Town, Bangalore 560005",
+    "announcementOn": true,
+    "announcement": {
+      "message": "",
+      "linkLabel": "",
+      "href": ""
+    },
+    "socials": []
   },
   "home": {
     "hero": {
