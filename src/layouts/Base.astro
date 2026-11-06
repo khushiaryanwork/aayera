@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import '../styles/pages.css';
 import type { Site } from '../lib/types';
+import FloatingSocials from '../components/FloatingSocials.astro';
 interface Props { site: Site; noindex?: boolean; title?: string; description?: string }
 const { site, noindex } = Astro.props;
 const title = Astro.props.title || site.title;
@@ -25,6 +26,7 @@ const description = Astro.props.description || site.description;
 </head>
 <body>
   <slot />
+  <FloatingSocials site={site} />
   <script>
     // Small page-wide behaviours that don't belong to a single React island:
     // solid nav after the hero, reveal-on-scroll (.rv), CTA background parallax.

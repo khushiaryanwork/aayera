@@ -73,7 +73,8 @@
         "platform": "x",
         "url": "#"
       }
-    ]
+    ],
+    "floatingSocials": true
   },
   "home": {
     "hero": {

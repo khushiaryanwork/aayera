@@ -199,3 +199,21 @@ html.menu-open .abar{transform:translateY(-100%)}
   .abar-social{padding-left:8px}
   .abar-social a{width:26px}
 }
+
+/* ---------- floating social buttons (bottom-right, like a chat button) ---------- */
+.fsoc{position:fixed;right:clamp(16px,2vw,28px);bottom:clamp(16px,2vw,28px);z-index:45;list-style:none;display:flex;flex-direction:column;gap:12px}
+.fsoc li{opacity:0;transform:translateY(16px) scale(.8);animation:fsocIn .55s cubic-bezier(.2,.7,.2,1.3) forwards;animation-delay:calc(.8s + var(--i) * .12s)}
+@keyframes fsocIn{to{opacity:1;transform:none}}
+.fsoc a{position:relative;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--bg);color:var(--fg);
+  box-shadow:0 10px 28px -8px oklch(0% 0 0 / .65),0 0 0 1px oklch(100% 0 0 / .14) inset;transition:transform .25s cubic-bezier(.2,.7,.2,1),box-shadow .25s}
+.fsoc a:hover,.fsoc a:focus-visible{transform:translateY(-3px) scale(1.06);box-shadow:0 16px 34px -10px oklch(0% 0 0 / .7),0 0 0 2px var(--gold)}
+.fsoc a:focus-visible{outline:none}
+.fsoc-tip{position:absolute;right:calc(100% + 12px);top:50%;transform:translate(6px,-50%);padding:7px 12px;border-radius:999px;white-space:nowrap;
+  font-size:13px;font-weight:500;background:var(--on);color:var(--black);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+.fsoc a:hover .fsoc-tip,.fsoc a:focus-visible .fsoc-tip{opacity:1;transform:translate(0,-50%)}
+html.menu-open .fsoc{display:none}
+@media (max-width:600px){.fsoc{gap:10px}.fsoc a{width:50px;height:50px}.fsoc a svg{width:22px;height:22px}.fsoc-tip{display:none}}
+@media (prefers-reduced-motion:reduce){.fsoc li{animation:none;opacity:1;transform:none}}
+.fsoc{transition:opacity .35s,transform .35s}
+/* homepage: stay out of the way of the slider arrows while they are showing */
+html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-events:none}

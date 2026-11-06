@@ -26,6 +26,7 @@ export interface Site {
   announcementOn: boolean;
   announcement: { message: string; linkLabel: string; href: string };
   socials: { platform: string; url: string }[];
+  floatingSocials: boolean;
 }
 
 export interface Home {

@@ -50,6 +50,10 @@ export const siteSettings = defineType({
         preview: { select: { title: 'platform', subtitle: 'url' } },
       }],
     }),
+    defineField({
+      name: 'floatingSocials', title: 'Show floating social buttons', type: 'boolean', group: 'bar', initialValue: true,
+      description: 'Round brand-coloured buttons for the social links above, fixed to the bottom-right corner of every page.',
+    }),
     defineField({ name: 'footerTagline', type: 'string', group: 'contact', hidden: true }),
     defineField({ name: 'title', title: 'Page title', type: 'string', group: 'seo' }),
     defineField({ name: 'description', title: 'Meta description', type: 'text', rows: 3, group: 'seo' }),

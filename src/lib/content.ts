@@ -22,7 +22,7 @@ const builder = createImageUrlBuilder({ projectId, dataset });
 
 const QUERY = /* groq */ `{
   "settings": *[_id == "siteSettings"][0]{
-    title, description, shareImage, searchVisibility, logo, nav, navCta, email, phones, address, hours, mapQuery, enquiryTopics, announcementOn, announcement, socials
+    title, description, shareImage, searchVisibility, logo, nav, navCta, email, phones, address, hours, mapQuery, enquiryTopics, announcementOn, announcement, socials, floatingSocials
   },
   "home": *[_id == "home"][0]{
     ...,
@@ -193,6 +193,7 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     mapQuery: pick(s.mapQuery, PD.contact.mapQuery),
     announcementOn: s.announcementOn ?? D.announcementOn,
     announcement: { message: s.announcement?.message || '', linkLabel: s.announcement?.linkLabel || '', href: s.announcement?.href || '' },
+    floatingSocials: s.floatingSocials ?? D.floatingSocials,
     socials: pick((s.socials || []).filter((x: any) => x?.platform && x?.url), D.socials as { platform: string; url: string }[]),
   };
 
