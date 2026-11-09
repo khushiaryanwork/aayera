@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, ScrollTrigger, EASE, requestRefresh } from '../lib/motion/gsap';
+import { gsap, ScrollTrigger, EASE, SCRUB, requestRefresh } from '../lib/motion/gsap';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 
@@ -29,7 +29,7 @@ export default function EventsTrack({ heading, intro, items }: Home['events']) {
       gsap
         .timeline({
           defaults: { ease: EASE.none },
-          scrollTrigger: { trigger: section.current, start: 'top top', end: () => `+=${travel()}`, scrub: true, invalidateOnRefresh: true },
+          scrollTrigger: { trigger: section.current, start: 'top top', end: () => `+=${travel()}`, scrub: SCRUB.section, invalidateOnRefresh: true },
         })
         .fromTo(track.current, { x: 0 }, { x: () => -travel() }, 0)
         .fromTo(bar.current, { scaleX: 0 }, { scaleX: 1 }, 0);

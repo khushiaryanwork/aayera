@@ -2,7 +2,7 @@
  * Page-wide motion shared by every page: reveal-on-scroll, nav / announcement-bar states,
  * the inner-page header zoom and the closing CTA parallax.
  */
-import { gsap, ScrollTrigger, EASE, MQ } from './gsap';
+import { gsap, ScrollTrigger, EASE, MQ, SCRUB } from './gsap';
 
 const REVEAL = { y: 36, duration: 0.9, stagger: 0.08 } as const;
 
@@ -47,7 +47,7 @@ function initCtaParallax(): void {
   const cta = document.querySelector<HTMLElement>('.cta');
   const bg = document.getElementById('ctaBg');
   if (!cta || !bg) return;
-  gsap.fromTo(bg, { y: 60 }, { y: -60, ease: EASE.none, scrollTrigger: { trigger: cta, start: 'top bottom', end: 'bottom top', scrub: true } });
+  gsap.fromTo(bg, { y: 60 }, { y: -60, ease: EASE.none, scrollTrigger: { trigger: cta, start: 'top bottom', end: 'bottom top', scrub: SCRUB.parallax } });
 }
 
 export function initPageMotion(): void {

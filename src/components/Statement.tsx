@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, EASE, MQ, requestRefresh } from '../lib/motion/gsap';
+import { gsap, EASE, MQ, SCRUB, requestRefresh } from '../lib/motion/gsap';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 
@@ -46,9 +46,10 @@ export default function Statement({ image, words }: Home['statement']) {
             trigger: section.current,
             start: 'top top',
             end: 'bottom bottom',
-            scrub: true,
-            onUpdate: (self) => updateWords(self.progress),
+            scrub: SCRUB.section,
           },
+          // read the smoothed timeline progress so the words stay in step with the image
+          onUpdate: () => updateWords(tl.progress()),
         });
         tl.fromTo(media.current, { clipPath: 'inset(22% 30% 22% 30% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: GROW_END }, 0)
           .fromTo(imgEl.current, { scale: 1.25 }, { scale: 1, duration: GROW_END }, 0)

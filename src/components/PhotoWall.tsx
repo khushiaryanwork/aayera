@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, EASE, MQ } from '../lib/motion/gsap';
+import { gsap, EASE, MQ, SCRUB } from '../lib/motion/gsap';
 import type { WallTile } from '../lib/types';
 
 /** Parallax strength per column (positive = drifts up as you scroll). */
@@ -26,7 +26,7 @@ export default function PhotoWall({ tiles }: { tiles: WallTile[] }) {
           gsap.fromTo(
             col,
             { y: drift / 2 },
-            { y: -drift / 2, ease: EASE.none, scrollTrigger: { trigger: wall.current, start: 'top bottom', end: 'bottom top', scrub: true } },
+            { y: -drift / 2, ease: EASE.none, scrollTrigger: { trigger: wall.current, start: 'top bottom', end: 'bottom top', scrub: SCRUB.parallax } },
           );
         });
       });

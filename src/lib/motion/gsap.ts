@@ -33,6 +33,17 @@ export const EASE = {
   none: 'none',
 } as const;
 
+/**
+ * Scroll smoothing for scrubbed animations: instead of jumping with every mouse-wheel
+ * step, the animation eases toward the scroll position over this many seconds.
+ */
+export const SCRUB = {
+  /** pinned, story-telling sections (hero zoom, events track, expanding image) */
+  section: 0.8,
+  /** background parallax — a little floatier */
+  parallax: 1.2,
+} as const;
+
 /** Media-query conditions for gsap.matchMedia(). */
 export const MQ = {
   motion: '(prefers-reduced-motion: no-preference)',

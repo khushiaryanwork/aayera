@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, EASE, MQ, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
+import { gsap, EASE, MQ, SCRUB, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
 import type { Home } from '../lib/types';
 import { Rich, plain } from './Rich';
 
@@ -155,7 +155,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
           trigger: heroEl,
           start: 'top top',
           end: 'bottom bottom',
-          scrub: true,
+          scrub: SCRUB.section,
           invalidateOnRefresh: true,
           onRefresh: () => {
             measure();
