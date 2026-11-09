@@ -11,10 +11,10 @@ export const home = defineType({
   icon: HomeIcon,
   groups: [
     { name: 'hero', title: '1 · Hero', default: true },
-    { name: 'events', title: '2 · Events' },
+    { name: 'brief', title: '2 · Who we are, verticals, industries, platforms' },
+    { name: 'events', title: '3 · Selected work' },
     { name: 'numbers', title: '3 · Statement & numbers' },
     { name: 'moments', title: '4 · Moments' },
-    { name: 'industries', title: '5 · Industries' },
     { name: 'clients', title: '6 · Filmstrip & clients' },
     { name: 'cta', title: '7 · Contact' },
   ],
@@ -40,6 +40,7 @@ export const home = defineType({
         defineField({ name: 'slideCta', title: 'Button on each slide', type: 'link' }),
         defineField({ name: 'eyebrow', title: 'Eyebrow above the headline', type: 'string' }),
         defineField({ name: 'heading', title: 'Headline (revealed on scroll)', type: 'text', rows: 2, description: ACCENT_HELP }),
+        defineField({ name: 'intro', title: 'Supporting line', type: 'text', rows: 2 }),
         defineField({ name: 'primaryCta', title: 'Primary button', type: 'link' }),
         defineField({ name: 'secondaryCta', title: 'Secondary button', type: 'link' }),
         defineField({
@@ -61,6 +62,29 @@ export const home = defineType({
         fields: [defineField({ name: 'text', type: 'string' }), defineField({ name: 'serif', title: 'Italic serif style', type: 'boolean' })],
         preview: { select: { title: 'text', serif: 'serif' }, prepare: ({ title, serif }) => ({ title, subtitle: serif ? 'Serif' : 'Sans' }) },
       })],
+    }),
+
+    /* ---------- brief sections ---------- */
+    defineField({
+      name: 'whoWeAre', title: 'Who we are', type: 'object', group: 'brief', options: { collapsible: false },
+      fields: [
+        defineField({ name: 'eyebrow', type: 'string' }),
+        defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
+        defineField({ name: 'body', type: 'text', rows: 5 }),
+        defineField({ name: 'cta', title: 'Button', type: 'link' }),
+      ],
+    }),
+    defineField({
+      name: 'verticalsHead', title: 'Business verticals heading', type: 'object', group: 'brief', options: { collapsible: false },
+      fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
+    }),
+    defineField({
+      name: 'industriesHead', title: 'Industries heading', type: 'object', group: 'brief', options: { collapsible: false },
+      fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
+    }),
+    defineField({
+      name: 'platformsHead', title: 'Flagship platforms heading', type: 'object', group: 'brief', options: { collapsible: false },
+      fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
     }),
 
     /* ---------- events ---------- */
@@ -115,28 +139,6 @@ export const home = defineType({
               defineField({ name: 'ratio', title: 'Shape', type: 'string', initialValue: '4/5', options: { list: [{ title: 'Portrait 4:5', value: '4/5' }, { title: 'Landscape 3:2', value: '3/2' }, { title: 'Square', value: '1/1' }], layout: 'radio', direction: 'horizontal' } }),
             ],
             preview: { select: { title: 'caption', subtitle: 'ratio', media: 'image' } },
-          })],
-        }),
-      ],
-    }),
-
-    /* ---------- industries ---------- */
-    defineField({
-      name: 'industries', type: 'object', group: 'industries', options: { collapsible: false },
-      fields: [
-        defineField({ name: 'eyebrow', type: 'string' }),
-        defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
-        defineField({
-          name: 'items', title: 'Panels', type: 'array',
-          of: [defineArrayMember({
-            type: 'object', name: 'industryPanel',
-            fields: [
-              defineField({ name: 'name', type: 'string', validation: (r) => r.required() }),
-              defineField({ name: 'text', type: 'text', rows: 2 }),
-              defineField({ name: 'count', title: 'Count label', type: 'string', description: 'e.g. "2 events"' }),
-              defineField({ name: 'image', type: 'imageWithAlt' }),
-            ],
-            preview: { select: { title: 'name', subtitle: 'count', media: 'image' } },
           })],
         }),
       ],

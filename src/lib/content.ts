@@ -8,7 +8,7 @@ import { createImageUrlBuilder } from '@sanity/image-url';
 import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
-import type { Home, Img, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section } from './types';
+import type { Home, Img, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head } from './types';
 
 const client = createClient({
   projectId,
@@ -31,6 +31,9 @@ const QUERY = /* groq */ `{
   },
   "allEvents": *[_type == "event" && !(_id in path("drafts.**"))] | order(startDate desc){ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website },
   "pages": *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{ ..., "slug": slug.current },
+  "verticals": *[_type == "vertical" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
+  "industries": *[_type == "industry" && !(_id in path("drafts.**"))] | order(order asc, name asc){ name, text },
+  "platforms": *[_type == "platform" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
   "allClients": *[_type == "client" && !(_id in path("drafts.**"))] | order(name asc){ name, logo, plainLogo }
 }`;
 
@@ -78,11 +81,13 @@ const cardSource = (e: any) => e.cardImage ?? LOCAL_CARD[e.startDate] ?? e.image
 
 function toEventCard(e: any): EventCard {
   const date = e.displayDate || dateRange(e.startDate, e.endDate);
+  const upcoming = (e.endDate || e.startDate || '') >= new Date().toISOString().slice(0, 10);
   return {
     image: img(cardSource(e), 1400, e.title) as Img,
-    tag: SECTOR[e.sector] || e.sector || '',
+    tag: (upcoming ? 'Upcoming · ' : '') + (SECTOR[e.sector] || e.sector || ''),
     title: e.title,
     meta: [date, cityOf(e)].filter(Boolean).join(' · '),
+    upcoming,
   };
 }
 function formatAddress(a: any) {
@@ -90,6 +95,8 @@ function formatAddress(a: any) {
   if (typeof a === 'string') return a;
   return [a.street, a.area, [a.city, a.postalCode].filter(Boolean).join(' ')].filter(Boolean).join(', ');
 }
+
+const head = (c: any, d: any): Head => ({ eyebrow: pick(c?.eyebrow, d.eyebrow || ''), heading: pick(c?.heading, d.heading || ''), intro: pick(c?.intro, d.intro || '') });
 
 /* ---------- inner pages ---------- */
 const PD: any = pageDefaults;
@@ -117,15 +124,19 @@ function normSection(x: any): Section | null {
     case 'textSection':
       return { _type: 'textSection', ...base, paragraphs: strs(x.paragraphs), chipsLabel: x.chipsLabel || '', chips: strs(x.chips), image: img(x.image, 1800) };
     case 'groupsSection':
-      return { _type: 'groupsSection', ...base, groups: (x.groups || []).map((g: any) => ({ title: g.title || '', items: strs(g.items) })) };
+      return { _type: 'groupsSection', ...base, groups: (x.groups || []).map((g: any) => ({ title: g.title || '', caption: g.caption || '', items: strs(g.items) })) };
     case 'listSection':
       return { _type: 'listSection', ...base, items: strs(x.items) };
     case 'featuresSection':
-      return { _type: 'featuresSection', ...base, items: (x.items || []).map((i: any) => ({ title: i.title || '', text: i.text || '', image: img(i.image, 1000, i.title) })) };
+      return { _type: 'featuresSection', ...base, layout: x.layout || 'auto', items: (x.items || []).map((i: any) => ({ title: i.title || '', text: i.text || '', image: img(i.image, 1000, i.title) })) };
     case 'linkCardsSection':
       return { _type: 'linkCardsSection', ...base, cards: (x.cards || []).map((c: any) => ({ title: c.title || '', text: c.text || '', href: c.href || '#', image: img(c.image, 1000, c.title) })) };
     case 'eventsSection':
-      return { _type: 'eventsSection', ...base, showSummaries: x.showSummaries !== false };
+      return { _type: 'eventsSection', ...base, showSummaries: x.showSummaries !== false, anchor: x.anchor || '' };
+    case 'verticalsSection':
+    case 'industriesSection':
+    case 'platformsSection':
+      return { _type: x._type, ...base };
     case 'clientsSection':
       return { _type: 'clientsSection', ...base };
     case 'contactSection':
@@ -143,6 +154,7 @@ function toPage(def: any, cms: any): Page {
   return {
     slug: c.slug || def.slug,
     title: pick(c.title, def?.title || ''),
+    seoTitle: pick(c.seoTitle, def?.seoTitle || ''),
     description: pick(c.description, def?.description || ''),
     showCta: (c.showCta ?? def?.showCta) !== false,
     hero: {
@@ -172,7 +184,7 @@ function load() {
   return cached;
 }
 
-export async function getContent(): Promise<{ site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[] }> {
+export async function getContent(): Promise<{ site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; industries: IndustryTile[]; platforms: Platform[] }> {
   const data: any = (await load()) || {};
   const s = data.settings || {};
   const h = data.home || {};
@@ -240,13 +252,13 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     : DH.clients.logos.map((n) => ({ src: `/assets/clients/${n}.png`, alt: 'Client logo', plain: false }));
 
   const st = h.statement || {};
-  const ind = h.industries || {};
   const cta = h.cta || {};
 
   const home: Home = {
     hero: {
       eyebrow: pick(hh.eyebrow, DH.hero.eyebrow),
       heading: pick(hh.heading, DH.hero.heading),
+      intro: pick(hh.intro, (DH.hero as any).intro || ''),
       primaryCta: has(hh.primaryCta?.label) ? hh.primaryCta : DH.hero.primaryCta,
       secondaryCta: has(hh.secondaryCta?.label) ? hh.secondaryCta : DH.hero.secondaryCta,
       slideCta: has(hh.slideCta?.label) ? hh.slideCta : DH.hero.slideCta,
@@ -258,11 +270,16 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     statement: { image: imgOr(st.image, DH.statement.image, 2400, DH.statement.image.alt), words: pick(st.words, DH.statement.words) },
     stats: (has(h.stats) ? h.stats : DH.stats).map((x: any) => ({ value: Number(x.value) || 0, suffix: x.suffix || '', label: x.label || '', image: img(x.image, 1000) })),
     moments: { eyebrow: pick(mo.eyebrow, DH.moments.eyebrow), heading: pick(mo.heading, DH.moments.heading), tiles },
-    industries: {
-      eyebrow: pick(ind.eyebrow, DH.industries.eyebrow),
-      heading: pick(ind.heading, DH.industries.heading),
-      items: (has(ind.items) ? ind.items : DH.industries.items).map((x: any) => ({ name: x.name || '', text: x.text || '', count: x.count || '', image: img(x.image, 1600) })),
+    whoWeAre: {
+      eyebrow: pick(h.whoWeAre?.eyebrow, DH.whoWeAre.eyebrow),
+      heading: pick(h.whoWeAre?.heading, DH.whoWeAre.heading),
+      intro: '',
+      body: pick(h.whoWeAre?.body, DH.whoWeAre.body),
+      cta: has(h.whoWeAre?.cta?.label) ? h.whoWeAre.cta : DH.whoWeAre.cta,
     },
+    verticalsHead: head(h.verticalsHead, DH.verticalsHead),
+    industriesHead: head(h.industriesHead, DH.industriesHead),
+    platformsHead: head(h.platformsHead, DH.platformsHead),
     filmstrip: has(h.filmstrip)
       ? h.filmstrip.map((x: any) => img(x, 600)).filter(Boolean)
       : DH.filmstrip.map((id) => ({ src: `/assets/img/07-sliding-rows/${id}.jpg`, alt: '' })),
@@ -286,5 +303,22 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     ? data.allClients.filter((c: any) => c?.logo).map((c: any) => ({ src: (img(c.logo, 460) as Img).src, alt: c.name || 'Client logo', plain: !!c.plainLogo }))
     : DH.clients.logos.map((n) => ({ src: `/assets/clients/${n}.png`, alt: 'Client logo', plain: false }));
 
-  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests) };
+  /* business verticals, industries, platforms: Sanity documents, or the brief's defaults */
+  const verticals: Vertical[] = (has(data.verticals) ? data.verticals : PD.verticals).map((v: any) => {
+    const key = v.key || '';
+    const active = (v.status || 'active') === 'active';
+    return {
+      key, name: v.name || '', short: v.short || (v.name || '').replace(/^Aayera\s+/i, ''), caption: v.caption || '', description: v.description || '',
+      status: active ? 'active' : 'coming-soon', image: img(v.image, 900, ''),
+      href: active && key && pages.some((p) => p.slug === `business-verticals/${key}`) ? `/business-verticals/${key}/` : '',
+    };
+  });
+  const industries: IndustryTile[] = (has(data.industries) ? data.industries : PD.industries).map((x: any) => ({ name: x.name || '', text: x.text || '' }));
+  const platforms: Platform[] = (has(data.platforms) ? data.platforms : PD.platforms).map((x: any) => ({
+    key: x.key || '', name: x.name || '', tagline: x.tagline || '', topics: strs(x.topics), summary: x.summary || '',
+    image: img(x.image, 1600, x.name), website: x.website || '',
+    editions: (x.editions || []).map((e: any) => ({ label: e.label || '', date: e.date || '', venue: e.venue || '', note: e.note || '', status: e.status === 'upcoming' ? 'upcoming' : 'past' })),
+  }));
+
+  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, industries, platforms };
 }

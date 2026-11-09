@@ -1,12 +1,21 @@
-# Old aayera.com addresses → new pages (Cloudflare Pages)
-/index.html               /                   301
-/about.html               /about/             301
-/training.html            /events/training/   301
-/conference.html          /events/conference/ 301
-/webiner.html             /events/webinar/    301
-/network.html             /networking/        301
-/clients.html             /clients/           301
-/news-and-events.html     /news-and-events/   301
-/contact.html             /contact/           301
-/services-detail-v1.html  /events/conference/ 301
-/services-detail-v2.html  /events/webinar/    301
+# Old addresses → new pages (Cloudflare Pages)
+# previous version of this site
+/events                    /business-verticals/                   301
+/events/                   /business-verticals/                   301
+/events/training/          /business-verticals/academy/           301
+/events/conference/        /business-verticals/events-conferences/ 301
+/events/webinar/           /business-verticals/academy/           301
+/networking/               /business-verticals/business-platforms/ 301
+/news-and-events/          /our-platforms/#track-record           301
+# original aayera.com
+/index.html                /                                      301
+/about.html                /about/                                301
+/training.html             /business-verticals/academy/           301
+/conference.html           /business-verticals/events-conferences/ 301
+/webiner.html              /business-verticals/academy/           301
+/network.html              /business-verticals/business-platforms/ 301
+/clients.html              /clients/                              301
+/news-and-events.html      /our-platforms/#track-record           301
+/contact.html              /contact/                              301
+/services-detail-v1.html   /business-verticals/events-conferences/ 301
+/services-detail-v2.html   /business-verticals/academy/           301

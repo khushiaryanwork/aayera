@@ -10,6 +10,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <article class="gcard rv">
         <span class="gnum">{pad(i + 1)}</span>
         <h3>{g.title}</h3>
+        {g.caption && <p class="gcap">{g.caption}</p>}
         <ul>{g.items.map((it: string) => <li>{it}</li>)}</ul>
       </article>
     ))}

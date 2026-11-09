@@ -1,0 +1,43 @@
+---
+import type { Platform, Head } from '../../lib/types';
+import SecHead from './SecHead.astro';
+const { head, platforms, compact } = Astro.props as { head: Head; platforms: Platform[]; compact?: boolean };
+const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
+---
+<section class={'sec psec' + (compact ? ' compact' : '')}>
+  <SecHead eyebrow={head.eyebrow} heading={head.heading} intro={head.intro} />
+  <div class="plist">
+    {platforms.map((p) => {
+      const next = p.editions.find((e) => e.status === 'upcoming');
+      return (
+        <article class="pcard rv" id={p.key || undefined}>
+          <div class="pcard-img">
+            {p.image && <img src={p.image.src} alt={p.image.alt} loading="lazy">}
+            {next && <span class="pill pill-solid">Next: {next.date}</span>}
+          </div>
+          <div class="pcard-txt">
+            <h3>{p.name}</h3>
+            <p class="ptag">{p.tagline}</p>
+            {p.topics.length > 0 && <ul class="ptopics">{p.topics.map((t) => <li>{t}</li>)}</ul>}
+            {!compact && p.summary && <p class="psum">{p.summary}</p>}
+            {p.editions.length > 0 && (
+              <ol class="peds">
+                {(compact ? p.editions.slice(0, 2) : p.editions).map((e) => (
+                  <li class={e.status}>
+                    <span class="ped-date">{e.date}</span>
+                    <span class="ped-main"><strong>{e.label}</strong>{e.status === 'upcoming' && <span class="pill">Upcoming</span>}<br>{e.venue}</span>
+                    {!compact && e.note && <span class="ped-note">{e.note}</span>}
+                  </li>
+                ))}
+              </ol>
+            )}
+            <p class="plinks">
+              {compact && <a class="erow-link" href={`/our-platforms/#${p.key}`}>Platform details <span aria-hidden="true">→</span></a>}
+              {p.website && <a class="erow-link" href={p.website} target="_blank" rel="noopener">{host(p.website)} <span aria-hidden="true">↗</span></a>}
+            </p>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>

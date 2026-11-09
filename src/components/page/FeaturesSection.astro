@@ -1,7 +1,8 @@
 ---
 import SecHead from './SecHead.astro';
 const { s } = Astro.props as { s: any };
-const withImages = s.items.some((i: any) => i.image);
+// 'auto' (default): photo cards when the items have images, otherwise title/description rows
+const withImages = s.layout === 'cards' || (s.layout === 'auto' && s.items.some((i: any) => i.image));
 ---
 <section class="sec fsec">
   <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
@@ -15,6 +16,10 @@ const withImages = s.items.some((i: any) => i.image);
         </article>
       ))}
     </div>
+  ) : s.layout === 'grid' ? (
+    <dl class="fgrid">
+      {s.items.map((it: any) => <div class="fgrid-item rv"><dt>{it.title}</dt><dd>{it.text}</dd></div>)}
+    </dl>
   ) : (
     <dl class="frows">
       {s.items.map((it: any) => (

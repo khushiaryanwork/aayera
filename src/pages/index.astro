@@ -3,7 +3,10 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Marquee from '../components/Marquee.astro';
 import Moments from '../components/Moments.astro';
-import IndustriesSection from '../components/IndustriesSection.astro';
+import WhoWeAre from '../components/WhoWeAre.astro';
+import VerticalTiles from '../components/page/VerticalTiles.astro';
+import IndustryGrid from '../components/page/IndustryGrid.astro';
+import PlatformCards from '../components/page/PlatformCards.astro';
 import Filmstrip from '../components/Filmstrip.astro';
 import Cta from '../components/Cta.astro';
 import Footer from '../components/Footer.astro';
@@ -14,17 +17,21 @@ import Stats from '../components/Stats';
 import Clients from '../components/Clients';
 import { getContent } from '../lib/content';
 
-const { site, home, noindex } = await getContent();
+const { site, home, noindex, verticals, industries, platforms } = await getContent();
 ---
 <Base site={site} noindex={noindex}>
   <Nav site={site} />
   <Hero client:load {...home.hero} />
   <Marquee words={home.marquee} />
-  <EventsTrack client:load {...home.events} />
+  <!-- order follows the content brief: who we are → verticals → industries → platforms → work → partners → contact -->
+  <WhoWeAre who={home.whoWeAre} />
+  <VerticalTiles head={home.verticalsHead} verticals={verticals} />
+  <IndustryGrid head={home.industriesHead} industries={industries} cta={{ label: 'Explore industries →', href: '/industries/' }} />
   <Statement client:load {...home.statement} />
+  <PlatformCards head={home.platformsHead} platforms={platforms} compact />
+  <EventsTrack client:load {...home.events} />
   <Stats client:load items={home.stats} />
   <Moments moments={home.moments} />
-  <IndustriesSection industries={home.industries} />
   <Filmstrip images={home.filmstrip} />
   <Clients client:load {...home.clients} />
   <Cta cta={home.cta} />

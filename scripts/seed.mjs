@@ -120,6 +120,26 @@ async function main() {
     process.stdout.write('p');
   }
 
+  /* ---- business verticals, industries, platforms (created if missing) ---- */
+  const slugId = (prefix, k) => `${prefix}-${String(k).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+  for (const [i, v] of PD.verticals.entries()) {
+    await client.createIfNotExists({
+      _id: slugId('vertical', v.key), _type: 'vertical', name: v.name, short: v.short, slug: { _type: 'slug', current: v.key },
+      caption: v.caption, description: v.description, status: v.status, image: await image(v.image, v.short), order: i + 1,
+    });
+  }
+  for (const [i, ind] of PD.industries.entries()) {
+    await client.createIfNotExists({ _id: slugId('industry', ind.name), _type: 'industry', name: ind.name, text: ind.text, order: i + 1 });
+  }
+  for (const [i, pl] of PD.platforms.entries()) {
+    await client.createIfNotExists({
+      _id: slugId('platform', pl.key), _type: 'platform', name: pl.name, slug: { _type: 'slug', current: pl.key }, tagline: pl.tagline,
+      topics: pl.topics, summary: pl.summary, image: await image(pl.image), ...(pl.website ? { website: pl.website } : {}), order: i + 1,
+      editions: pl.editions.map((e) => ({ _key: key(), _type: 'edition', ...e })),
+    });
+  }
+  process.stdout.write('v');
+
   /* ---- home page ---- */
   const existing = await client.fetch(`*[_id=="home"][0]._id`);
   if (existing && !force) {
@@ -132,12 +152,17 @@ async function main() {
     hero: {
       eyebrow: H.hero.eyebrow,
       heading: H.hero.heading,
+      intro: H.hero.intro,
       primaryCta: link(H.hero.primaryCta),
       secondaryCta: link(H.hero.secondaryCta),
       slideCta: link(H.hero.slideCta),
       slides: await Promise.all(H.hero.slides.map(async (s) => ({ _key: key(), _type: 'slide', image: await image(s.image), tag: s.tag, title: s.title, ...(s.short ? { short: s.short } : {}), meta: s.meta }))),
       mosaic: [],
     },
+    whoWeAre: { ...H.whoWeAre, cta: link(H.whoWeAre.cta) },
+    verticalsHead: H.verticalsHead,
+    industriesHead: H.industriesHead,
+    platformsHead: H.platformsHead,
     marquee: H.marquee.map((w) => ({ _key: key(), _type: 'marqueeWord', text: w.text, serif: !!w.serif })),
     eventsSection: { heading: H.events.heading, intro: H.events.intro, events: eventIds.map((id) => ({ _key: key(), _type: 'reference', _ref: id })) },
     statement: { image: await image(H.statement.image), words: H.statement.words },
@@ -146,11 +171,6 @@ async function main() {
       eyebrow: H.moments.eyebrow,
       heading: H.moments.heading,
       tiles: await Promise.all(H.moments.tiles.map(async (t) => ({ _key: key(), _type: 'wallTile', image: await image(t.image, t.caption), caption: t.caption, ratio: t.ratio }))),
-    },
-    industries: {
-      eyebrow: H.industries.eyebrow,
-      heading: H.industries.heading,
-      items: await Promise.all(H.industries.items.map(async (d) => ({ _key: key(), _type: 'industryPanel', name: d.name, text: d.text, count: d.count, image: await image(d.image) }))),
     },
     filmstrip: await Promise.all(H.filmstrip.map(async (id) => ({ _key: key(), ...(await image({ src: `/assets/img/07-sliding-rows/${id}.jpg` })) }))),
     clientsSection: { eyebrow: H.clients.eyebrow, heading: H.clients.heading, intro: H.clients.intro },

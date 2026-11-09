@@ -7,7 +7,7 @@ and rebuilds whenever someone publishes in the CMS.
 | | |
 |---|---|
 | Home | `/` |
-| Pages | `/about/` · `/events/` (`training/`, `conference/`, `webinar/`) · `/networking/` · `/clients/` · `/news-and-events/` · `/contact/` |
+| Pages | `/about/` · `/business-verticals/` (+ `events-conferences/`, `business-platforms/`, `exhibitions-experiences/`, `marketing-communications/`, `academy/`) · `/industries/` · `/our-platforms/` · `/clients/` · `/contact/` |
 | CMS (Sanity Studio, embedded) | `/studio` |
 | Sanity project | **Aayera Dummy** · `jmz64r1s` · dataset `production` |
 
@@ -30,6 +30,16 @@ npm run build      # static output in dist/
 - Events and Clients are their own documents (the 7 events and 25 named clients already in the
   dataset are reused). Until an event has a **Card photo**, the site uses this design's bundled
   photo for it.
+
+### Content brief (Phase 1)
+Structure and copy follow *AAYERA Website Content & Developer Brief v1.0*: the homepage runs
+hero → who we are → business verticals → industries → flagship platforms → selected work →
+partner ecosystem → contact. In the Studio:
+- **Business verticals**: 8 tiles. Active ones link to their page; *Coming soon* ones are greyed
+  (currently Intelligence & Research, Corporate Solutions, Digital Commerce).
+- **Industries**: the 12 industry ecosystems.
+- **Platforms**: THE ADAS SHOW and SDV SUMMIT, with editions (dates, venues, exact partner wording).
+- **Events**: the track record. Events dated in the future show as *Upcoming*.
 
 ### Inner pages
 The pages from the old aayera.com (About us, Events → Training / Conference / Webinar, Networking,

@@ -1,0 +1,19 @@
+---
+import type { IndustryTile, Head } from '../../lib/types';
+import SecHead from './SecHead.astro';
+const { head, industries, cta } = Astro.props as { head: Head; industries: IndustryTile[]; cta?: { label: string; href: string } };
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="sec isec">
+  <SecHead eyebrow={head.eyebrow} heading={head.heading} intro={head.intro} />
+  <ul class="igrid rv">
+    {industries.map((ind, i) => (
+      <li class="itile">
+        <span class="inum">{pad(i + 1)}</span>
+        <h3>{ind.name}</h3>
+        <p>{ind.text}</p>
+      </li>
+    ))}
+  </ul>
+  {cta && <p class="sec-cta"><a class="btn btn-ghost" href={cta.href}>{cta.label}</a></p>}
+</section>

@@ -10,7 +10,7 @@ const groups = [
 ].filter((g) => g.items.length);
 const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
 ---
-<section class="sec esec">
+<section class="sec esec" id={s.anchor || undefined}>
   <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
   {groups.map((g) => (
     <div class="egroup">

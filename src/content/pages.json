@@ -2,12 +2,12 @@
   "pages": [
     {
       "slug": "about",
-      "title": "About us",
-      "description": "Aayera is a global business information firm that conducts, organises and hosts conferences, summits, trainings and exhibitions.",
+      "title": "About AAYERA",
+      "description": "Learn about AAYERA, a diversified business and industry engagement company building platforms, partnerships and opportunities.",
       "hero": {
-        "eyebrow": "About Aayera",
+        "eyebrow": "About AAYERA",
         "heading": "Who *we are.*",
-        "intro": "On-the-ground presence in India, Saudi Arabia, Qatar, the United Arab Emirates, the United Kingdom and the United States.",
+        "intro": "A diversified business & industry engagement group, with on-the-ground presence in India, Saudi Arabia, Qatar, the United Arab Emirates, the United Kingdom and the United States.",
         "image": {
           "src": "/assets/img/04-numbers/02-cities.jpg",
           "alt": "The Aayera convention venue in Bengaluru",
@@ -18,11 +18,9 @@
         {
           "_type": "textSection",
           "eyebrow": "Who we are",
-          "heading": "A 360-degree partner\nfor *industry events.*",
+          "heading": "Beyond events.\n*Building industry ecosystems.*",
           "paragraphs": [
-            "Aayera is a global business information firm that conducts, organises and hosts conferences, summits, trainings and exhibitions. We have successfully conducted projects for international and local clients throughout the Middle East and the Levant. We handle a diverse portfolio, offering 360-degree solutions to a number of industries, encompassing Event Management & Promotions, Exhibitions and Marketing Communication.",
-            "Whether the ‘deal’ is capital raising, vendor sales contracts or sourcing a strategic partner, Aayera provides clients with an unprecedented, high-ROI environment for conducting business. An in-house team of experts conducts extensive research in conjunction with recognised thought leaders to ensure that all events are relevant, timely and at the forefront of market and industry trends.",
-            "Flexibility and adaptability are key concepts. Our team ensures that all events are tailored to the specific needs of our customers, providing them with a customised and truly unique experience."
+            "AAYERA is a diversified business and industry engagement company creating platforms that connect organisations, institutions, technology providers and decision-makers. Through industry-led events, exhibitions, business platforms, research, communications and corporate solutions, AAYERA helps businesses build relationships, exchange knowledge and explore new opportunities. With a focus on collaboration and emerging industries, AAYERA works to bring ideas, people and markets closer together."
           ],
           "chipsLabel": "On-the-ground presence",
           "chips": [
@@ -39,54 +37,69 @@
           }
         },
         {
-          "_type": "linkCardsSection",
-          "eyebrow": "What we do",
-          "heading": "Ways to *work with us.*",
-          "cards": [
+          "_type": "featuresSection",
+          "eyebrow": "Purpose",
+          "heading": "Vision &\n*mission.*",
+          "layout": "rows",
+          "items": [
             {
-              "title": "Training",
-              "text": "We provide training courses based on management, functional and technical verticals.",
-              "href": "/events/training/",
-              "image": {
-                "src": "/assets/img/05-photo-wall/08-workshop.jpg"
-              }
+              "title": "Vision",
+              "text": "To become a trusted platform for industry engagement, business collaboration and innovation across markets."
             },
             {
-              "title": "Conferences",
-              "text": "We provide a variety of professional development experiences.",
-              "href": "/events/conference/",
-              "image": {
-                "src": "/assets/img/01-opening/04-healthcare-congress.jpg"
-              }
-            },
-            {
-              "title": "Webinars",
-              "text": "Come hear Aayera experts and learn more about our business and our successes.",
-              "href": "/events/webinar/",
-              "image": {
-                "src": "/assets/img/07-sliding-rows/10-tech-desk.jpg"
-              }
-            },
-            {
-              "title": "Networking",
-              "text": "A sophisticated platform to connect with experts, get your business done and position your company for future success.",
-              "href": "/networking/",
-              "image": {
-                "src": "/assets/img/05-photo-wall/05-networking.jpg"
-              }
+              "title": "Mission",
+              "text": "To connect businesses and institutions through impactful platforms, knowledge and experiences."
             }
           ]
+        },
+        {
+          "_type": "featuresSection",
+          "eyebrow": "Values",
+          "heading": "What *guides us.*",
+          "layout": "grid",
+          "items": [
+            {
+              "title": "Integrity",
+              "text": "Building trust through transparent and responsible business practices."
+            },
+            {
+              "title": "Collaboration",
+              "text": "Bringing organisations and people together to achieve more."
+            },
+            {
+              "title": "Innovation",
+              "text": "Exploring new ideas, technologies and ways of working."
+            },
+            {
+              "title": "Excellence",
+              "text": "Maintaining high standards in execution and relationships."
+            },
+            {
+              "title": "Impact",
+              "text": "Focusing on outcomes that create meaningful value."
+            },
+            {
+              "title": "Agility",
+              "text": "Adapting to evolving industries and market needs."
+            }
+          ]
+        },
+        {
+          "_type": "verticalsSection",
+          "eyebrow": "What we do",
+          "heading": "Our business *verticals.*"
         }
-      ]
+      ],
+      "seoTitle": "About AAYERA | Business & Industry Engagement"
     },
     {
-      "slug": "events",
-      "title": "Events",
-      "description": "Training, conferences and webinars from Aayera, and the events we have organised.",
+      "slug": "business-verticals",
+      "title": "Business Verticals",
+      "description": "Explore AAYERA's capabilities across events, exhibitions, business engagement, intelligence, communications and digital commerce.",
       "hero": {
-        "eyebrow": "Events",
-        "heading": "Training. Conferences.\n*Webinars.*",
-        "intro": "Professional development and industry conversations, delivered in the room and on the web.",
+        "eyebrow": "Business Verticals",
+        "heading": "Capabilities that\n*connect industries.*",
+        "intro": "From industry platforms to corporate solutions, AAYERA helps turn connections into opportunities.",
         "image": {
           "src": "/assets/img/01-opening/01-keynote-auditorium.jpg",
           "alt": "A keynote in a packed auditorium"
@@ -94,51 +107,369 @@
       },
       "sections": [
         {
-          "_type": "linkCardsSection",
+          "_type": "verticalsSection",
+          "eyebrow": "Our verticals",
+          "heading": "Eight ways we *work with you.*"
+        },
+        {
+          "_type": "groupsSection",
+          "eyebrow": "Supporting capabilities",
+          "heading": "Beyond the *core.*",
+          "intro": "Capabilities that run across our verticals.",
+          "groups": [
+            {
+              "title": "Global Business Engagement",
+              "caption": "Connecting businesses, governments, investors, industry leaders and decision-makers across markets.",
+              "items": [
+                "International business delegations",
+                "Cross-border partnerships",
+                "Investment and trade forums",
+                "Business development and market access",
+                "Global industry networking"
+              ]
+            },
+            {
+              "title": "Strategic Partnerships",
+              "caption": "Creating meaningful collaborations between industry, institutions and enterprises.",
+              "items": [
+                "Government and institutional partnerships",
+                "Industry associations",
+                "Knowledge partnerships",
+                "Technology alliances",
+                "Corporate collaborations"
+              ]
+            },
+            {
+              "title": "Awards & Recognition",
+              "caption": "Recognising excellence, innovation, leadership and industry transformation.",
+              "items": [
+                "Industry excellence awards",
+                "Technology innovation awards",
+                "Corporate leadership recognition",
+                "Entrepreneurship and sustainability awards",
+                "Jury-led merit-based recognition"
+              ]
+            },
+            {
+              "title": "Corporate Experiences",
+              "caption": "Curating memorable experiences for brands, businesses and organisations.",
+              "items": [
+                "Leadership retreats",
+                "Corporate celebrations",
+                "Annual conferences",
+                "Product launches",
+                "Incentive programmes"
+              ]
+            },
+            {
+              "title": "Research & Thought Leadership",
+              "caption": "Turning industry knowledge into useful perspectives for business and policy.",
+              "items": [
+                "Industry reports and white papers",
+                "Market landscape and opportunity scans",
+                "Expert interviews and opinion pieces",
+                "Post-event reports and key takeaways",
+                "Partner-led knowledge initiatives"
+              ]
+            }
+          ]
+        }
+      ],
+      "seoTitle": "AAYERA Business Verticals | Events, Research & Solutions"
+    },
+    {
+      "slug": "business-verticals/events-conferences",
+      "title": "Events & Conferences",
+      "description": "Industry summits, international conferences, exhibitions, trade shows, leadership forums and corporate events by AAYERA.",
+      "hero": {
+        "eyebrow": "Business Verticals · Events & Conferences",
+        "heading": "Creating platforms\nwhere *industries meet.*",
+        "intro": "Industry summits, international conferences, exhibitions, trade shows, leadership forums and corporate events.",
+        "image": {
+          "src": "/assets/img/01-opening/04-healthcare-congress.jpg",
+          "alt": "A large conference hall during a plenary session"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Events & Conferences",
+          "heading": "Conferences,\n*organised end to end.*",
+          "paragraphs": [
+            "AAYERA develops industry-focused platforms that bring together business leaders, policymakers, technology providers, researchers and decision-makers. Through conferences, exhibitions, demonstrations and structured business engagement, these platforms encourage knowledge exchange and meaningful industry connections.",
+            "We handle every part of a conference, from site selection and speakers to registration, sponsorship and post-event evaluation. This list is not exhaustive: we will gladly prepare a custom proposal for you on request."
+          ]
+        },
+        {
+          "_type": "groupsSection",
           "eyebrow": "Our services",
-          "heading": "Choose your *format.*",
-          "cards": [
+          "heading": "What we can *do for you.*",
+          "groups": [
             {
-              "title": "Training",
-              "text": "We provide training courses based on management, functional and technical verticals.",
-              "href": "/events/training/",
-              "image": {
-                "src": "/assets/img/05-photo-wall/08-workshop.jpg"
-              }
+              "title": "Management",
+              "items": [
+                "Abstracts, Posters and Paper Management",
+                "Accommodation Management",
+                "Site Selection",
+                "Committee and LOC Management",
+                "Supplier Negotiation and Management",
+                "Venue, Food and Beverage Coordination",
+                "Registration Online and Onsite",
+                "Social Functions / Transport / Tours / Accompanying Persons Program",
+                "Speaker and Program Management",
+                "Staff and Volunteer Management",
+                "Print Material",
+                "Post Evaluation and Statistics",
+                "Digital Solutions"
+              ]
             },
             {
-              "title": "Conferences",
-              "text": "We provide a variety of professional development experiences.",
-              "href": "/events/conference/",
-              "image": {
-                "src": "/assets/img/01-opening/04-healthcare-congress.jpg"
-              }
+              "title": "Functional",
+              "items": [
+                "Design and Distribution of Promotional Materials",
+                "Publication Management",
+                "Social Media Toolkit",
+                "Attendance Building"
+              ]
             },
             {
-              "title": "Webinars",
-              "text": "Come hear Aayera experts and learn more about our business and our successes.",
-              "href": "/events/webinar/",
-              "image": {
-                "src": "/assets/img/07-sliding-rows/10-tech-desk.jpg"
-              }
+              "title": "Sponsorship & Exhibits",
+              "items": [
+                "Exhibition and Sponsorship Sales",
+                "Sponsorship Fulfillment",
+                "Development of Prospectus",
+                "Exhibit and Supplier Management",
+                "Design and Development of Exhibit Floorplans"
+              ]
             }
           ]
         },
         {
-          "_type": "eventsSection",
-          "eyebrow": "Our event record",
-          "heading": "The rooms we've *filled.*"
+          "_type": "listSection",
+          "eyebrow": "Formats",
+          "heading": "Other event *formats.*",
+          "items": [
+            "Industry roundtables and closed-door leadership dialogues",
+            "Buyer–seller meetings and pre-scheduled B2B matchmaking",
+            "Technology showcases and live demonstrations",
+            "Corporate award ceremonies and merit-based industry recognition",
+            "Executive networking receptions and leadership dinners",
+            "International delegations, business missions and market-entry forums"
+          ]
+        },
+        {
+          "_type": "linkCardsSection",
+          "eyebrow": "See them in action",
+          "heading": "Our *platforms.*",
+          "cards": [
+            {
+              "title": "THE ADAS SHOW",
+              "text": "India's Road to Intelligent & Connected Mobility.",
+              "href": "/our-platforms/#adas",
+              "image": {
+                "src": "/assets/img/01-opening/03-mobility-forum.jpg",
+                "alt": ""
+              }
+            },
+            {
+              "title": "SDV SUMMIT",
+              "text": "The Future of Software-Defined Mobility.",
+              "href": "/our-platforms/#sdv",
+              "image": {
+                "src": "/assets/img/01-opening/05-technology-confex.jpg",
+                "alt": ""
+              }
+            },
+            {
+              "title": "Event track record",
+              "text": "Conferences and summits from Bengaluru to Cape Town.",
+              "href": "/our-platforms/#track-record",
+              "image": {
+                "src": "/assets/img/01-opening/01-keynote-auditorium.jpg",
+                "alt": ""
+              }
+            }
+          ]
         }
       ]
     },
     {
-      "slug": "events/training",
-      "title": "Training",
-      "description": "Consultancy and training courses in management, functional and technical disciplines.",
+      "slug": "business-verticals/business-platforms",
+      "title": "Business Platforms",
+      "description": "B2B matchmaking, strategic networking, investment forums, buyer–seller meetings and partnership development by AAYERA.",
       "hero": {
-        "eyebrow": "Events · Training",
+        "eyebrow": "Business Verticals · Business Platforms",
+        "heading": "Turning connections into\n*business opportunities.*",
+        "intro": "B2B matchmaking, strategic networking, investment forums, buyer–seller meetings, industry roundtables and partnership development.",
+        "image": {
+          "src": "/assets/img/05-photo-wall/05-networking.jpg",
+          "alt": "Delegates networking at an Aayera event"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Business Platforms",
+          "heading": "Get your\nbusiness *done.*",
+          "paragraphs": [
+            "AAYERA offers a sophisticated platform to connect with industry experts, get your business done and position your company for future success.",
+            "Whether the ‘deal’ is capital raising, vendor sales contracts or sourcing a strategic partner, our business platforms create a focused environment for conducting business: structured meetings, curated introductions and time with the people who matter."
+          ]
+        },
+        {
+          "_type": "listSection",
+          "eyebrow": "What we offer",
+          "heading": "Structured *engagement.*",
+          "items": [
+            "B2B matchmaking",
+            "Strategic networking",
+            "Investment forums",
+            "Buyer–seller meetings",
+            "Industry roundtables",
+            "Partnership development"
+          ]
+        },
+        {
+          "_type": "featuresSection",
+          "eyebrow": "Built into every schedule",
+          "heading": "Ample opportunities\nto *meet.*",
+          "intro": "Conference and exhibition schedules provide you with ample opportunities to meet all attendees, speakers and exhibitors, including:",
+          "items": [
+            {
+              "title": "Reception in the Exhibition Hall",
+              "text": "Mingle with peers from around the world and get the first view of the exhibition hall when you register.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/07-exhibition.jpg"
+              }
+            },
+            {
+              "title": "Networking Reception in the Exhibition Hall",
+              "text": "Network with the leaders in the industry and preview the latest products and services as you enjoy a reception with great food on the exhibition hall floor. Networking receptions run throughout the day and are included in your full conference registration.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/05-networking.jpg"
+              }
+            },
+            {
+              "title": "Opening and Closing Networking Receptions",
+              "text": "Enjoy some sweet treats and meet with peers and exhibitors before the exhibition hall closes for the year. The receptions are included in your full conference registration.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/11-gala.jpg"
+              }
+            },
+            {
+              "title": "Networking Lunch",
+              "text": "Enjoy good food and great company. Networking Lunch is included in your full conference or one-day conference registration.",
+              "image": {
+                "src": "/assets/img/05-photo-wall/06-coffee-break.jpg"
+              }
+            },
+            {
+              "title": "Networking Breaks",
+              "text": "In between conference sessions, where you will learn from industry experts, you will have the opportunity to meet all other attendees and discuss the most burning industry issues. Networking Breaks are included in your full conference or one-day conference registration.",
+              "image": {
+                "src": "/assets/img/07-sliding-rows/08-hallway.jpg"
+              }
+            },
+            {
+              "title": "Breakfast With Sponsors",
+              "text": "Enjoy good food and network face-to-face with the conference sponsors, who are keen to meet and discuss their technology offer for the industry. Breakfast with Sponsors is included in your full conference registration.",
+              "image": {
+                "src": "/assets/img/07-sliding-rows/13-business-cards.jpg"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "business-verticals/exhibitions-experiences",
+      "title": "Exhibitions & Experiences",
+      "description": "Exhibition management, industry pavilions, brand activations, experiential marketing, product showcases and live demonstrations.",
+      "hero": {
+        "eyebrow": "Business Verticals · Exhibitions & Experiences",
+        "heading": "Experiences that move\n*businesses forward.*",
+        "intro": "Exhibition management, industry pavilions, brand activations, experiential marketing, product showcases and live demonstrations.",
+        "image": {
+          "src": "/assets/img/05-photo-wall/07-exhibition.jpg",
+          "alt": "A busy exhibition floor"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Exhibitions & Experiences",
+          "heading": "Where products\n*meet their market.*",
+          "paragraphs": [
+            "From the exhibition floor to live demonstrations on the test track, AAYERA designs experiences that put products, technologies and brands in front of the right audience.",
+            "We manage exhibitions end to end: sponsorship and exhibition sales, prospectus development, exhibitor and supplier management, and the design and development of exhibit floorplans."
+          ]
+        },
+        {
+          "_type": "listSection",
+          "eyebrow": "What we offer",
+          "heading": "Exhibitions &\n*experiences.*",
+          "items": [
+            "Exhibition management",
+            "Industry pavilions",
+            "Brand activations",
+            "Experiential marketing",
+            "Product showcases",
+            "Live demonstrations",
+            "Exhibition and sponsorship sales",
+            "Design and development of exhibit floorplans"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "business-verticals/marketing-communications",
+      "title": "Marketing & Communications",
+      "description": "Brand strategy, corporate communications, digital marketing, public relations, media partnerships and campaign management.",
+      "hero": {
+        "eyebrow": "Business Verticals · Marketing & Communications",
+        "heading": "Building brands,\n*influence and visibility.*",
+        "intro": "Brand strategy, corporate communications, digital marketing, public relations, media partnerships and campaign management.",
+        "image": {
+          "src": "/assets/img/01-opening/02-energy-summit.jpg",
+          "alt": "A speaker on stage at an industry summit"
+        }
+      },
+      "sections": [
+        {
+          "_type": "textSection",
+          "eyebrow": "Marketing & Communications",
+          "heading": "Get seen by the\n*industry that matters.*",
+          "paragraphs": [
+            "Marketing communication has been part of AAYERA's 360-degree offering from the start, alongside event management, promotions and exhibitions.",
+            "We help organisations reach industry audiences with clear positioning, consistent communications and the right media partners, before, during and after the moments that matter."
+          ]
+        },
+        {
+          "_type": "listSection",
+          "eyebrow": "What we offer",
+          "heading": "Communications *services.*",
+          "items": [
+            "Brand strategy",
+            "Corporate communications",
+            "Digital marketing",
+            "Public relations",
+            "Media partnerships",
+            "Campaign management",
+            "Design and distribution of promotional materials",
+            "Social media toolkits",
+            "Attendance building"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "business-verticals/academy",
+      "title": "Academy & Professional Development",
+      "description": "Executive learning, technical workshops, leadership programmes, corporate training and live webinars from AAYERA.",
+      "hero": {
+        "eyebrow": "Business Verticals · Academy",
         "heading": "People. Performance.\n*Profits.*",
-        "intro": "Our core competency is the provision of Consultancy & Training to achieve measurable improvements in People, Performance & Profits.",
+        "intro": "Executive learning, technical workshops, leadership programmes, corporate training and industry development initiatives.",
         "image": {
           "src": "/assets/img/05-photo-wall/08-workshop.jpg",
           "alt": "Delegates at an interactive workshop"
@@ -152,7 +483,8 @@
           "paragraphs": [
             "Our portfolio of training courses and seminars is renowned for its breadth and depth of focus, the calibre of its speakers, its interactive, practical and result-orientated nature, and the diverse and international range of participants. It is an excellent networking opportunity.",
             "Our training courses and seminars offer concrete toolkits of effective and practical techniques, strategies and skills to take away. The content continually evolves in response to new business challenges and new managerial agendas."
-          ]
+          ],
+          "intro": "Our core competency is the provision of Consultancy & Training to achieve measurable improvements in People, Performance & Profits."
         },
         {
           "_type": "groupsSection",
@@ -228,95 +560,10 @@
             "SIMOPS (Simultaneous Operations) for Onshore and Offshore Facilities",
             "Best Practice in Surface Production Operations Management"
           ]
-        }
-      ]
-    },
-    {
-      "slug": "events/conference",
-      "title": "Conference",
-      "description": "Professional conference organisation: management, promotion, sponsorship and exhibits.",
-      "hero": {
-        "eyebrow": "Events · Conference",
-        "heading": "Conferences,\n*organised end to end.*",
-        "intro": "Management, promotion, sponsorship and exhibits, with a custom proposal for every event.",
-        "image": {
-          "src": "/assets/img/01-opening/04-healthcare-congress.jpg",
-          "alt": "A large conference hall during a plenary session"
-        }
-      },
-      "sections": [
-        {
-          "_type": "textSection",
-          "eyebrow": "Conference",
-          "heading": "Recognised for\n*what we deliver.*",
-          "paragraphs": [
-            "Aayera is an industry frontrunner in the world of professional conference organisers. We have gained both international recognition and many industry accreditations for the services that we have to offer.",
-            "This section will give you a brief overview of what we can do for you. This list is not exhaustive – we will gladly prepare a custom proposal for you upon request."
-          ]
         },
         {
-          "_type": "groupsSection",
-          "eyebrow": "Our services",
-          "heading": "What we can *do for you.*",
-          "groups": [
-            {
-              "title": "Management",
-              "items": [
-                "Abstracts, Posters and Paper Management",
-                "Accommodation Management",
-                "Site Selection",
-                "Committee and LOC Management",
-                "Supplier Negotiation and Management",
-                "Venue, Food and Beverage Coordination",
-                "Registration Online and Onsite",
-                "Social Functions / Transport / Tours / Accompanying Persons Program",
-                "Speaker and Program Management",
-                "Staff and Volunteer Management",
-                "Print Material",
-                "Post Evaluation and Statistics",
-                "Digital Solutions"
-              ]
-            },
-            {
-              "title": "Functional",
-              "items": [
-                "Design and Distribution of Promotional Materials",
-                "Publication Management",
-                "Social Media Toolkit",
-                "Attendance Building"
-              ]
-            },
-            {
-              "title": "Sponsorship & Exhibits",
-              "items": [
-                "Exhibition and Sponsorship Sales",
-                "Sponsorship Fulfillment",
-                "Development of Prospectus",
-                "Exhibit and Supplier Management",
-                "Design and Development of Exhibit Floorplans"
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "slug": "events/webinar",
-      "title": "Webinar",
-      "description": "Live, interactive web-based seminars for engineers, scientists, faculty, students, manufacturers and consultants.",
-      "hero": {
-        "eyebrow": "Events · Webinar",
-        "heading": "Seminars,\n*on the web.*",
-        "intro": "Live, interactive online seminars: ask questions in real time, earn a Professional Development Hour, with no travel required.",
-        "image": {
-          "src": "/assets/img/01-opening/05-technology-confex.jpg",
-          "alt": "A technology conference in session"
-        }
-      },
-      "sections": [
-        {
           "_type": "textSection",
-          "eyebrow": "Webinar",
+          "eyebrow": "Webinars",
           "heading": "Live, interactive\n*learning.*",
           "paragraphs": [
             "Short for web-based seminar, a webinar is a presentation, lecture, workshop or seminar that's transmitted over the web. A key feature of the webinar is its interactive elements: the ability to give, receive and discuss information. Contrast this with a webcast, in which the data transmission is one way and does not allow interaction between the presenter and the audience.",
@@ -370,75 +617,62 @@
       ]
     },
     {
-      "slug": "networking",
-      "title": "Networking",
-      "description": "Receptions, lunches, breaks and sponsor breakfasts: every Aayera schedule is built for meeting the right people.",
+      "slug": "industries",
+      "title": "Industries",
+      "description": "Discover the industry ecosystems AAYERA engages across mobility, technology, healthcare, energy, manufacturing and more.",
       "hero": {
-        "eyebrow": "Networking",
-        "heading": "Get your\nbusiness *done.*",
-        "intro": "Aayera offers a sophisticated platform to connect with industry experts, get your business done and position your company for future success.",
+        "eyebrow": "Industries",
+        "heading": "Connecting the industries\n*shaping tomorrow.*",
+        "intro": "From mobility and manufacturing to healthcare, energy and digital innovation, AAYERA works across a diverse range of industry ecosystems.",
         "image": {
-          "src": "/assets/img/05-photo-wall/05-networking.jpg",
-          "alt": "Delegates networking at an Aayera event"
+          "src": "/assets/img/01-opening/03-mobility-forum.jpg",
+          "alt": "Delegates at an industry forum"
         }
       },
       "sections": [
         {
-          "_type": "featuresSection",
-          "eyebrow": "Built into every schedule",
-          "heading": "Ample opportunities\nto *meet.*",
-          "intro": "Conference and exhibition schedules provide you with ample opportunities to meet all attendees, speakers and exhibitors, including:",
-          "items": [
-            {
-              "title": "Reception in the Exhibition Hall",
-              "text": "Mingle with peers from around the world and get the first view of the exhibition hall when you register.",
-              "image": {
-                "src": "/assets/img/05-photo-wall/07-exhibition.jpg"
-              }
-            },
-            {
-              "title": "Networking Reception in the Exhibition Hall",
-              "text": "Network with the leaders in the industry and preview the latest products and services as you enjoy a reception with great food on the exhibition hall floor. Networking receptions run throughout the day and are included in your full conference registration.",
-              "image": {
-                "src": "/assets/img/05-photo-wall/05-networking.jpg"
-              }
-            },
-            {
-              "title": "Opening and Closing Networking Receptions",
-              "text": "Enjoy some sweet treats and meet with peers and exhibitors before the exhibition hall closes for the year. The receptions are included in your full conference registration.",
-              "image": {
-                "src": "/assets/img/05-photo-wall/11-gala.jpg"
-              }
-            },
-            {
-              "title": "Networking Lunch",
-              "text": "Enjoy good food and great company. Networking Lunch is included in your full conference or one-day conference registration.",
-              "image": {
-                "src": "/assets/img/05-photo-wall/06-coffee-break.jpg"
-              }
-            },
-            {
-              "title": "Networking Breaks",
-              "text": "In between conference sessions, where you will learn from industry experts, you will have the opportunity to meet all other attendees and discuss the most burning industry issues. Networking Breaks are included in your full conference or one-day conference registration.",
-              "image": {
-                "src": "/assets/img/07-sliding-rows/08-hallway.jpg"
-              }
-            },
-            {
-              "title": "Breakfast With Sponsors",
-              "text": "Enjoy good food and network face-to-face with the conference sponsors, who are keen to meet and discuss their technology offer for the industry. Breakfast with Sponsors is included in your full conference registration.",
-              "image": {
-                "src": "/assets/img/07-sliding-rows/13-business-cards.jpg"
-              }
-            }
-          ]
+          "_type": "industriesSection",
+          "eyebrow": "Industries served",
+          "heading": "Twelve industry\n*ecosystems.*",
+          "intro": "We engage with industries at the forefront of economic growth, technological change and business transformation. Our platforms and capabilities bring together organisations, experts and decision-makers to exchange knowledge, build partnerships and explore opportunities."
         }
-      ]
+      ],
+      "seoTitle": "Industries Served by AAYERA | Cross-Industry Engagement"
+    },
+    {
+      "slug": "our-platforms",
+      "title": "Our Platforms",
+      "description": "Explore AAYERA's industry-led platforms, conferences, exhibitions and business engagement initiatives.",
+      "hero": {
+        "eyebrow": "Our Platforms",
+        "heading": "Building industry-leading\n*conversations.*",
+        "intro": "AAYERA develops industry-focused platforms that bring together business leaders, policymakers, technology providers, researchers and decision-makers.",
+        "image": {
+          "src": "/assets/img/01-opening/05-technology-confex.jpg",
+          "alt": "A technology conference in session"
+        }
+      },
+      "sections": [
+        {
+          "_type": "platformsSection",
+          "eyebrow": "Flagship platforms",
+          "heading": "Our flagship\n*properties.*",
+          "intro": "Through conferences, exhibitions, demonstrations and structured business engagement, these platforms encourage knowledge exchange and meaningful industry connections."
+        },
+        {
+          "_type": "eventsSection",
+          "eyebrow": "Event track record",
+          "heading": "The rooms we've *filled.*",
+          "showSummaries": true,
+          "anchor": "track-record"
+        }
+      ],
+      "seoTitle": "AAYERA Platforms | Industry Summits & Conferences"
     },
     {
       "slug": "clients",
       "title": "Clients",
-      "description": "Organisations across energy, mobility, healthcare and technology that have worked with Aayera.",
+      "description": "Organisations across energy, mobility, healthcare and technology that AAYERA has worked with.",
       "hero": {
         "eyebrow": "Our clients",
         "heading": "Good company.\n*Great connections.*",
@@ -455,36 +689,14 @@
       ]
     },
     {
-      "slug": "news-and-events",
-      "title": "News & Events",
-      "description": "Conferences and summits organised by Aayera, upcoming and past.",
-      "hero": {
-        "eyebrow": "News & Events",
-        "heading": "News &\n*events.*",
-        "intro": "The conferences and summits we've organised, from Bengaluru to Cape Town.",
-        "image": {
-          "src": "/assets/img/05-photo-wall/07-exhibition.jpg",
-          "alt": "A busy exhibition floor"
-        }
-      },
-      "sections": [
-        {
-          "_type": "eventsSection",
-          "eyebrow": "Events",
-          "heading": "From the *event floor.*",
-          "showSummaries": true
-        }
-      ]
-    },
-    {
       "slug": "contact",
       "title": "Contact",
-      "description": "Get in touch with Aayera: email, phone and our Bangalore office.",
+      "description": "Connect with AAYERA for business partnerships, event enquiries, sponsorships, collaborations and corporate solutions.",
       "showCta": false,
       "hero": {
         "eyebrow": "Contact",
-        "heading": "Let's have\na *chat!*",
-        "intro": "Planning an event, a training programme or a partnership? Write to us, call, or visit our Bangalore office.",
+        "heading": "Let's build\n*what's next.*",
+        "intro": "Start a conversation with AAYERA about partnerships, events, sponsorship, exhibiting or our business verticals.",
         "image": {
           "src": "/assets/img/07-sliding-rows/14-roundtable.jpg",
           "alt": "A roundtable discussion"
@@ -497,7 +709,8 @@
           "heading": "We'd love to\n*hear from you.*",
           "formHeading": "Send us a message"
         }
-      ]
+      ],
+      "seoTitle": "Contact AAYERA | Partnerships & Business Enquiries"
     }
   ],
   "events": {
@@ -532,18 +745,253 @@
     "2017-08-24": {
       "location": "Le Méridien, Bengaluru, India",
       "website": "http://iotindiaconfex.in/"
+    },
+    "2026-12-03": {
+      "location": "ADAS Test City, ARAI, Takwe, Pune",
+      "summary": "The fourth edition of THE ADAS SHOW returns to India's first ADAS Test City, supported by ARAI, with ITS India Forum as strategic partner."
+    },
+    "2026-02-12": {
+      "location": "ADAS Test City, ARAI, Takwe, Pune",
+      "summary": "THE ADAS SHOW 2026, organised by AAYERA in collaboration with ARAI at India's first ADAS Test City, brought together government officials, industry leaders, global OEMs, Tier 1 suppliers and technology innovators."
+    },
+    "2025-09-25": {
+      "location": "Royal Orchid, Bengaluru",
+      "website": "https://www.sdvsummit.com/",
+      "summary": "The second edition of the Software Defined Vehicle Summit, organised by AAYERA in collaboration with ARAI, with IIT Hyderabad as associate partner. Theme: “Code. Connect. Drive – Powering the Future of Indian Mobility through Software.”"
+    },
+    "2023-12-01": {
+      "location": "ICAT, Manesar",
+      "summary": "THE ADAS SHOW 2023, organised by AAYERA in collaboration with the Ministry of Heavy Industries and hosted at ICAT, featured exhibits from OEMs, auto-tech companies, ADAS technology providers and testing equipment manufacturers, including a live ADAS demonstration."
     }
   },
   "contact": {
     "hours": "Mon–Fri: 10:00am – 08:00pm",
     "mapQuery": "47 Wheelers Road, Cox Town, Bangalore 560005",
     "interests": [
-      "Training",
-      "Conference",
-      "Webinar",
-      "Networking",
-      "Sponsorship & exhibiting",
+      "General enquiry",
+      "Partnership",
+      "Sponsorship",
+      "Exhibiting",
+      "Events & conferences",
+      "Training & academy",
       "Something else"
     ]
-  }
+  },
+  "verticals": [
+    {
+      "key": "events-conferences",
+      "name": "Aayera Events & Conferences",
+      "short": "Events & Conferences",
+      "caption": "Creating platforms where industries meet.",
+      "description": "Industry summits, international conferences, exhibitions, trade shows, leadership forums and corporate events.",
+      "status": "active",
+      "image": {
+        "src": "/assets/img/01-opening/01-keynote-auditorium.jpg",
+        "alt": ""
+      }
+    },
+    {
+      "key": "business-platforms",
+      "name": "Aayera Business Platforms",
+      "short": "Business Platforms",
+      "caption": "Turning connections into business opportunities.",
+      "description": "B2B matchmaking, strategic networking, investment forums, buyer–seller meetings, industry roundtables and partnership development.",
+      "status": "active",
+      "image": {
+        "src": "/assets/img/07-sliding-rows/13-business-cards.jpg",
+        "alt": ""
+      }
+    },
+    {
+      "key": "exhibitions-experiences",
+      "name": "Aayera Exhibitions & Experiences",
+      "short": "Exhibitions & Experiences",
+      "caption": "Designing experiences that move businesses forward.",
+      "description": "Exhibition management, industry pavilions, brand activations, experiential marketing, product showcases and live demonstrations.",
+      "status": "active",
+      "image": {
+        "src": "/assets/img/05-photo-wall/07-exhibition.jpg",
+        "alt": ""
+      }
+    },
+    {
+      "key": "intelligence-research",
+      "name": "Aayera Intelligence & Research",
+      "short": "Intelligence & Research",
+      "caption": "Knowledge that informs business decisions.",
+      "description": "Industry research, market intelligence, business reports, white papers, sector analysis and knowledge partnerships.",
+      "status": "coming-soon",
+      "image": {
+        "src": "/assets/img/07-sliding-rows/05-notebook.jpg",
+        "alt": ""
+      }
+    },
+    {
+      "key": "marketing-communications",
+      "name": "Aayera Marketing & Communications",
+      "short": "Marketing & Communications",
+      "caption": "Building brands, influence and visibility.",
+      "description": "Brand strategy, corporate communications, digital marketing, public relations, media partnerships and campaign management.",
+      "status": "active",
+      "image": {
+        "src": "/assets/img/07-sliding-rows/10-tech-desk.jpg",
+        "alt": ""
+      }
+    },
+    {
+      "key": "corporate-solutions",
+      "name": "Aayera Corporate Solutions",
+      "short": "Corporate Solutions",
+      "caption": "Thoughtful solutions for modern organisations.",
+      "description": "Corporate gifting, employee engagement solutions, customised merchandise, business gifting and enterprise procurement.",
+      "status": "coming-soon",
+      "image": {
+        "src": "/assets/img/05-photo-wall/11-gala.jpg",
+        "alt": ""
+      }
+    },
+    {
+      "key": "digital-commerce",
+      "name": "Aayera Digital Commerce",
+      "short": "Digital Commerce",
+      "caption": "Creating new opportunities in the digital economy.",
+      "description": "E-commerce platforms, online retail, D2C brand development, marketplace solutions and digital business ventures.",
+      "status": "coming-soon",
+      "image": {
+        "src": "/assets/img/07-sliding-rows/11-exhibit-detail.jpg",
+        "alt": ""
+      }
+    },
+    {
+      "key": "academy",
+      "name": "Aayera Academy & Professional Development",
+      "short": "Academy & Professional Development",
+      "caption": "Empowering people and organisations through knowledge.",
+      "description": "Executive learning, technical workshops, leadership programmes, corporate training and industry development initiatives.",
+      "status": "active",
+      "image": {
+        "src": "/assets/img/05-photo-wall/08-workshop.jpg",
+        "alt": ""
+      }
+    }
+  ],
+  "industries": [
+    {
+      "name": "Automotive & Future Mobility",
+      "text": "ADAS, autonomous vehicles, electric mobility, connected vehicles, software-defined vehicles, V2X, automotive AI, vehicle safety and intelligent infrastructure."
+    },
+    {
+      "name": "Energy & Utilities",
+      "text": "Renewable energy, smart grids, smart metering, power distribution, energy storage, EV charging, hydrogen and clean energy."
+    },
+    {
+      "name": "Healthcare & Life Sciences",
+      "text": "Pharmaceuticals, biotechnology, medical devices, healthcare infrastructure, diagnostics, health technology and medical supply chains."
+    },
+    {
+      "name": "Technology & Digital Innovation",
+      "text": "Artificial intelligence, IoT, cloud computing, cybersecurity, robotics, semiconductors, enterprise technology and digital transformation."
+    },
+    {
+      "name": "Manufacturing & Industrial Technology",
+      "text": "Advanced manufacturing, industrial automation, engineering, industrial IoT, precision engineering, materials, electronics and smart factories."
+    },
+    {
+      "name": "Infrastructure & Smart Cities",
+      "text": "Urban infrastructure, smart cities, construction, real estate, transportation infrastructure, ports, airports and public-private partnerships."
+    },
+    {
+      "name": "Logistics & Supply Chain",
+      "text": "Global trade, warehousing, freight, shipping, supply chain technology, procurement, distribution and cross-border commerce."
+    },
+    {
+      "name": "Banking, Finance & Fintech",
+      "text": "Digital banking, financial services, insurance, investment, wealth management, payments, fintech and capital markets."
+    },
+    {
+      "name": "Retail, E-commerce & Consumer Brands",
+      "text": "Digital commerce, D2C brands, beauty and personal care, consumer products, omnichannel retail, brand development and marketplaces."
+    },
+    {
+      "name": "Agriculture & Food Technology",
+      "text": "Agri-tech, food processing, food supply chains, agricultural innovation, cold-chain logistics and sustainable agriculture."
+    },
+    {
+      "name": "Sustainability & Climate Technology",
+      "text": "ESG, decarbonisation, circular economy, climate technology, green mobility, carbon management and sustainable industry."
+    },
+    {
+      "name": "Education, Skills & Human Capital",
+      "text": "Executive education, professional training, leadership development, technical certification, workforce transformation and talent development."
+    }
+  ],
+  "platforms": [
+    {
+      "key": "adas",
+      "name": "THE ADAS SHOW",
+      "tagline": "India's Road to Intelligent & Connected Mobility.",
+      "topics": [
+        "ADAS",
+        "V2X",
+        "AI",
+        "Autonomous Mobility",
+        "Vehicle Safety"
+      ],
+      "summary": "An annual AAYERA platform bringing government, OEMs, Tier 1 suppliers and technology providers together around advanced driver-assistance systems, with live demonstrations at India's automotive test facilities.",
+      "image": {
+        "src": "/assets/img/01-opening/03-mobility-forum.jpg",
+        "alt": "Delegates at an automotive technology forum"
+      },
+      "website": "",
+      "editions": [
+        {
+          "label": "4th edition",
+          "date": "3 December 2026",
+          "venue": "ADAS Test City, ARAI, Takwe, Pune",
+          "note": "Supported by ARAI · Strategic partner: ITS India Forum",
+          "status": "upcoming"
+        },
+        {
+          "label": "THE ADAS SHOW 2026",
+          "date": "12 February 2026",
+          "venue": "ADAS Test City, ARAI, Takwe, Pune",
+          "note": "In collaboration with ARAI",
+          "status": "past"
+        },
+        {
+          "label": "THE ADAS SHOW 2023",
+          "date": "December 2023",
+          "venue": "ICAT, Manesar",
+          "note": "In collaboration with the Ministry of Heavy Industries, hosted at ICAT",
+          "status": "past"
+        }
+      ]
+    },
+    {
+      "key": "sdv",
+      "name": "SDV SUMMIT",
+      "tagline": "The Future of Software-Defined Mobility.",
+      "topics": [
+        "Automotive Software",
+        "Connected Vehicles",
+        "AI",
+        "Digital Architecture"
+      ],
+      "summary": "A summit on software-defined vehicles for OEMs, technology companies, start-ups, academia and policymakers, from centralised E/E architectures and over-the-air updates to cybersecurity. 2025 theme: “Code. Connect. Drive.”",
+      "image": {
+        "src": "/assets/img/01-opening/05-technology-confex.jpg",
+        "alt": "A technology conference in session"
+      },
+      "website": "https://www.sdvsummit.com/",
+      "editions": [
+        {
+          "label": "2nd edition",
+          "date": "25 September 2025",
+          "venue": "Royal Orchid, Bengaluru",
+          "note": "In collaboration with ARAI · Associate partner: IIT Hyderabad",
+          "status": "past"
+        }
+      ]
+    }
+  ]
 }

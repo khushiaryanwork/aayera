@@ -12,6 +12,9 @@ import LinkCards from '../components/page/LinkCards.astro';
 import EventsList from '../components/page/EventsList.astro';
 import Clients from '../components/Clients';
 import ContactSection from '../components/page/ContactSection.astro';
+import VerticalTiles from '../components/page/VerticalTiles.astro';
+import IndustryGrid from '../components/page/IndustryGrid.astro';
+import PlatformCards from '../components/page/PlatformCards.astro';
 import { getContent } from '../lib/content';
 import type { Page } from '../lib/types';
 
@@ -21,7 +24,7 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.props as { slug: string };
-const { site, home, noindex, pages, eventList, allLogos, enquiryTopics } = await getContent();
+const { site, home, noindex, pages, eventList, allLogos, enquiryTopics, verticals, industries, platforms } = await getContent();
 const page = pages.find((p) => p.slug === slug) as Page;
 
 // breadcrumb: Home / parent page (if any) / this page
@@ -33,7 +36,7 @@ const crumbs = [
   { label: page.title },
 ];
 ---
-<Base site={site} noindex={noindex} title={`${page.title} | Aayera`} description={page.description || site.description}>
+<Base site={site} noindex={noindex} title={page.seoTitle || `${page.title} | AAYERA`} description={page.description || site.description}>
   <Nav site={site} />
   <main>
     <PageHero page={page} crumbs={crumbs} />
@@ -57,6 +60,9 @@ const crumbs = [
             />
           );
         case 'contactSection': return <ContactSection s={s} site={site} topics={enquiryTopics} />;
+        case 'verticalsSection': return <VerticalTiles head={s} verticals={verticals} />;
+        case 'industriesSection': return <IndustryGrid head={s} industries={industries} />;
+        case 'platformsSection': return <PlatformCards head={s} platforms={platforms} />;
       }
     })}
   </main>

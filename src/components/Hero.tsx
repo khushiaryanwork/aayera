@@ -8,7 +8,7 @@ const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const ease = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
 
 /** Full-screen slider that, on scroll, shrinks into the centre slot of a wall of event photos. */
-export default function Hero({ eyebrow, heading, primaryCta, secondaryCta, slideCta, slides, mosaic }: Props) {
+export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta, slideCta, slides, mosaic }: Props) {
   const n = slides.length;
   const [cur, setCur] = useState(0);
   const [hovering, setHovering] = useState(false);
@@ -137,6 +137,7 @@ export default function Hero({ eyebrow, heading, primaryCta, secondaryCta, slide
         <div className="hero-title" ref={title}>
           <p className="eyebrow">{eyebrow}</p>
           <h1 aria-label={plain(heading)}><Rich text={heading} /></h1>
+          {intro && <p className="hero-intro">{intro}</p>}
           <div className="hero-actions">
             <a className="btn btn-gold" href={primaryCta.href}>{primaryCta.label}</a>
             <a className="btn btn-ghost" href={secondaryCta.href}>{secondaryCta.label}</a>

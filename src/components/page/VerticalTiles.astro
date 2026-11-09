@@ -1,0 +1,31 @@
+---
+import type { Vertical, Head } from '../../lib/types';
+import SecHead from './SecHead.astro';
+const { head, verticals } = Astro.props as { head: Head; verticals: Vertical[] };
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="sec vsec">
+  <SecHead eyebrow={head.eyebrow} heading={head.heading} intro={head.intro} />
+  <ul class="vgrid">
+    {verticals.map((v, i) => {
+      const inner = (
+        <>
+          <div class="vtile-img">{v.image && <img src={v.image.src} alt="" loading="lazy">}</div>
+          <div class="vtile-txt">
+            <span class="vnum">{pad(i + 1)}</span>
+            {v.status === 'coming-soon' && <span class="vsoon">Coming soon</span>}
+            <h3>{v.short}</h3>
+            <p class="vcap">{v.caption}</p>
+            <p class="vdesc">{v.description}</p>
+            {v.href && <span class="vmore" aria-hidden="true">Explore →</span>}
+          </div>
+        </>
+      );
+      return (
+        <li class={'vtile rv' + (v.status === 'coming-soon' ? ' soon' : '')}>
+          {v.href ? <a href={v.href} aria-label={`${v.name}: ${v.caption}`}>{inner}</a> : <div>{inner}</div>}
+        </li>
+      );
+    })}
+  </ul>
+</section>

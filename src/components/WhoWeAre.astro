@@ -1,0 +1,17 @@
+---
+import type { Home } from '../lib/types';
+import { Rich } from './Rich';
+const { who } = Astro.props as { who: Home['whoWeAre'] };
+---
+<section class="sec tsec who">
+  <div class="tsec-grid">
+    <div class="tsec-head rv">
+      <p class="eyebrow">{who.eyebrow}</p>
+      <h2><Rich text={who.heading} /></h2>
+    </div>
+    <div class="tsec-body rv">
+      <p class="lede">{who.body}</p>
+      {who.cta?.label && <p><a class="btn btn-gold" href={who.cta.href}>{who.cta.label}</a></p>}
+    </div>
+  </div>
+</section>

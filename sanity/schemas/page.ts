@@ -34,7 +34,7 @@ export const groupsSection = defineType({
       name: 'groups', title: 'Cards', type: 'array',
       of: [defineArrayMember({
         type: 'object', name: 'group',
-        fields: [defineField({ name: 'title', type: 'string' }), defineField({ name: 'items', type: 'array', of: [{ type: 'string' }] })],
+        fields: [defineField({ name: 'title', type: 'string' }), defineField({ name: 'caption', type: 'string' }), defineField({ name: 'items', type: 'array', of: [{ type: 'string' }] })],
         preview: { select: { title: 'title', items: 'items' }, prepare: ({ title, items }: any) => ({ title, subtitle: `${items?.length || 0} items` }) },
       })],
     }),
@@ -53,6 +53,10 @@ export const featuresSection = defineType({
   description: 'Shown as photo cards when the items have images, otherwise as title / description rows.',
   fields: [
     ...head, intro,
+    defineField({
+      name: 'layout', type: 'string', initialValue: 'auto',
+      options: { list: [{ title: 'Automatic', value: 'auto' }, { title: 'Rows', value: 'rows' }, { title: 'Grid of cards', value: 'grid' }, { title: 'Photo cards', value: 'cards' }], layout: 'radio', direction: 'horizontal' },
+    }),
     defineField({
       name: 'items', type: 'array',
       of: [defineArrayMember({
@@ -89,7 +93,11 @@ export const linkCardsSection = defineType({
 export const eventsSection = defineType({
   name: 'eventsSection', title: 'Events list', type: 'object',
   description: 'Lists every published Event, split into upcoming and previous by date.',
-  fields: [...head, intro, defineField({ name: 'showSummaries', title: 'Show event descriptions', type: 'boolean', initialValue: true })],
+  fields: [
+    ...head, intro,
+    defineField({ name: 'showSummaries', title: 'Show event descriptions', type: 'boolean', initialValue: true }),
+    defineField({ name: 'anchor', type: 'string', description: 'Optional link target, e.g. track-record → /our-platforms/#track-record' }),
+  ],
   preview: preview('Events list'),
 })
 
@@ -107,7 +115,23 @@ export const contactSection = defineType({
   preview: preview('Contact details & form'),
 })
 
-export const SECTION_TYPES = ['textSection', 'groupsSection', 'listSection', 'featuresSection', 'linkCardsSection', 'eventsSection', 'clientsSection', 'contactSection']
+export const verticalsSection = defineType({
+  name: 'verticalsSection', title: 'Business vertical tiles', type: 'object',
+  description: 'Tiles for every Business vertical document (coming-soon ones greyed).',
+  fields: [...head, intro], preview: preview('Business vertical tiles'),
+})
+export const industriesSection = defineType({
+  name: 'industriesSection', title: 'Industries grid', type: 'object',
+  description: 'Grid of every Industry document.',
+  fields: [...head, intro], preview: preview('Industries grid'),
+})
+export const platformsSection = defineType({
+  name: 'platformsSection', title: 'Flagship platforms', type: 'object',
+  description: 'A card for every Platform document, with its editions.',
+  fields: [...head, intro], preview: preview('Flagship platforms'),
+})
+
+export const SECTION_TYPES = ['verticalsSection', 'industriesSection', 'platformsSection', 'textSection', 'groupsSection', 'listSection', 'featuresSection', 'linkCardsSection', 'eventsSection', 'clientsSection', 'contactSection']
 
 /* ---------- page document ---------- */
 export const page = defineType({
@@ -118,6 +142,7 @@ export const page = defineType({
   groups: [{ name: 'content', title: 'Content', default: true }, { name: 'seo', title: 'SEO' }],
   fields: [
     defineField({ name: 'title', type: 'string', group: 'content', description: 'Used in the breadcrumb and browser tab.', validation: (r) => r.required() }),
+    defineField({ name: 'seoTitle', title: 'SEO title', type: 'string', group: 'seo', description: 'Browser tab / Google title. Defaults to "<Title> | AAYERA".' }),
     defineField({
       name: 'slug', title: 'URL', type: 'slug', group: 'content',
       description: 'e.g. about → /about/, events/training → /events/training/. The built-in pages fall back to their original content when a field here is empty.',

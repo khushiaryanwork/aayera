@@ -1,49 +1,85 @@
 {
   "settings": {
-    "title": "Aayera | Moments That Move Industry",
-    "description": "Aayera brings industry together through conferences, summits, training and exhibitions.",
+    "title": "AAYERA | Business Platforms, Industry Events & Solutions",
+    "description": "AAYERA connects industries and businesses through events, exhibitions, business platforms, research and corporate solutions.",
     "logo": {
       "src": "/assets/logo-on-dark.png",
       "alt": "Aayera"
     },
     "nav": [
       {
-        "label": "About us",
-        "href": "/about/"
-      },
-      {
-        "label": "Events",
-        "href": "/events/",
+        "label": "About",
+        "href": "/about/",
         "children": [
           {
-            "label": "Training",
-            "href": "/events/training/"
+            "label": "About AAYERA",
+            "href": "/about/"
           },
           {
-            "label": "Conference",
-            "href": "/events/conference/"
-          },
-          {
-            "label": "Webinar",
-            "href": "/events/webinar/"
+            "label": "Clients",
+            "href": "/clients/"
           }
         ]
       },
       {
-        "label": "Networking",
-        "href": "/networking/"
+        "label": "Business Verticals",
+        "href": "/business-verticals/",
+        "children": [
+          {
+            "label": "Events & Conferences",
+            "href": "/business-verticals/events-conferences/"
+          },
+          {
+            "label": "Business Platforms",
+            "href": "/business-verticals/business-platforms/"
+          },
+          {
+            "label": "Exhibitions & Experiences",
+            "href": "/business-verticals/exhibitions-experiences/"
+          },
+          {
+            "label": "Marketing & Communications",
+            "href": "/business-verticals/marketing-communications/"
+          },
+          {
+            "label": "Academy & Professional Development",
+            "href": "/business-verticals/academy/"
+          },
+          {
+            "label": "All verticals",
+            "href": "/business-verticals/"
+          }
+        ]
       },
       {
-        "label": "Clients",
-        "href": "/clients/"
+        "label": "Industries",
+        "href": "/industries/"
       },
       {
-        "label": "News & Events",
-        "href": "/news-and-events/"
+        "label": "Our Platforms",
+        "href": "/our-platforms/",
+        "children": [
+          {
+            "label": "THE ADAS SHOW",
+            "href": "/our-platforms/#adas"
+          },
+          {
+            "label": "SDV SUMMIT",
+            "href": "/our-platforms/#sdv"
+          },
+          {
+            "label": "Event track record",
+            "href": "/our-platforms/#track-record"
+          }
+        ]
+      },
+      {
+        "label": "Contact",
+        "href": "/contact/"
       }
     ],
     "navCta": {
-      "label": "Contact",
+      "label": "Partner with us",
       "href": "/contact/"
     },
     "email": "info@aayera.com",
@@ -78,21 +114,39 @@
   },
   "home": {
     "hero": {
-      "eyebrow": "Conferences · Summits · Training · Exhibitions",
-      "heading": "Where industry *meets.*",
+      "eyebrow": "A Diversified Business & Industry Engagement Group",
+      "heading": "Beyond events.\nBuilding industry *ecosystems.*",
       "primaryCta": {
-        "label": "Explore our events →",
-        "href": "#events"
+        "label": "Explore our business verticals →",
+        "href": "/business-verticals/"
       },
       "secondaryCta": {
-        "label": "Partner with us",
+        "label": "Partner with AAYERA",
         "href": "/contact/"
       },
       "slideCta": {
-        "label": "Explore our events →",
-        "href": "#events"
+        "label": "Discover our platforms →",
+        "href": "/our-platforms/"
       },
       "slides": [
+        {
+          "image": {
+            "src": "/assets/img/01-opening/03-mobility-forum.jpg",
+            "alt": ""
+          },
+          "tag": "Mobility",
+          "title": "THE ADAS SHOW",
+          "meta": "4th edition · Pune · 3 December 2026"
+        },
+        {
+          "image": {
+            "src": "/assets/img/01-opening/05-technology-confex.jpg",
+            "alt": ""
+          },
+          "tag": "Technology",
+          "title": "SDV SUMMIT",
+          "meta": "Bengaluru · September 2025"
+        },
         {
           "image": {
             "src": "/assets/img/01-opening/02-energy-summit.jpg",
@@ -111,62 +165,86 @@
           "title": "Turkey Healthcare Project Delivery Conference",
           "short": "Turkey Healthcare Conference",
           "meta": "Ankara · April 2020"
-        },
-        {
-          "image": {
-            "src": "/assets/img/01-opening/03-mobility-forum.jpg",
-            "alt": ""
-          },
-          "tag": "Mobility",
-          "title": "EV Charging Summit",
-          "meta": "Bengaluru · June 2021"
-        },
-        {
-          "image": {
-            "src": "/assets/img/01-opening/05-technology-confex.jpg",
-            "alt": ""
-          },
-          "tag": "Technology",
-          "title": "IoT India Confex",
-          "meta": "Bengaluru · August 2017"
         }
       ],
-      "mosaic": []
+      "mosaic": [],
+      "intro": "A diversified business platform connecting industries, enabling partnerships and creating opportunities."
     },
     "marquee": [
       {
-        "text": "Conferences"
+        "text": "Events & Conferences"
       },
       {
-        "text": "Summits",
+        "text": "Business Platforms",
         "serif": true
       },
       {
         "text": "Exhibitions"
       },
       {
-        "text": "Training",
+        "text": "Research",
         "serif": true
       },
       {
-        "text": "Energy"
+        "text": "Communications"
       },
       {
-        "text": "Mobility",
+        "text": "Corporate Solutions",
         "serif": true
       },
       {
-        "text": "Healthcare"
+        "text": "Digital Commerce"
       },
       {
-        "text": "Technology",
+        "text": "Academy",
         "serif": true
       }
     ],
     "events": {
-      "heading": "The rooms\nwe've *filled.*",
-      "intro": "Seven flagship events across three continents. Keep scrolling.",
+      "heading": "Selected work:\nthe rooms we've *filled.*",
+      "intro": "Conferences and summits from Manesar and Pune to Ankara and Cape Town. Keep scrolling.",
       "items": [
+        {
+          "title": "THE ADAS SHOW — 4th edition",
+          "sector": "mobility",
+          "city": "Pune",
+          "startDate": "2026-12-03",
+          "endDate": "2026-12-03",
+          "cardImage": {
+            "src": "/assets/img/07-sliding-rows/01-arrivals.jpg"
+          }
+        },
+        {
+          "title": "THE ADAS SHOW 2026",
+          "sector": "mobility",
+          "city": "Pune",
+          "startDate": "2026-02-12",
+          "endDate": "2026-02-12",
+          "cardImage": {
+            "src": "/assets/img/06-industries/02-mobility.jpg"
+          }
+        },
+        {
+          "title": "SDV SUMMIT 2025",
+          "sector": "tech",
+          "city": "Bengaluru",
+          "startDate": "2025-09-25",
+          "endDate": "2025-09-25",
+          "cardImage": {
+            "src": "/assets/img/01-opening/05-technology-confex.jpg"
+          }
+        },
+        {
+          "title": "THE ADAS SHOW 2023",
+          "sector": "mobility",
+          "city": "Manesar",
+          "startDate": "2023-12-01",
+          "endDate": "2023-12-01",
+          "displayDate": "December 2023",
+          "cardImage": {
+            "src": "/assets/img/01-opening/03-mobility-forum.jpg"
+          }
+        },
         {
           "title": "EV Charging Summit",
           "sector": "mobility",
@@ -253,15 +331,15 @@
     },
     "stats": [
       {
-        "value": 7,
+        "value": 10,
         "suffix": "",
-        "label": "Flagship events",
+        "label": "Events delivered",
         "image": {
           "src": "/assets/img/04-numbers/01-events.jpg"
         }
       },
       {
-        "value": 5,
+        "value": 6,
         "suffix": "",
         "label": "Host cities",
         "image": {
@@ -279,7 +357,7 @@
       {
         "value": 6,
         "suffix": "",
-        "label": "Countries",
+        "label": "Countries of presence",
         "image": {
           "src": "/assets/img/04-numbers/04-countries.jpg"
         }
@@ -436,9 +514,9 @@
       "20-team-moment"
     ],
     "clients": {
-      "eyebrow": "In good company",
+      "eyebrow": "Partner ecosystem",
       "heading": "{count} organisations.\n*One room.*",
-      "intro": "Industry leaders across energy, mobility, healthcare and technology have shared our stages.",
+      "intro": "Partnerships that bring industry together, across energy, mobility, healthcare and technology.",
       "logos": [
         1,
         2,
@@ -468,24 +546,48 @@
       ]
     },
     "cta": {
-      "eyebrow": "Your next event",
-      "heading": "Let's fill\nthe *next room.*",
+      "eyebrow": "Start a conversation with AAYERA",
+      "heading": "Let's build\n*what's next.*",
       "image": {
         "src": "/assets/img/08-closing/01-standing-ovation.jpg",
         "alt": ""
       },
       "buttons": [
         {
-          "label": "info@aayera.com →",
-          "href": "mailto:info@aayera.com",
+          "label": "Partner with AAYERA →",
+          "href": "/contact/",
           "style": "gold"
         },
         {
-          "label": "+91 80 4853 6267",
-          "href": "tel:+918048536267",
+          "label": "info@aayera.com",
+          "href": "mailto:info@aayera.com",
           "style": "ghost"
         }
       ]
+    },
+    "whoWeAre": {
+      "eyebrow": "Who we are",
+      "heading": "Ideas. Industries.\n*Opportunities.*",
+      "body": "AAYERA is a diversified business and industry engagement company. We create platforms and deliver solutions across events, exhibitions, business engagement, research, communications, corporate services and digital commerce—connecting organisations and industry communities to opportunities for collaboration and growth.",
+      "cta": {
+        "label": "About AAYERA →",
+        "href": "/about/"
+      }
+    },
+    "verticalsHead": {
+      "eyebrow": "Business verticals",
+      "heading": "Turning connections into\n*business opportunities.*",
+      "intro": "Eight service lines, one purpose: bringing organisations, ideas and markets closer together."
+    },
+    "industriesHead": {
+      "eyebrow": "Industries we serve",
+      "heading": "Across sectors.\n*Across possibilities.*",
+      "intro": "Engaging the ecosystems driving change."
+    },
+    "platformsHead": {
+      "eyebrow": "Flagship platforms",
+      "heading": "Conversations that move\n*industries forward.*",
+      "intro": "Established AAYERA platforms for intelligent, connected and software-defined mobility."
     }
   }
 }
