@@ -3,7 +3,7 @@ const { words } = Astro.props as { words: { text: string; serif?: boolean }[] };
 const run = [...words, ...words]; // doubled so the -50% loop is seamless
 ---
 <div class="marquee" aria-hidden="true">
-  <div class="marquee-track">
+  <div class="marquee-track" data-loop="38">
     {run.map((w) => <span class={w.serif ? 'serif' : undefined}>{w.text}</span>)}
   </div>
 </div>

@@ -1,8 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap, EASE, MQ, requestRefresh } from '../lib/motion/gsap';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 
-const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+/** Scroll choreography (fractions of the section's scroll distance). */
+const GROW_END = 0.6; // image reaches full-bleed
+const VEIL = [0.35, 0.3] as const; // darkening overlay: start, duration
+const WORD_START = 0.42; // first word appears…
+const WORD_STEP = 0.1; // …and each next one this much later
 
 /** Image that grows from a rounded card to full-bleed, with words revealing on top. */
 export default function Statement({ image, words }: Home['statement']) {
@@ -11,28 +17,49 @@ export default function Statement({ image, words }: Home['statement']) {
   const imgEl = useRef<HTMLImageElement>(null);
   const wordsEl = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const spans = [...wordsEl.current!.children] as HTMLElement[];
-    const onScroll = () => {
-      const exp = section.current!, vh = innerHeight;
-      const ep = clamp((scrollY - exp.offsetTop) / (exp.offsetHeight - vh));
-      const g = clamp(ep / 0.6), ti = 22 * (1 - g), si = 30 * (1 - g), r = 28 * (1 - g);
-      media.current!.style.clipPath = `inset(${ti}% ${si}% ${ti}% ${si}% round ${r}px)`;
-      imgEl.current!.style.transform = `scale(${1.25 - 0.25 * g})`;
-      media.current!.style.setProperty('--o', String(clamp((ep - 0.35) / 0.3) * 0.9));
-      spans.forEach((w, i) => w.classList.toggle('in', ep > 0.42 + i * 0.1));
-    };
-    let ticking = false;
-    const scroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { onScroll(); ticking = false; });
-    };
-    onScroll();
-    addEventListener('scroll', scroll, { passive: true });
-    addEventListener('resize', onScroll);
-    return () => { removeEventListener('scroll', scroll); removeEventListener('resize', onScroll); };
-  }, []);
+  useGSAP(
+    () => {
+      const spans = gsap.utils.toArray<HTMLElement>(wordsEl.current!.children);
+
+      const mm = gsap.matchMedia();
+      // reduced motion: show the finished state (full-bleed image, all words) without scrubbing
+      mm.add(MQ.reduce, () => {
+        gsap.set(media.current, { clipPath: 'inset(0% 0% 0% 0% round 0px)', '--o': 0.9 });
+        gsap.set(imgEl.current, { scale: 1 });
+        gsap.set(spans, { autoAlpha: 1, y: 0 });
+      });
+      mm.add(MQ.motion, () => {
+        // words animate in and out as the scrub crosses each threshold (time-based, like the original)
+        const shown = spans.map(() => false);
+        gsap.set(spans, { autoAlpha: 0, y: 40 });
+        const updateWords = (progress: number) =>
+          spans.forEach((el, i) => {
+            const on = progress > WORD_START + i * WORD_STEP;
+            if (on === shown[i]) return;
+            shown[i] = on;
+            gsap.to(el, { autoAlpha: on ? 1 : 0, y: on ? 0 : 40, duration: 0.7, ease: EASE.out, overwrite: true });
+          });
+
+        const tl = gsap.timeline({
+          defaults: { ease: EASE.none },
+          scrollTrigger: {
+            trigger: section.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true,
+            onUpdate: (self) => updateWords(self.progress),
+          },
+        });
+        tl.fromTo(media.current, { clipPath: 'inset(22% 30% 22% 30% round 28px)' }, { clipPath: 'inset(0% 0% 0% 0% round 0px)', duration: GROW_END }, 0)
+          .fromTo(imgEl.current, { scale: 1.25 }, { scale: 1, duration: GROW_END }, 0)
+          .fromTo(media.current, { '--o': 0 }, { '--o': 0.9, duration: VEIL[1] }, VEIL[0])
+          .to({}, { duration: 1 - GROW_END }, GROW_END); // pad to the full scroll length
+      });
+
+      requestRefresh();
+    },
+    { scope: section },
+  );
 
   return (
     <section className="expand" id="expand" ref={section}>

@@ -1,73 +1,113 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap, ScrollTrigger, EASE, MQ } from '../lib/motion/gsap';
+import { createLoop } from '../lib/motion/loop';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 
-const BASE = [38, 30, 46];
+/** Base speed of each row in px/s; rows alternate direction. */
+const ROW_SPEEDS = [38, 30, 46];
+/** Track contents are repeated so the loop never shows a gap. */
+const COPIES = 4;
+const HOVER_SPEED = 0.12; // a hovered row slows to 12%
+const MAX_BOOST = 8; // fastest multiplier while scrolling quickly
+const SHEEN = { cycle: 7, sweep: 0.28, step: 0.55 } as const; // logo highlight: every 7s, staggered
 
 /** Three marquee rows of client logos: alternate directions, scrolling speeds them up, hover slows a row. */
 export default function Clients({ eyebrow, heading, intro, logos }: Home['clients']) {
   const root = useRef<HTMLElement>(null);
   const countEl = useRef<HTMLSpanElement>(null);
-  const [copies, setCopies] = useState(4);
+  const [copies, setCopies] = useState(COPIES);
   const rows: (typeof logos)[] = [[], [], []];
   logos.forEach((l, i) => rows[i % 3].push(l));
 
-  useEffect(() => {
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) setCopies(1);
-    // the real count is pre-rendered for SEO; reset so it can count up when the section is reached
-    else if (!root.current!.classList.contains('in')) countEl.current!.textContent = '0';
-    const clientsEl = root.current!;
-    const k = reduce ? 1 : copies;
-    const marq = [...clientsEl.querySelectorAll<HTMLElement>('.lrow')].map((el, i) => ({
-      el, t: el.firstElementChild as HTMLElement, dir: i % 2 ? 1 : -1, base: BASE[i] ?? 38,
-      o: Math.random() * 400, k: 1, kt: 1, w: 1,
-    }));
-    const enter = marq.map((m) => () => (m.kt = 0.12));
-    const leave = marq.map((m) => () => (m.kt = 1));
-    marq.forEach((m, i) => { m.el.addEventListener('mouseenter', enter[i]); m.el.addEventListener('mouseleave', leave[i]); });
-    const measure = () => marq.forEach((m) => (m.w = m.t.scrollWidth / k || 1));
+  useGSAP(
+    () => {
+      const section = root.current!;
+      const rowEls = gsap.utils.toArray<HTMLElement>('.lrow', section);
+      const mm = gsap.matchMedia();
 
-    let on = false, last = 0, lastY = scrollY, boost = 0, raf = 0;
-    const loop = (now: number) => {
-      if (!on) return;
-      const dt = Math.min((now - last) / 1000, 0.05); last = now;
-      const dy = Math.abs(scrollY - lastY); lastY = scrollY;
-      boost = Math.max(boost * 0.92, Math.min(dy * 14, 520));
-      marq.forEach((m) => {
-        m.k += (m.kt - m.k) * 0.08;
-        m.o += (m.base + boost * 0.35) * m.k * dt;
-        const x = m.dir < 0 ? -(m.o % m.w) : (m.o % m.w) - m.w;
-        m.t.style.transform = `translate3d(${x}px,0,0)`;
+      mm.add(MQ.reduce, () => {
+        setCopies(1); // a single static, wrapping set of logos (see .ltrack in global.css)
+        gsap.set(rowEls, { autoAlpha: 1, x: 0 });
       });
-      raf = requestAnimationFrame(loop);
-    };
-    const io = new IntersectionObserver(([e]) => {
-      on = e.isIntersecting;
-      if (on && !clientsEl.classList.contains('in')) {
-        clientsEl.classList.add('in');
-        if (!reduce) {
-          const t0 = performance.now(), n = logos.length;
-          const tick = (t: number) => {
-            const p = Math.min((t - t0) / 1600, 1);
-            countEl.current!.textContent = String(Math.round(n * (1 - Math.pow(1 - p, 3))));
-            if (p < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
-        }
-      }
-      if (on && !reduce) { last = performance.now(); cancelAnimationFrame(raf); raf = requestAnimationFrame(loop); }
-    }, { threshold: 0.15 });
-    io.observe(clientsEl);
-    measure();
-    addEventListener('load', measure);
-    addEventListener('resize', measure);
-    return () => {
-      io.disconnect(); cancelAnimationFrame(raf);
-      removeEventListener('load', measure); removeEventListener('resize', measure);
-      marq.forEach((m, i) => { m.el.removeEventListener('mouseenter', enter[i]); m.el.removeEventListener('mouseleave', leave[i]); });
-    };
-  }, [copies, logos.length]);
+
+      mm.add(MQ.motion, () => {
+        /* entrance: rows slide in from alternating sides, counter counts up */
+        const counter = { v: 0 };
+        countEl.current!.textContent = '0';
+        gsap
+          .timeline({ scrollTrigger: { trigger: section, start: 'top 85%', once: true } })
+          .fromTo(rowEls, { autoAlpha: 0, x: (i) => (i === 1 ? 80 : -80) }, { autoAlpha: 1, x: 0, duration: 1.4, ease: EASE.out, stagger: 0.12 }, 0)
+          .to(counter, {
+            v: logos.length,
+            duration: 1.6,
+            ease: EASE.out,
+            snap: { v: 1 },
+            onUpdate: () => {
+              countEl.current!.textContent = String(counter.v);
+            },
+          }, 0);
+
+        /* endless rows; each row's speed = hover factor × scroll boost */
+        const cleanups: (() => void)[] = [];
+        const loops = rowEls.map((row, i) => {
+          const track = row.firstElementChild as HTMLElement;
+          const tween = createLoop(track, COPIES, { speed: ROW_SPEEDS[i] ?? 38, reversed: i % 2 === 1, startProgress: Math.random() });
+          const speed = { hover: 1 };
+          const slow = () => gsap.to(speed, { hover: HOVER_SPEED, duration: 0.6, ease: EASE.out, overwrite: true });
+          const resume = () => gsap.to(speed, { hover: 1, duration: 0.6, ease: EASE.out, overwrite: true });
+          row.addEventListener('mouseenter', slow);
+          row.addEventListener('mouseleave', resume);
+          cleanups.push(() => {
+            row.removeEventListener('mouseenter', slow);
+            row.removeEventListener('mouseleave', resume);
+          });
+          return { tween, speed };
+        });
+
+        const boost = { v: 1 };
+        const applySpeed = () => loops.forEach(({ tween, speed }) => tween.timeScale(speed.hover * boost.v));
+        gsap.ticker.add(applySpeed);
+
+        // scrolling quickly speeds the rows up, then they glide back to normal
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: (self) => {
+            const v = Math.min(MAX_BOOST, 1 + Math.abs(self.getVelocity()) / 300);
+            if (v > boost.v) gsap.to(boost, { v, duration: 0.2, overwrite: true, onComplete: () => void gsap.to(boost, { v: 1, duration: 1.2, ease: EASE.out }) });
+          },
+          // only run the loops while the section is on screen
+          onToggle: (self) => loops.forEach(({ tween }) => (self.isActive ? tween.play() : tween.pause())),
+        });
+
+        /* gold sheen sweeping across each logo, staggered */
+        gsap.utils.toArray<HTMLElement>('.lcard', section).forEach((card, i) => {
+          gsap.fromTo(
+            card,
+            { '--sheen': '-130%' },
+            {
+              '--sheen': '130%',
+              duration: SHEEN.cycle * SHEEN.sweep,
+              ease: 'sine.inOut',
+              repeat: -1,
+              repeatDelay: SHEEN.cycle * (1 - SHEEN.sweep),
+              delay: (i * SHEEN.step) % SHEEN.cycle,
+            },
+          );
+        });
+
+        return () => {
+          gsap.ticker.remove(applySpeed);
+          cleanups.forEach((fn) => fn());
+        };
+      });
+    },
+    // rebuild if the number of logos changes; copies only drops to 1 for reduced motion
+    { scope: root, dependencies: [logos.length, copies], revertOnUpdate: true },
+  );
 
   return (
     <section className="clients" id="clients" ref={root}>
@@ -82,8 +122,8 @@ export default function Clients({ eyebrow, heading, intro, logos }: Home['client
             <div className="ltrack">
               {Array.from({ length: copies }, (_, c) =>
                 r.map((l, j) => (
-                  <div className={'lcard' + (l.plain ? ' plain' : '')} key={`${c}-${j}`} style={{ ['--d' as any]: `${((i * 3 + j) * 0.55) % 7}s` }}>
-                    <img src={l.src} alt={l.alt} loading="lazy" />
+                  <div className={'lcard' + (l.plain ? ' plain' : '')} key={`${c}-${j}`}>
+                    <img src={l.src} alt={c === 0 ? l.alt : ''} aria-hidden={c > 0 || undefined} loading="lazy" />
                   </div>
                 )),
               )}

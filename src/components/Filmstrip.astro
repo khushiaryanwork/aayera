@@ -7,7 +7,7 @@ const rows = [images.slice(0, half), images.slice(half)];
 <section aria-label="More from our events">
   {rows.map((r, i) => (
     <div class="film">
-      <div class={'film-track' + (i ? ' rev' : '')}>
+      <div class={'film-track' + (i ? ' rev' : '')} data-loop={i ? 80 : 70} data-loop-reverse={i ? '' : undefined} data-loop-hover-pause>
         {[...r, ...r].map((im) => <img src={im.src} alt={im.alt} loading="lazy">)}
       </div>
     </div>

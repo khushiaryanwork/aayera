@@ -102,6 +102,28 @@ sanity.io/manage → Aayera Dummy → **API → CORS origins** → add, with **A
 
 Publishing in the Studio now triggers a Cloudflare build, and the change is live in about a minute.
 
+## Motion (GSAP)
+
+All scroll-driven, looping and entrance animation runs on **GSAP 3 + ScrollTrigger**;
+CSS transitions are kept only for hover / focus / open-close states.
+
+| Where | What |
+|---|---|
+| `src/lib/motion/gsap.ts` | the only place GSAP is imported from: registers ScrollTrigger once, shared `EASE` + `MQ` (media queries), `requestRefresh()` |
+| `src/lib/motion/page.ts` | every page: `.rv` reveals (`ScrollTrigger.batch`), nav/bar states, inner-page header zoom, CTA parallax |
+| `src/lib/motion/loop.ts` | seamless horizontal loops; Astro markup opts in with `data-loop="<seconds>"` (`data-loop-reverse`, `data-loop-hover-pause`) |
+| `Hero.tsx` | slide crossfade / Ken Burns / caption stagger; scrubbed zoom-into-wall timeline (`quickSetter` for per-frame geometry) |
+| `EventsTrack.tsx`, `Statement.tsx`, `PhotoWall.tsx`, `Stats.tsx`, `Clients.tsx` | scrubbed timelines, parallax, counters, velocity-boosted logo rows |
+
+Conventions:
+- React islands use `useGSAP()` from `@gsap/react` with a `scope` ref, so everything is
+  cleaned up automatically. Listeners added inside are removed in the returned cleanup.
+- Decorative motion is wrapped in `gsap.matchMedia().add(MQ.motion, …)`. With *reduce
+  motion* turned on, content shows in its finished state (no hidden text, static logos).
+- Without JavaScript, everything is visible: elements are hidden only by GSAP, or by the
+  `html.motion` class that an inline head script sets when motion is allowed.
+- Timings live in named constants at the top of each component, not inline numbers.
+
 ## Project layout
 
 ```

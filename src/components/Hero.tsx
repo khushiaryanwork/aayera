@@ -1,18 +1,30 @@
 import { useEffect, useRef, useState } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap, EASE, MQ, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
 import type { Home } from '../lib/types';
 import { Rich, plain } from './Rich';
 
 type Props = Home['hero'];
 
-const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const ease = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+/** Slider timing (seconds). */
+const AUTOPLAY = { desktop: 4, mobile: 6 } as const;
+const SLIDE = { fade: 1.1, kenBurns: 7, copyDelay: 0.35, copyStagger: 0.1 } as const;
+
+/**
+ * Scroll choreography, as fractions of the hero's scroll distance:
+ * the slider shrinks into the wall over 0–0.68, captions fade in at 0.55–0.8,
+ * and the headline + veil rise in at 0.5–0.8.
+ */
+const ZOOM = { end: 0.68, labels: [0.55, 0.25], title: [0.5, 0.3], uiOffAt: 0.34, overscan: 1.02 } as const;
+
+type Rect = { x: number; y: number; w: number; h: number };
 
 /** Full-screen slider that, on scroll, shrinks into the centre slot of a wall of event photos. */
 export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta, slideCta, slides, mosaic }: Props) {
-  const n = slides.length;
+  const count = slides.length;
   const [cur, setCur] = useState(0);
   const [hovering, setHovering] = useState(false);
-  const go = (i: number) => setCur(((i % n) + n) % n);
+  const go = (i: number) => setCur(((i % count) + count) % count);
 
   const section = useRef<HTMLElement>(null);
   const sticky = useRef<HTMLDivElement>(null);
@@ -24,63 +36,121 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   const ui = useRef<HTMLDivElement>(null);
   const swipeX = useRef<number | null>(null);
 
-  // autoplay: restarts whenever the slide changes; paused while hovering or with reduced motion
+  /* ---------- autoplay: restarts on every slide change, paused on hover / reduced motion ---------- */
   useEffect(() => {
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || hovering || n < 2) return;
-    const dur = matchMedia('(min-width:761px)').matches ? 4000 : 6000;
-    const t = setTimeout(() => setCur((c) => (c + 1) % n), dur);
-    return () => clearTimeout(t);
-  }, [cur, hovering, n]);
-
-  // scroll-driven zoom out into the wall
-  useEffect(() => {
-    let R = { x: 0, y: 0, w: 1, h: 1 };
-    const size = () => {
-      const s = slot.current!;
-      R = { x: s.offsetLeft, y: s.offsetTop, w: s.offsetWidth || 1, h: s.offsetHeight || 1 };
-    };
-    const onScroll = () => {
-      const y = scrollY, vh = innerHeight, vw = innerWidth;
-      const heroEl = section.current!, m = mosaicEl.current!, f = frame.current!;
-      const zp = clamp(y / Math.max(heroEl.offsetHeight - vh, 1)), e = ease(clamp(zp / 0.68));
-      const s0 = Math.max(vw / R.w, vh / R.h) * 1.02, sc = s0 + (1 - s0) * e;
-      const cx = R.x + R.w / 2, cy = R.y + R.h / 2, fw = R.w * sc, fh = R.h * sc;
-      m.style.transformOrigin = `${cx}px ${cy}px`;
-      m.style.transform = `scale(${sc})`;
-      m.style.opacity = String(clamp(e * 3));
-      m.style.setProperty('--lbl', String(clamp((zp - 0.55) / 0.25)));
-      // clip the frame to the screen so the slide text and dots always sit inside the visible area
-      const fx = Math.max(0, cx - fw / 2), fy = Math.max(0, cy - fh / 2), fr = Math.min(vw, cx + fw / 2), fb = Math.min(vh, cy + fh / 2);
-      f.style.width = fr - fx + 'px';
-      f.style.height = fb - fy + 'px';
-      f.style.transform = `translate3d(${fx}px,${fy}px,0)`;
-      f.style.borderRadius = 16 * e + 'px';
-      sticky.current!.style.setProperty('--ui', String(1 - clamp(e * 3)));
-      ui.current!.classList.toggle('off', e > 0.34);
-      const t = clamp((zp - 0.5) / 0.3);
-      veil.current!.style.opacity = String(t);
-      title.current!.style.opacity = String(t);
-      title.current!.style.transform = `translateY(${(1 - t) * 40}px)`;
-      title.current!.classList.toggle('live', t > 0.5);
-    };
-    let ticking = false;
-    const scroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { onScroll(); ticking = false; });
-    };
-    const resize = () => { size(); onScroll(); };
-    size(); onScroll();
-    addEventListener('scroll', scroll, { passive: true });
-    addEventListener('resize', resize);
-    addEventListener('load', resize);
+    if (count < 2 || hovering || prefersReducedMotion()) return;
+    const delay = window.matchMedia(MQ.desktop).matches ? AUTOPLAY.desktop : AUTOPLAY.mobile;
+    const next = gsap.delayedCall(delay, () => setCur((c) => (c + 1) % count));
     return () => {
-      removeEventListener('scroll', scroll);
-      removeEventListener('resize', resize);
-      removeEventListener('load', resize);
+      next.kill();
     };
-  }, []);
+  }, [cur, hovering, count]);
+
+  /* ---------- slide change: crossfade, Ken Burns zoom, caption stagger ---------- */
+  useGSAP(
+    () => {
+      const els = gsap.utils.toArray<HTMLElement>('.slide', section.current);
+      const active = els[cur];
+      if (!active) return;
+      const reduce = prefersReducedMotion();
+      const fade = reduce ? 0 : SLIDE.fade;
+
+      gsap.to(els.filter((el) => el !== active), { autoAlpha: 0, duration: fade, ease: 'power1.inOut', overwrite: 'auto' });
+      gsap.to(active, { autoAlpha: 1, duration: fade, ease: 'power1.inOut', overwrite: 'auto' });
+      if (reduce) return;
+
+      const img = active.querySelector('img');
+      if (img) gsap.fromTo(img, { scale: 1.08 }, { scale: 1, duration: SLIDE.kenBurns, ease: 'power2.out', overwrite: true });
+      gsap.fromTo(
+        active.querySelectorAll('.slide-copy > *'),
+        { autoAlpha: 0, y: 24 },
+        { autoAlpha: 1, y: 0, duration: 0.8, ease: EASE.out, stagger: SLIDE.copyStagger, delay: SLIDE.copyDelay, overwrite: true },
+      );
+    },
+    { scope: section, dependencies: [cur] },
+  );
+
+  /* ---------- scroll: the slider zooms out into the wall, then the headline rises in ---------- */
+  useGSAP(
+    () => {
+      const heroEl = section.current!, wall = mosaicEl.current!, frameEl = frame.current!;
+      const rect: Rect = { x: 0, y: 0, w: 1, h: 1 };
+      const measure = () => {
+        const s = slot.current!;
+        Object.assign(rect, { x: s.offsetLeft, y: s.offsetTop, w: s.offsetWidth || 1, h: s.offsetHeight || 1 });
+        gsap.set(wall, { transformOrigin: `${rect.x + rect.w / 2}px ${rect.y + rect.h / 2}px` });
+      };
+
+      // per-frame writes go through quickSetter (no tween objects created on scroll)
+      const setWallScale = gsap.quickSetter(wall, 'scale');
+      const setWallAlpha = gsap.quickSetter(wall, 'opacity');
+      const setFrame = {
+        x: gsap.quickSetter(frameEl, 'x', 'px'),
+        y: gsap.quickSetter(frameEl, 'y', 'px'),
+        w: gsap.quickSetter(frameEl, 'width', 'px'),
+        h: gsap.quickSetter(frameEl, 'height', 'px'),
+        r: gsap.quickSetter(frameEl, 'borderRadius', 'px'),
+      };
+      const setUi = gsap.quickSetter(sticky.current!, '--ui');
+
+      // zoom = eased 0→1. The frame follows the zoomed slot but stays clipped to the screen,
+      // so the slide text and dots are always inside the visible area.
+      const zoom = { p: 0 };
+      const render = () => {
+        const vw = window.innerWidth, vh = window.innerHeight, e = zoom.p;
+        const start = Math.max(vw / rect.w, vh / rect.h) * ZOOM.overscan;
+        const scale = start + (1 - start) * e;
+        const cx = rect.x + rect.w / 2, cy = rect.y + rect.h / 2, fw = rect.w * scale, fh = rect.h * scale;
+        const left = Math.max(0, cx - fw / 2), top = Math.max(0, cy - fh / 2);
+        setWallScale(scale);
+        setWallAlpha(Math.min(1, e * 3));
+        setFrame.x(left);
+        setFrame.y(top);
+        setFrame.w(Math.min(vw, cx + fw / 2) - left);
+        setFrame.h(Math.min(vh, cy + fh / 2) - top);
+        setFrame.r(16 * e);
+        setUi(1 - Math.min(1, e * 3));
+        ui.current!.classList.toggle('off', e > ZOOM.uiOffAt);
+      };
+
+      const tl = gsap.timeline({
+        defaults: { ease: EASE.none },
+        scrollTrigger: {
+          trigger: heroEl,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: true,
+          invalidateOnRefresh: true,
+          onRefresh: () => {
+            measure();
+            render();
+          },
+        },
+      });
+      tl.to(zoom, { p: 1, duration: ZOOM.end, ease: 'power2.inOut', onUpdate: render }, 0)
+        .fromTo(wall, { '--lbl': 0 }, { '--lbl': 1, duration: ZOOM.labels[1] }, ZOOM.labels[0])
+        .fromTo(veil.current!, { opacity: 0 }, { opacity: 1, duration: ZOOM.title[1] }, ZOOM.title[0])
+        .fromTo(
+          title.current!,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: ZOOM.title[1],
+            onUpdate() {
+              title.current!.classList.toggle('live', this.progress() > 0.5);
+            },
+          },
+          ZOOM.title[0],
+        )
+        .to({}, { duration: 1 - (ZOOM.title[0] + ZOOM.title[1]) }); // pad so the timeline spans the whole scroll
+
+      measure();
+      render();
+      requestRefresh();
+    },
+    { scope: section },
+  );
 
   // 15 cells: the centre one (index 7, in both the 5×3 and 3×5 grids) is the empty slot the slider lands in
   const cells = Array.from({ length: 15 }, (_, i) => (i === 7 ? null : mosaic[i < 7 ? i : i - 1]));
@@ -92,8 +162,13 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         ref={sticky}
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
-        onKeyDown={(e) => { if (e.key === 'ArrowLeft') go(cur - 1); if (e.key === 'ArrowRight') go(cur + 1); }}
-        onPointerDown={(e) => { if (e.pointerType !== 'mouse') swipeX.current = e.clientX; }}
+        onKeyDown={(e) => {
+          if (e.key === 'ArrowLeft') go(cur - 1);
+          if (e.key === 'ArrowRight') go(cur + 1);
+        }}
+        onPointerDown={(e) => {
+          if (e.pointerType !== 'mouse') swipeX.current = e.clientX;
+        }}
         onPointerUp={(e) => {
           if (swipeX.current === null) return;
           const dx = e.clientX - swipeX.current;
@@ -104,7 +179,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         <div className="mosaic" ref={mosaicEl} aria-hidden="true">
           {cells.map((m, i) =>
             m === null ? (
-              <figure className="slot" key={i} ref={slot as any} />
+              <figure className="slot" key={i} ref={slot} />
             ) : m ? (
               <figure key={i}>
                 <img src={m.image.src} alt="" decoding="async" />
@@ -119,7 +194,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         <div className="hero-frame" ref={frame}>
           <div>
             {slides.map((s, i) => (
-              <div className={'slide' + (i === cur ? ' on' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${n}`} key={i}>
+              <div className={'slide' + (i === cur ? ' on' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} key={i}>
                 <img src={s.image.src} alt={s.image.alt} {...(i ? { loading: 'lazy' as const } : { fetchPriority: 'high' as const })} />
                 <div className="slide-copy">
                   <p className="eyebrow">{s.tag}</p>

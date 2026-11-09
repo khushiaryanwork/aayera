@@ -38,15 +38,30 @@ const items = site.floatingSocials ? site.socials.filter((s) => BRANDS[s.platfor
     <button class="fsoc-main" type="button" aria-expanded="false" aria-controls="fsoc-list" aria-label="Follow Aayera on social media">
       <span class="fsoc-ico-open" aria-hidden="true"></span>
       <svg class="fsoc-ico-close" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+      <span class="fsoc-ring" aria-hidden="true"></span>
       <span class="fsoc-tip">Follow us</span>
     </button>
   </div>
 )}
 
 <script>
+  import { gsap, EASE, MQ } from '../lib/motion/gsap';
+
   // one button that opens the social links: hover on desktop, tap/click everywhere
   const root = document.getElementById('fsoc');
   if (root) {
+    // entrance pop and a soft pulse ring on the closed button
+    gsap.matchMedia().add(MQ.motion, () => {
+      // animate the inner button, not #fsoc itself: the wrapper's visibility is owned by CSS
+      // (it is hidden on the homepage while the slider arrows show)
+      gsap.fromTo(
+        root.querySelector('.fsoc-main'),
+        { autoAlpha: 0, y: 16, scale: 0.8 },
+        { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, delay: 0.8, ease: 'back.out(1.7)', clearProps: 'opacity,visibility,transform' },
+      );
+      const ring = root.querySelector('.fsoc-ring');
+      if (ring) gsap.fromTo(ring, { scale: 1, opacity: 0.7 }, { scale: 1.55, opacity: 0, duration: 2, ease: 'power2.out', repeat: -1, repeatDelay: 0.8, delay: 2 });
+    });
     const btn = root.querySelector<HTMLButtonElement>('.fsoc-main')!;
     const links = [...root.querySelectorAll<HTMLAnchorElement>('.fsoc-list a')];
     const hover = matchMedia('(hover:hover) and (pointer:fine)');

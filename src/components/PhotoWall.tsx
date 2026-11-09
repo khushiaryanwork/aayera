@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap, EASE, MQ } from '../lib/motion/gsap';
 import type { WallTile } from '../lib/types';
 
+/** Parallax strength per column (positive = drifts up as you scroll). */
 const SPEEDS = [0.12, -0.08, 0.16, -0.05];
+/** Pixels of drift at strength 1 across the wall's full pass through the viewport. */
+const DRIFT = 900;
 
 /** Four parallax columns of photos; clicking one opens a lightbox. */
 export default function PhotoWall({ tiles }: { tiles: WallTile[] }) {
@@ -12,24 +17,22 @@ export default function PhotoWall({ tiles }: { tiles: WallTile[] }) {
   const per = Math.ceil(tiles.length / 4) || 1;
   const cols = [0, 1, 2, 3].map((c) => tiles.slice(c * per, c * per + per).map((t, j) => ({ t, i: c * per + j })));
 
-  useEffect(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const colEls = [...wall.current!.children] as HTMLElement[];
-    const onScroll = () => {
-      const vh = innerHeight, wr = wall.current!.getBoundingClientRect(), wp = (vh - wr.top) / (vh + wr.height);
-      colEls.forEach((c, i) => (c.style.transform = `translate3d(0,${(wp - 0.5) * SPEEDS[i] * -900}px,0)`));
-    };
-    let ticking = false;
-    const scroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { onScroll(); ticking = false; });
-    };
-    onScroll();
-    addEventListener('scroll', scroll, { passive: true });
-    addEventListener('resize', onScroll);
-    return () => { removeEventListener('scroll', scroll); removeEventListener('resize', onScroll); };
-  }, []);
+  // columns drift at different speeds while the wall passes through the viewport
+  useGSAP(
+    () => {
+      gsap.matchMedia().add(MQ.motion, () => {
+        gsap.utils.toArray<HTMLElement>(wall.current!.children).forEach((col, i) => {
+          const drift = (SPEEDS[i] ?? 0) * DRIFT;
+          gsap.fromTo(
+            col,
+            { y: drift / 2 },
+            { y: -drift / 2, ease: EASE.none, scrollTrigger: { trigger: wall.current, start: 'top bottom', end: 'bottom top', scrub: true } },
+          );
+        });
+      });
+    },
+    { scope: wall },
+  );
 
   const show = useCallback((i: number) => setOpen(((i % tiles.length) + tiles.length) % tiles.length), [tiles.length]);
   const close = () => setOpen(null);

@@ -1,44 +1,44 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import { gsap, ScrollTrigger, EASE, requestRefresh } from '../lib/motion/gsap';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 
-const clamp = (v: number, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** Pinned section whose cards travel horizontally as the page scrolls vertically. */
+/**
+ * Pinned section whose cards travel horizontally as the page scrolls vertically.
+ * The section is made exactly `100vh + travel` tall and its inner wrapper is CSS-sticky,
+ * so the vertical scroll distance equals the horizontal distance the track moves.
+ */
 export default function EventsTrack({ heading, intro, items }: Home['events']) {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    let travel = 0;
-    const size = () => {
-      travel = Math.max(0, track.current!.scrollWidth - innerWidth);
-      section.current!.style.height = innerHeight + travel + 'px';
-    };
-    const onScroll = () => {
-      const hp = clamp((scrollY - section.current!.offsetTop) / (travel || 1));
-      track.current!.style.transform = `translate3d(${-hp * travel}px,0,0)`;
-      bar.current!.style.transform = `scaleX(${hp})`;
-    };
-    let ticking = false;
-    const scroll = () => {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { onScroll(); ticking = false; });
-    };
-    const resize = () => { size(); onScroll(); };
-    resize();
-    addEventListener('scroll', scroll, { passive: true });
-    addEventListener('resize', resize);
-    addEventListener('load', resize);
-    return () => {
-      removeEventListener('scroll', scroll);
-      removeEventListener('resize', resize);
-      removeEventListener('load', resize);
-    };
-  }, []);
+  useGSAP(
+    () => {
+      const travel = () => Math.max(0, track.current!.scrollWidth - window.innerWidth);
+      // size the section before ScrollTrigger measures, on every refresh (resize, fonts, images)
+      const size = () => {
+        section.current!.style.height = `${window.innerHeight + travel()}px`;
+      };
+      size();
+      ScrollTrigger.addEventListener('refreshInit', size);
+
+      gsap
+        .timeline({
+          defaults: { ease: EASE.none },
+          scrollTrigger: { trigger: section.current, start: 'top top', end: () => `+=${travel()}`, scrub: true, invalidateOnRefresh: true },
+        })
+        .fromTo(track.current, { x: 0 }, { x: () => -travel() }, 0)
+        .fromTo(bar.current, { scaleX: 0 }, { scaleX: 1 }, 0);
+
+      requestRefresh();
+      return () => ScrollTrigger.removeEventListener('refreshInit', size);
+    },
+    { scope: section },
+  );
 
   return (
     <section className="hscroll" id="events" ref={section}>
