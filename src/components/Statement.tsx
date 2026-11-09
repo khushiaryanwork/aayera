@@ -37,7 +37,7 @@ export default function Statement({ image, words }: Home['statement']) {
             const on = progress > WORD_START + i * WORD_STEP;
             if (on === shown[i]) return;
             shown[i] = on;
-            gsap.to(el, { autoAlpha: on ? 1 : 0, y: on ? 0 : 40, duration: 0.7, ease: EASE.out, overwrite: true });
+            gsap.to(el, { autoAlpha: on ? 1 : 0, y: on ? 0 : 40, duration: 0.7, ease: EASE.css, overwrite: true });
           });
 
         const tl = gsap.timeline({

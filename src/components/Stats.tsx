@@ -20,7 +20,7 @@ export default function Stats({ items }: { items: Stat[] }) {
           gsap.to(counter, {
             v: target,
             duration: COUNT_DURATION,
-            ease: EASE.out,
+            ease: EASE.count,
             snap: { v: 1 },
             onUpdate: () => {
               el.textContent = String(counter.v);

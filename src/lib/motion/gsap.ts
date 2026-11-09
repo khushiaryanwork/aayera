@@ -5,9 +5,14 @@
  */
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { CustomEase } from 'gsap/CustomEase';
 
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger, CustomEase);
+  // exact copies of the curves the original CSS used, so motion feels identical
+  CustomEase.create('siteOut', '0.2,0.7,0.2,1'); // cubic-bezier(.2,.7,.2,1): the site's "settle" curve
+  CustomEase.create('cssEase', '0.25,0.1,0.25,1'); // CSS `ease`
+  CustomEase.create('cssEaseOut', '0,0,0.58,1'); // CSS `ease-out`
   // ignore the address-bar show/hide resize on mobile so pinned/scrubbed sections don't jump
   ScrollTrigger.config({ ignoreMobileResize: true });
 }
@@ -15,9 +20,15 @@ if (typeof window !== 'undefined') {
 /** Shared easing vocabulary (keeps motion consistent with the original CSS curves). */
 export const EASE = {
   /** cubic-bezier(.2,.7,.2,1): the site's standard "settle" curve */
-  out: 'power3.out',
-  /** ease-in-out cubic (GSAP's power2 is cubic) */
+  out: 'siteOut',
+  /** CSS `ease`, used for fades */
+  css: 'cssEase',
+  /** CSS `ease-out` */
+  cssOut: 'cssEaseOut',
+  /** ease-in-out cubic (GSAP's power2 is cubic) — the hero zoom */
   inOut: 'power2.inOut',
+  /** ease-out cubic, 1-(1-t)^3 — the number counters */
+  count: 'power2.out',
   /** constant speed, for scroll-scrubbed and looping motion */
   none: 'none',
 } as const;

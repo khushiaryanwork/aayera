@@ -38,11 +38,13 @@ export default function Clients({ eyebrow, heading, intro, logos }: Home['client
         countEl.current!.textContent = '0';
         gsap
           .timeline({ scrollTrigger: { trigger: section, start: 'top 85%', once: true } })
-          .fromTo(rowEls, { autoAlpha: 0, x: (i) => (i === 1 ? 80 : -80) }, { autoAlpha: 1, x: 0, duration: 1.4, ease: EASE.out, stagger: 0.12 }, 0)
+          // fade (1.1s, CSS ease) and slide (1.4s, site curve) run together, 0.12s apart per row
+          .fromTo(rowEls, { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.1, ease: EASE.css, stagger: 0.12 }, 0)
+          .fromTo(rowEls, { x: (i) => (i === 1 ? 80 : -80) }, { x: 0, duration: 1.4, ease: EASE.out, stagger: 0.12 }, 0)
           .to(counter, {
             v: logos.length,
             duration: 1.6,
-            ease: EASE.out,
+            ease: EASE.count,
             snap: { v: 1 },
             onUpdate: () => {
               countEl.current!.textContent = String(counter.v);

@@ -29,16 +29,12 @@ function initReveals(): void {
     start: 'top 88%',
     once: true,
     onEnter: (batch) =>
-      gsap.to(batch, {
-        autoAlpha: 1,
-        y: 0,
-        duration: REVEAL.duration,
-        ease: EASE.out,
-        stagger: REVEAL.stagger,
-        overwrite: true,
-        // hand transforms back to CSS so hover lifts keep working
-        clearProps: 'transform',
-      }),
+      gsap
+        .timeline()
+        // fade with CSS `ease`, rise with the site curve (as the original CSS transition did)
+        .to(batch, { autoAlpha: 1, duration: REVEAL.duration, ease: EASE.css, stagger: REVEAL.stagger }, 0)
+        // hand transforms back to CSS afterwards so hover lifts keep working
+        .to(batch, { y: 0, duration: REVEAL.duration, ease: EASE.out, stagger: REVEAL.stagger, clearProps: 'transform' }, 0),
   });
 }
 

@@ -6,9 +6,18 @@ import { Rich, plain } from './Rich';
 
 type Props = Home['hero'];
 
-/** Slider timing (seconds). */
+/** Slider timing (seconds) — identical to the original CSS version. */
 const AUTOPLAY = { desktop: 4, mobile: 6 } as const;
-const SLIDE = { fade: 1.1, kenBurns: 7, copyDelay: 0.35, copyStagger: 0.1 } as const;
+const SLIDE = {
+  fade: 1.1, // crossfade between slides (CSS `ease`)
+  kenBurns: 7, // slow zoom from 108% to 100% (CSS `ease-out`)
+  kenBurnsFrom: 1.08,
+  copyFade: 0.7, // caption opacity (CSS `ease`)
+  copyMove: 0.8, // caption slide-up (site curve)
+  copyOffset: 24, // px the caption rises
+  copyDelay: 0.35, // first caption line starts after…
+  copyStagger: 0.1, // …and each next line this much later
+} as const;
 
 /**
  * Scroll choreography, as fractions of the hero's scroll distance:
@@ -47,25 +56,52 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   }, [cur, hovering, count]);
 
   /* ---------- slide change: crossfade, Ken Burns zoom, caption stagger ---------- */
+  const firstRun = useRef(true);
   useGSAP(
     () => {
       const els = gsap.utils.toArray<HTMLElement>('.slide', section.current);
       const active = els[cur];
       if (!active) return;
+      const others = els.filter((el) => el !== active);
       const reduce = prefersReducedMotion();
-      const fade = reduce ? 0 : SLIDE.fade;
+      const t = (seconds: number) => (reduce ? 0 : seconds);
+      const captionOf = (el: HTMLElement) => el.querySelectorAll<HTMLElement>('.slide-copy > *');
+      const kenBurns = (el: HTMLElement) => {
+        const img = el.querySelector('img');
+        if (img) gsap.fromTo(img, { scale: SLIDE.kenBurnsFrom }, { scale: 1, duration: t(SLIDE.kenBurns), ease: EASE.cssOut, overwrite: true });
+      };
 
-      gsap.to(els.filter((el) => el !== active), { autoAlpha: 0, duration: fade, ease: 'power1.inOut', overwrite: 'auto' });
-      gsap.to(active, { autoAlpha: 1, duration: fade, ease: 'power1.inOut', overwrite: 'auto' });
-      if (reduce) return;
+      // first render: the server already shows slide 1 with its caption, so only start the zoom
+      if (firstRun.current) {
+        firstRun.current = false;
+        gsap.set(others, { autoAlpha: 0 });
+        others.forEach((el) => gsap.set(captionOf(el), { opacity: 0, y: SLIDE.copyOffset }));
+        kenBurns(active);
+        return;
+      }
 
-      const img = active.querySelector('img');
-      if (img) gsap.fromTo(img, { scale: 1.08 }, { scale: 1, duration: SLIDE.kenBurns, ease: 'power2.out', overwrite: true });
-      gsap.fromTo(
-        active.querySelectorAll('.slide-copy > *'),
-        { autoAlpha: 0, y: 24 },
-        { autoAlpha: 1, y: 0, duration: 0.8, ease: EASE.out, stagger: SLIDE.copyStagger, delay: SLIDE.copyDelay, overwrite: true },
-      );
+      // crossfade
+      gsap.to(others, { autoAlpha: 0, duration: t(SLIDE.fade), ease: EASE.css, overwrite: 'auto' });
+      gsap.to(active, { autoAlpha: 1, duration: t(SLIDE.fade), ease: EASE.css, overwrite: 'auto' });
+
+      // outgoing slides: photo resets to its start zoom, caption drops away (no delay)
+      others.forEach((el) => {
+        const img = el.querySelector('img');
+        if (img) {
+          gsap.killTweensOf(img);
+          gsap.set(img, { scale: SLIDE.kenBurnsFrom });
+        }
+        const caption = captionOf(el);
+        gsap.to(caption, { opacity: 0, duration: t(SLIDE.copyFade), ease: EASE.css, overwrite: 'auto' });
+        gsap.to(caption, { y: SLIDE.copyOffset, duration: t(SLIDE.copyMove), ease: EASE.out, overwrite: 'auto' });
+      });
+
+      // incoming slide: zoom + caption lines rise in one after another
+      kenBurns(active);
+      const caption = captionOf(active);
+      const delay = (i: number) => (reduce ? 0 : SLIDE.copyDelay + i * SLIDE.copyStagger);
+      gsap.to(caption, { opacity: 1, duration: t(SLIDE.copyFade), ease: EASE.css, delay, overwrite: 'auto' });
+      gsap.to(caption, { y: 0, duration: t(SLIDE.copyMove), ease: EASE.out, delay, overwrite: 'auto' });
     },
     { scope: section, dependencies: [cur] },
   );
@@ -127,7 +163,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
           },
         },
       });
-      tl.to(zoom, { p: 1, duration: ZOOM.end, ease: 'power2.inOut', onUpdate: render }, 0)
+      tl.to(zoom, { p: 1, duration: ZOOM.end, ease: EASE.inOut, onUpdate: render }, 0)
         .fromTo(wall, { '--lbl': 0 }, { '--lbl': 1, duration: ZOOM.labels[1] }, ZOOM.labels[0])
         .fromTo(veil.current!, { opacity: 0 }, { opacity: 1, duration: ZOOM.title[1] }, ZOOM.title[0])
         .fromTo(

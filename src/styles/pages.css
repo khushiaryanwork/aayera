@@ -228,7 +228,8 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 @media (prefers-reduced-motion:reduce){.fsoc,.fsoc-list li,.fsoc-main svg,.fsoc-main .fsoc-ico-open{transition:none}}
 
 /* ============ brief additions: verticals, industries, platforms ============ */
-.hero-intro{margin:18px auto 0;max-width:46ch;font-size:clamp(15px,1.3vw,18px);line-height:1.55;color:oklch(90% .006 260)}
+/* h1 already has 30px below it; give the buttons the same breathing room */
+.hero-intro{margin:0 auto 32px;max-width:46ch;font-size:clamp(15px,1.3vw,18px);line-height:1.55;color:oklch(90% .006 260)}
 .sec-cta{margin-top:clamp(32px,4vw,48px)}
 
 /* business vertical tiles */
