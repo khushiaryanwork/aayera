@@ -19,7 +19,15 @@ export default function EventsTrack({ heading, intro, items }: Home['events']) {
 
   useGSAP(
     () => {
-      const travel = () => Math.max(0, track.current!.scrollWidth - window.innerWidth);
+      // distance to move so the last card ends one gutter (the track's right padding) inside
+      // the visible width; clientWidth excludes a desktop scrollbar, and scrollWidth would drop the padding
+      const travel = () => {
+        const el = track.current!;
+        const last = el.lastElementChild as HTMLElement | null;
+        if (!last) return 0;
+        const contentEnd = last.offsetLeft + last.offsetWidth + parseFloat(getComputedStyle(el).paddingRight);
+        return Math.max(0, Math.ceil(contentEnd - document.documentElement.clientWidth));
+      };
       // size the section before ScrollTrigger measures, on every refresh (resize, fonts, images)
       const size = () => {
         section.current!.style.height = `${window.innerHeight + travel()}px`;
