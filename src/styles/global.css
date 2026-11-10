@@ -114,7 +114,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hscroll-head p{color:var(--muted);font-size:14px;max-width:30ch}
 .htrack{display:flex;gap:24px;padding:0 var(--gutter);will-change:transform}
 .hcard{position:relative;flex:0 0 auto;width:clamp(280px,38vw,620px);height:min(62svh,560px);border-radius:22px;overflow:hidden;background:var(--raised)}
-.hcard:nth-child(3n+2){width:clamp(240px,26vw,420px)}
 .hcard img{width:100%;height:100%;object-fit:cover;transform:scale(1.15);transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
 .hcard:hover img{transform:scale(1.05)}
 .hcard::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 50%,oklch(10% .012 260 / .85))}
