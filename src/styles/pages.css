@@ -161,12 +161,24 @@ html.menu-open .nav{background:var(--black)}
 .cmap iframe{width:100%;height:100%;border:0;filter:grayscale(1) invert(.92) contrast(.9) hue-rotate(180deg)}
 @media (max-width:860px){.csec-grid{grid-template-columns:minmax(0,1fr)}.cmap{aspect-ratio:4/3}}
 
-/* footer: brand / links / contact */
-.foot-brand{display:flex;flex-direction:column;gap:12px;max-width:34ch}
-.foot-links{display:flex;flex-wrap:wrap;gap:10px 22px;align-content:flex-start;max-width:520px}
-.foot-links a{color:var(--on);opacity:.8}
-.foot-links a:hover{opacity:1}
-.foot-contact{align-self:flex-start}
+/* footer: brand + contact | one column per menu group | copyright row */
+.foot-top{display:grid;grid-template-columns:minmax(220px,1.1fr) 3fr;gap:clamp(36px,5vw,80px)}
+.foot-brand{display:flex;flex-direction:column;gap:18px;max-width:34ch}
+.foot-brand address{font-style:normal;line-height:1.6}
+.foot-contact{list-style:none;display:flex;flex-direction:column;gap:8px}
+.foot-contact a{color:var(--on)}
+.foot-hours{font-size:13px}
+.foot-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 28px}
+.foot-title{font-size:11px;line-height:1.4;letter-spacing:.16em;text-transform:uppercase;white-space:nowrap;color:var(--gold);margin-bottom:16px}
+.foot-title a,.foot-title a:hover{color:var(--gold)}
+.foot-col ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+.foot-col ul a{color:var(--on);opacity:.78;line-height:1.35}
+.foot-col ul a:hover{opacity:1;color:var(--gold)}
+.foot-bottom{margin-top:clamp(40px,5vw,64px);padding-top:22px;border-top:1px solid var(--rule);font-size:13px}
+@media (max-width:1100px){.foot-top{grid-template-columns:1fr}.foot-brand{max-width:none}}
+@media (max-width:760px){.foot-cols{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* leave room for the floating message button */
+@media (max-width:600px){.foot-bottom{padding-right:70px}}
 .cmap{background:var(--raised)}
 
 /* ---------- announcement bar (above the nav; slides away once the page scrolls) ---------- */
@@ -315,4 +327,4 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 /* contact details */
 .cinfo dd a{display:inline-block;padding-block:7px;margin-block:-4px}
 /* footer links on touch screens */
-@media (pointer:coarse){.foot-contact a,.foot-links a{display:inline-block;padding-block:9px}.foot-links{gap:0 22px}}
+@media (pointer:coarse){.foot-contact a,.foot-col ul a{display:inline-block;padding-block:6px}.foot-col ul,.foot-contact{gap:4px}}

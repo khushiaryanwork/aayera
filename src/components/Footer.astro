@@ -1,18 +1,41 @@
 ---
-import type { Site } from '../lib/types';
+import type { Site, Link } from '../lib/types';
 const { site } = Astro.props as { site: Site };
-const links = site.nav.flatMap((n) => [n, ...(n.children ?? [])]).concat(site.navCta);
+
+/* One column per menu group that has sub-pages (About, Business Verticals, Our Platforms);
+   single menu links (Industries, Contact) and the header button go together in a last column. */
+const groups = site.nav
+  .filter((n) => n.children?.length)
+  .map((n) => ({ title: n.label, href: n.href, links: n.children as Link[] }));
+const singles = site.nav.filter((n) => !n.children?.length).map(({ label, href }) => ({ label, href }));
+if (site.navCta?.href && !singles.some((l) => l.label === site.navCta.label)) singles.push(site.navCta);
+if (singles.length) groups.push({ title: 'Explore', href: '', links: singles });
+
+const year = new Date().getFullYear();
 ---
-<footer>
-  <div class="foot-brand">
-    <a href="/" aria-label="Aayera home"><img src={site.logo.src} alt={site.logo.alt || 'Aayera'}></a>
-    <span>{site.address}</span>
+<footer class="foot">
+  <div class="foot-top">
+    <div class="foot-brand">
+      <a href="/" aria-label="Aayera home"><img src={site.logo.src} alt={site.logo.alt || 'Aayera'} width="120" height="38"></a>
+      {site.address && <address>{site.address}</address>}
+      <ul class="foot-contact">
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        {site.phones.map((p) => <li><a href={`tel:${p.number}`}>{p.label}</a></li>)}
+        {site.hours && <li class="foot-hours">{site.hours}</li>}
+      </ul>
+    </div>
+    <nav class="foot-cols" aria-label="Footer">
+      {groups.map((g) => (
+        <div class="foot-col">
+          <p class="foot-title">{g.href ? <a href={g.href}>{g.title}</a> : g.title}</p>
+          <ul>
+            {g.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+          </ul>
+        </div>
+      ))}
+    </nav>
   </div>
-  <nav class="foot-links" aria-label="Footer">
-    {links.map((l) => <a href={l.href}>{l.label}</a>)}
-  </nav>
-  <span class="foot-contact">
-    <a href={`mailto:${site.email}`}>{site.email}</a>
-    {site.phones.map((p) => <> · <a href={`tel:${p.number}`}>{p.label}</a></>)}
-  </span>
+  <div class="foot-bottom">
+    <span>© {year} AAYERA. All rights reserved.</span>
+  </div>
 </footer>
