@@ -30,10 +30,10 @@ const { site, home, noindex, verticals, industries, platforms } = await getConte
   <Statement client:load {...home.statement} />
   <PlatformCards head={home.platformsHead} platforms={platforms} compact />
   <EventsTrack client:load {...home.events} />
-  <Stats client:load items={home.stats} />
+  <Stats client:visible={{ rootMargin: '600px' }} items={home.stats} />
   <Moments moments={home.moments} />
   <Filmstrip images={home.filmstrip} />
-  <Clients client:load {...home.clients} />
+  <Clients client:visible={{ rootMargin: '600px' }} {...home.clients} />
   <Cta cta={home.cta} />
   <Footer site={site} />
 </Base>

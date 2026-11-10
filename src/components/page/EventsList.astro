@@ -1,4 +1,5 @@
 ---
+import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import type { EventItem } from '../../lib/types';
 import SecHead from './SecHead.astro';
 const { s, events } = Astro.props as { s: any; events: EventItem[] };
@@ -8,24 +9,27 @@ const groups = [
   { label: 'Upcoming events', items: upcoming },
   { label: upcoming.length ? 'Previous events' : '', items: past },
 ].filter((g) => g.items.length);
+// keep heading levels in order whether or not the section has its own heading
+const G = s.heading ? 'h3' : 'h2';
+const levelOf = (labelled: boolean) => (labelled ? (s.heading ? 'h4' : 'h3') : s.heading ? 'h3' : 'h2');
 const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
 ---
 <section class="sec esec" id={s.anchor || undefined}>
   <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
   {groups.map((g) => (
     <div class="egroup">
-      {g.label && <h3 class="egroup-title">{g.label}</h3>}
-      {g.items.map((e) => (
+      {g.label && <G class="egroup-title">{g.label}</G>}
+      {g.items.map((e) => { const T = levelOf(!!g.label); return (
         <article class={'erow rv' + (s.showSummaries && e.summary ? '' : ' compact')}>
-          <div class="erow-img">{e.image && <img src={e.image.src} alt={e.title} loading="lazy">}</div>
+          <div class="erow-img">{e.image && <img {...imgAttrs(e.image, SIZES.half)} alt={e.title} loading="lazy" decoding="async">}</div>
           <div class="erow-txt">
             <p class="erow-meta"><span class="pill">{e.tag}</span>{e.date}{e.location && <> · {e.location}</>}</p>
-            <h3>{e.title}</h3>
+            <T class="erow-title">{e.title}</T>
             {s.showSummaries && e.summary && e.summary.split(/\n\s*\n/).map((p) => <p class="erow-sum">{p}</p>)}
             {e.website && <a class="erow-link" href={e.website} target="_blank" rel="noopener">{host(e.website)} <span aria-hidden="true">↗</span></a>}
           </div>
         </article>
-      ))}
+      ); })}
     </div>
   ))}
 </section>

@@ -1,10 +1,11 @@
 ---
+import { imgAttrs, SIZES } from '../lib/img-attrs';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 const { cta } = Astro.props as { cta: Home['cta'] };
 ---
 <section class="cta" id="contact">
-  <div class="cta-bg" id="ctaBg">{cta.image && <img src={cta.image.src} alt={cta.image.alt} loading="lazy">}</div>
+  <div class="cta-bg" id="ctaBg">{cta.image && <img {...imgAttrs(cta.image, SIZES.full)} alt={cta.image.alt} loading="lazy" decoding="async">}</div>
   <div class="cta-in rv">
     <p class="eyebrow">{cta.eyebrow}</p>
     <h2><Rich text={cta.heading} /></h2>

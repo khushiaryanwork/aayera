@@ -9,5 +9,5 @@ const { moments } = Astro.props as { moments: Home['moments'] };
     <p class="eyebrow">{moments.eyebrow}</p>
     <h2><Rich text={moments.heading} /></h2>
   </div>
-  <PhotoWall client:load tiles={moments.tiles} />
+  <PhotoWall client:visible={{ rootMargin: '600px' }} tiles={moments.tiles} />
 </section>

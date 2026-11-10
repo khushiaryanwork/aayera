@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, EASE, MQ, SCRUB, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
 import { MOBILE_MEDIA } from '../lib/breakpoints';
+import { imgProps, SIZES } from '../lib/img-attrs';
 import type { Home } from '../lib/types';
 import { Rich, plain } from './Rich';
 
@@ -34,7 +35,27 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   const count = slides.length;
   const [cur, setCur] = useState(0);
   const [hovering, setHovering] = useState(false);
-  const go = (i: number) => setCur(((i % count) + count) % count);
+  // slides 2+ and the photo wall are only needed later: load them once the page has finished
+  // loading, so the first slide gets all the bandwidth (also when autoplay may start)
+  const [restLoaded, setRestLoaded] = useState(false);
+  const go = (i: number) => {
+    setRestLoaded(true);
+    setCur(((i % count) + count) % count);
+  };
+
+  useEffect(() => {
+    let idle = 0;
+    const later = () => {
+      idle = window.requestIdleCallback ? window.requestIdleCallback(() => setRestLoaded(true), { timeout: 1500 }) : window.setTimeout(() => setRestLoaded(true), 200);
+    };
+    if (document.readyState === 'complete') later();
+    else window.addEventListener('load', later, { once: true });
+    return () => {
+      window.removeEventListener('load', later);
+      if (window.cancelIdleCallback) window.cancelIdleCallback(idle);
+      else window.clearTimeout(idle);
+    };
+  }, []);
 
   const section = useRef<HTMLElement>(null);
   const sticky = useRef<HTMLDivElement>(null);
@@ -48,13 +69,13 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
 
   /* ---------- autoplay: restarts on every slide change, paused on hover / reduced motion ---------- */
   useEffect(() => {
-    if (count < 2 || hovering || prefersReducedMotion()) return;
+    if (count < 2 || hovering || !restLoaded || prefersReducedMotion()) return;
     const delay = window.matchMedia(MQ.desktop).matches ? AUTOPLAY.desktop : AUTOPLAY.mobile;
     const next = gsap.delayedCall(delay, () => setCur((c) => (c + 1) % count));
     return () => {
       next.kill();
     };
-  }, [cur, hovering, count]);
+  }, [cur, hovering, count, restLoaded]);
 
   /* ---------- slide change: crossfade, Ken Burns zoom, caption stagger ---------- */
   const firstRun = useRef(true);
@@ -219,7 +240,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
               <figure className="slot" key={i} ref={slot} />
             ) : m ? (
               <figure key={i}>
-                <img src={m.image.src} alt="" decoding="async" />
+                {restLoaded && <img {...imgProps(m.image, SIZES.mosaic)} alt="" decoding="async" />}
                 <figcaption>{m.caption}</figcaption>
               </figure>
             ) : (
@@ -233,10 +254,12 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
             {slides.map((s, i) => (
               <div className={'slide' + (i === cur ? ' on' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} key={i}>
                 {/* phones get the portrait image when one is set; the browser downloads only one of the two */}
-                <picture>
-                  {s.imageMobile && <source media={MOBILE_MEDIA} srcSet={s.imageMobile.src} />}
-                  <img src={s.image.src} alt={s.image.alt} {...(i ? { loading: 'lazy' as const } : { fetchPriority: 'high' as const })} />
-                </picture>
+                {(i === 0 || restLoaded) && (
+                  <picture>
+                    {s.imageMobile && <source media={MOBILE_MEDIA} srcSet={s.imageMobile.srcset || s.imageMobile.src} sizes={SIZES.full} />}
+                    <img {...imgProps(s.image, SIZES.full)} alt={s.image.alt} {...(i ? {} : { fetchPriority: 'high' as const })} />
+                  </picture>
+                )}
                 <div className="slide-copy">
                   <p className="eyebrow">{s.tag}</p>
                   <h2>{s.short || s.title}</h2>

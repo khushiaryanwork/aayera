@@ -1,4 +1,5 @@
 ---
+import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import SecHead from './SecHead.astro';
 const { s } = Astro.props as { s: any };
 // 'auto' (default): photo cards when the items have images, otherwise title/description rows
@@ -10,7 +11,7 @@ const withImages = s.layout === 'cards' || (s.layout === 'auto' && s.items.some(
     <div class="fcards">
       {s.items.map((it: any, i: number) => (
         <article class="fcard rv" style={`--i:${i % 3}`}>
-          {it.image && <div class="fcard-img"><img src={it.image.src} alt={it.image.alt} loading="lazy"></div>}
+          {it.image && <div class="fcard-img"><img {...imgAttrs(it.image, SIZES.third)} alt={it.image.alt} loading="lazy" decoding="async"></div>}
           <h3>{it.title}</h3>
           <p>{it.text}</p>
         </article>

@@ -1,4 +1,5 @@
 ---
+import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import { Rich } from '../Rich';
 const { s } = Astro.props as { s: any };
 ---
@@ -19,5 +20,5 @@ const { s } = Astro.props as { s: any };
       )}
     </div>
   </div>
-  {s.image && <figure class="tsec-img rv"><img src={s.image.src} alt={s.image.alt} loading="lazy"></figure>}
+  {s.image && <figure class="tsec-img rv"><img {...imgAttrs(s.image, SIZES.content)} alt={s.image.alt} loading="lazy" decoding="async"></figure>}
 </section>

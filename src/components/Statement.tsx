@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, EASE, MQ, SCRUB, requestRefresh } from '../lib/motion/gsap';
+import { imgProps, SIZES } from '../lib/img-attrs';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 
@@ -66,7 +67,7 @@ export default function Statement({ image, words }: Home['statement']) {
     <section className="expand" id="expand" ref={section}>
       <div className="expand-sticky">
         <div className="expand-media" ref={media}>
-          {image && <img ref={imgEl} src={image.src} alt={image.alt} />}
+          {image && <img ref={imgEl} {...imgProps(image, SIZES.full)} alt={image.alt} loading="lazy" decoding="async" />}
         </div>
         <div className="expand-words" ref={wordsEl}>
           {words.map((w, i) => {

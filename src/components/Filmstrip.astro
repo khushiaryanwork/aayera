@@ -1,4 +1,5 @@
 ---
+import { imgAttrs, SIZES } from '../lib/img-attrs';
 import type { Img } from '../lib/types';
 const { images } = Astro.props as { images: Img[] };
 const half = Math.ceil(images.length / 2);
@@ -8,7 +9,7 @@ const rows = [images.slice(0, half), images.slice(half)];
   {rows.map((r, i) => (
     <div class="film">
       <div class={'film-track' + (i ? ' rev' : '')} data-loop={i ? 80 : 70} data-loop-reverse={i ? '' : undefined} data-loop-hover-pause>
-        {[...r, ...r].map((im) => <img src={im.src} alt={im.alt} loading="lazy">)}
+        {[...r, ...r].map((im) => <img {...imgAttrs(im, SIZES.thumb)} alt={im.alt} loading="lazy" decoding="async">)}
       </div>
     </div>
   ))}

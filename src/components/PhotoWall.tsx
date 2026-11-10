@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, EASE, MQ, SCRUB } from '../lib/motion/gsap';
+import { imgProps, SIZES } from '../lib/img-attrs';
 import type { WallTile } from '../lib/types';
 
 /** Parallax strength per column (positive = drifts up as you scroll). */
@@ -57,7 +58,7 @@ export default function PhotoWall({ tiles }: { tiles: WallTile[] }) {
           <div className="wall-col" key={c}>
             {col.map(({ t, i }) => (
               <figure className="tile" key={i} style={{ ['--ar' as any]: t.ratio }} onClick={() => show(i)}>
-                <img src={t.image.src} alt={t.caption} loading="lazy" />
+                <img {...imgProps(t.image, SIZES.quarter)} alt={t.caption} loading="lazy" decoding="async" />
                 <span>{t.caption}</span>
               </figure>
             ))}
@@ -72,7 +73,7 @@ export default function PhotoWall({ tiles }: { tiles: WallTile[] }) {
         <button className="icon-btn nav-l" aria-label="Previous" onClick={() => open !== null && show(open - 1)}>
           <svg viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.6" fill="none"><path d="M10 3L5 8l5 5" /></svg>
         </button>
-        {cur && <img src={cur.full} alt={cur.caption} />}
+        {cur && <img {...imgProps(cur.full, '92vw')} alt={cur.caption} />}
         <button className="icon-btn nav-r" aria-label="Next" onClick={() => open !== null && show(open + 1)}>
           <svg viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.6" fill="none"><path d="M6 3l5 5-5 5" /></svg>
         </button>

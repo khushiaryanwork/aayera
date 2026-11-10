@@ -31,7 +31,8 @@ const key = () => randomUUID().replace(/-/g, '').slice(0, 12);
 const cache = new Map();
 async function upload(publicPath) {
   if (cache.has(publicPath)) return cache.get(publicPath);
-  const file = join(root, 'public', publicPath);
+  // bundled photos live in src/assets/img (processed by Astro); logos/icons stay in public/
+  const file = publicPath.startsWith('/assets/img/') ? join(root, 'src', publicPath) : join(root, 'public', publicPath);
   const asset = await client.assets.upload('image', createReadStream(file), { filename: basename(file) });
   const ref = { _type: 'reference', _ref: asset._id };
   cache.set(publicPath, ref);

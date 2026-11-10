@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, EASE, MQ } from '../lib/motion/gsap';
+import { imgProps, SIZES } from '../lib/img-attrs';
 import type { Stat } from '../lib/types';
 
 const COUNT_DURATION = 1.4;
@@ -37,7 +38,7 @@ export default function Stats({ items }: { items: Stat[] }) {
     <section className="stats" aria-label="Aayera in numbers" id="stats" ref={root}>
       {items.map((s, i) => (
         <div className="stat" key={i}>
-          {s.image && <img src={s.image.src} alt="" loading="lazy" />}
+          {s.image && <img {...imgProps(s.image, SIZES.quarter)} alt="" loading="lazy" decoding="async" />}
           <b><span className="v" data-n={s.value}>{s.value}</span><sup>{s.suffix}</sup></b>
           <span>{s.label}</span>
         </div>

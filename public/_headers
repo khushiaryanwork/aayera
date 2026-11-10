@@ -1,0 +1,12 @@
+# Cloudflare Pages response headers
+# Build output with content hashes in the file name (JS, CSS, optimised images): cache forever
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Logos and icons (not hashed): a month, refreshed in the background
+/assets/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

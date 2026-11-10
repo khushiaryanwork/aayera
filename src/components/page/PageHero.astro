@@ -1,4 +1,5 @@
 ---
+import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import type { Page } from '../../lib/types';
 import { MOBILE_MEDIA } from '../../lib/breakpoints';
 import { Rich } from '../Rich';
@@ -11,8 +12,8 @@ const { hero } = page;
     {hero.image && (
       <picture>
         {/* phones get the portrait image when one is set */}
-        {hero.imageMobile && <source media={MOBILE_MEDIA} srcset={hero.imageMobile.src}>}
-        <img src={hero.image.src} alt="" fetchpriority="high" style={hero.image.pos ? `object-position:${hero.image.pos}` : undefined}>
+        {hero.imageMobile && <source media={MOBILE_MEDIA} srcset={hero.imageMobile.srcset || hero.imageMobile.src} sizes={SIZES.full}>}
+        <img {...imgAttrs(hero.image, SIZES.full)} alt="" fetchpriority="high" style={hero.image.pos ? `object-position:${hero.image.pos}` : undefined}>
       </picture>
     )}
   </div>

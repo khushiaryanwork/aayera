@@ -24,7 +24,8 @@ function initNavState(): void {
 function initReveals(): void {
   const items = gsap.utils.toArray<HTMLElement>('.rv');
   if (!items.length) return;
-  gsap.set(items, { autoAlpha: 0, y: REVEAL.y });
+  // opacity only (not visibility) so content waiting to reveal stays available to screen readers
+  gsap.set(items, { opacity: 0, y: REVEAL.y });
   ScrollTrigger.batch(items, {
     start: 'top 88%',
     once: true,
@@ -32,7 +33,7 @@ function initReveals(): void {
       gsap
         .timeline()
         // fade with CSS `ease`, rise with the site curve (as the original CSS transition did)
-        .to(batch, { autoAlpha: 1, duration: REVEAL.duration, ease: EASE.css, stagger: REVEAL.stagger }, 0)
+        .to(batch, { opacity: 1, duration: REVEAL.duration, ease: EASE.css, stagger: REVEAL.stagger }, 0)
         // hand transforms back to CSS afterwards so hover lifts keep working
         .to(batch, { y: 0, duration: REVEAL.duration, ease: EASE.out, stagger: REVEAL.stagger, clearProps: 'transform' }, 0),
   });

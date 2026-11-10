@@ -5,6 +5,7 @@
  */
 import { createClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
+import { optimiseImages, widthsFor } from './images';
 import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
@@ -42,14 +43,31 @@ const has = (v: unknown) =>
   v !== undefined && v !== null && v !== '' && !(Array.isArray(v) && v.length === 0);
 const pick = <T,>(cms: any, def: T): T => (has(cms) ? cms : def);
 
+/** Natural size from a Sanity asset id like "image-<hash>-1920x500-jpg". */
+const sanityDims = (ref: string): [number, number] | null => {
+  const m = /-(\d+)x(\d+)-\w+$/.exec(ref || '');
+  return m ? [Number(m[1]), Number(m[2])] : null;
+};
+
+/**
+ * Normalise any image value (bundled path, defaults object or Sanity image) to an Img.
+ * `width` is the widest the image is ever displayed; bundled images get their srcset later
+ * (lib/images.ts), Sanity images get a CDN srcset here.
+ */
 function img(v: any, width: number, fallbackAlt = ''): Img | null {
   if (!v) return null;
-  if (typeof v === 'string') return { src: v, alt: fallbackAlt };
-  if (v.src) return { src: v.src, alt: v.alt ?? fallbackAlt, ...(v.position ? { pos: v.position } : {}) };
+  if (typeof v === 'string') return { src: v, alt: fallbackAlt, w: width };
+  if (v.src) return { src: v.src, alt: v.alt ?? fallbackAlt, w: width, ...(v.position ? { pos: v.position } : {}) };
   if (v.asset) {
     const h = v.hotspot;
+    const url = (w: number) => builder.image(v).width(w).fit('max').auto('format').quality(78).url();
+    const dims = sanityDims(v.asset._ref);
+    const widths = widthsFor(dims?.[0] ?? width, width);
+    const largest = widths[widths.length - 1];
     return {
-      src: builder.image(v).width(width).fit('max').auto('format').quality(78).url(),
+      src: url(largest),
+      srcset: widths.map((w) => `${url(w)} ${w}w`).join(', '),
+      ...(dims ? { width: largest, height: Math.round((dims[1] / dims[0]) * largest) } : {}),
       alt: v.alt ?? fallbackAlt,
       ...(h && typeof h.x === 'number' ? { pos: `${Math.round(h.x * 100)}% ${Math.round(h.y * 100)}%` } : {}),
     };
@@ -188,7 +206,16 @@ function load() {
   return cached;
 }
 
-export async function getContent(): Promise<{ site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; industries: IndustryTile[]; platforms: Platform[] }> {
+type Content = { site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; industries: IndustryTile[]; platforms: Platform[] };
+
+let content: Promise<Content> | null = null;
+/** All site content, built once per build and shared by every page. */
+export function getContent(): Promise<Content> {
+  content ??= buildContent().then(optimiseImages);
+  return content;
+}
+
+async function buildContent(): Promise<Content> {
   const data: any = (await load()) || {};
   const s = data.settings || {};
   const h = data.home || {};
@@ -228,7 +255,7 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
   const mo = h.moments || {};
   const tiles: WallTile[] = (has(mo.tiles) ? mo.tiles : DH.moments.tiles).map((t: any) => ({
     image: img(t.image, 1000, t.caption) as Img,
-    full: (img(t.image, 2200) as Img).src,
+    full: img(t.image, 2200) as Img,
     ratio: t.ratio || '4/5',
     caption: t.caption || '',
   }));
@@ -244,7 +271,7 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     mosaic = [];
     for (let i = 0; mosaic.length < 14 && (i < evTiles.length || i < picks.length); i++) {
       if (evTiles[i]) mosaic.push(evTiles[i]);
-      if (picks[i] && mosaic.length < 14) mosaic.push({ image: { src: picks[i].image.src.replace(/w=\d+/, 'w=800'), alt: '' }, caption: picks[i].caption });
+      if (picks[i] && mosaic.length < 14) mosaic.push({ image: { ...picks[i].image, alt: '', w: 800 }, caption: picks[i].caption });
     }
   }
 
@@ -286,7 +313,7 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
     platformsHead: head(h.platformsHead, DH.platformsHead),
     filmstrip: has(h.filmstrip)
       ? h.filmstrip.map((x: any) => img(x, 600)).filter(Boolean)
-      : DH.filmstrip.map((id) => ({ src: `/assets/img/07-sliding-rows/${id}.jpg`, alt: '' })),
+      : DH.filmstrip.map((id) => ({ src: `/assets/img/07-sliding-rows/${id}.jpg`, alt: '', w: 600 })),
     clients: { eyebrow: pick(cs.eyebrow, DH.clients.eyebrow), heading: pick(cs.heading, DH.clients.heading), intro: pick(cs.intro, DH.clients.intro), logos },
     cta: {
       eyebrow: pick(cta.eyebrow, DH.cta.eyebrow),

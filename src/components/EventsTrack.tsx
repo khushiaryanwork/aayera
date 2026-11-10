@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, ScrollTrigger, EASE, SCRUB, requestRefresh } from '../lib/motion/gsap';
+import { imgProps, SIZES } from '../lib/img-attrs';
 import type { Home } from '../lib/types';
 import { Rich } from './Rich';
 
@@ -50,7 +51,7 @@ export default function EventsTrack({ heading, intro, items }: Home['events']) {
         <div className="htrack" ref={track}>
           {items.map((e, i) => (
             <figure className="hcard" key={i}>
-              <img src={e.image?.src} alt={e.title} />
+              {e.image && <img {...imgProps(e.image, SIZES.card)} alt={e.title} loading="lazy" decoding="async" />}
               <span className="num">{pad(i + 1)}</span>
               <figcaption>
                 <small>{e.tag}</small>

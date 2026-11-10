@@ -1,4 +1,10 @@
-export type Img = { src: string; alt: string; pos?: string }; // pos: CSS object-position (from Sanity hotspot or defaults)
+/**
+ * An image ready to render.
+ * - `pos`: CSS object-position (from the Sanity hotspot or defaults)
+ * - `w`: the widest it is ever shown, in px (caps the generated sizes)
+ * - `srcset`, `width`, `height`: filled in by the image pipeline (lib/images.ts) or the Sanity CDN
+ */
+export type Img = { src: string; alt: string; pos?: string; w?: number; srcset?: string; width?: number; height?: number };
 export type Link = { label: string; href: string };
 export type NavItem = Link & { children?: Link[] };
 
@@ -12,7 +18,7 @@ export type IndustryTile = { name: string; text: string };
 export type Edition = { label: string; date: string; venue: string; note: string; status: 'upcoming' | 'past' };
 export type Platform = { key: string; name: string; tagline: string; topics: string[]; summary: string; image: Img | null; website: string; editions: Edition[] };
 export type Stat = { value: number; suffix: string; label: string; image: Img | null };
-export type WallTile = { image: Img; full: string; ratio: string; caption: string };
+export type WallTile = { image: Img; full: Img; ratio: string; caption: string };
 export type Industry = { name: string; text: string; count: string; image: Img | null };
 export type Logo = { src: string; alt: string; plain: boolean };
 export type Button = Link & { style: 'gold' | 'ghost' };
