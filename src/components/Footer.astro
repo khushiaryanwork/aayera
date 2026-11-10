@@ -12,6 +12,7 @@ if (site.navCta?.href && !singles.some((l) => l.label === site.navCta.label)) si
 if (singles.length) groups.push({ title: 'Explore', href: '', links: singles });
 
 const year = new Date().getFullYear();
+const caret = '<svg viewBox="0 0 12 12" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>';
 ---
 <footer class="foot">
   <div class="foot-top">
@@ -25,12 +26,18 @@ const year = new Date().getFullYear();
       </ul>
     </div>
     <nav class="foot-cols" aria-label="Footer">
-      {groups.map((g) => (
+      {groups.map((g, i) => (
         <div class="foot-col">
-          <p class="foot-title">{g.href ? <a href={g.href}>{g.title}</a> : g.title}</p>
-          <ul>
-            {g.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
-          </ul>
+          {/* desktop: plain heading; phones: the heading is a button that opens the group */}
+          <p class="foot-title">
+            <span class="foot-title-text">{g.href ? <a href={g.href}>{g.title}</a> : g.title}</span>
+            <button class="foot-toggle" type="button" aria-expanded="false" aria-controls={`foot-${i}`}>{g.title}<Fragment set:html={caret} /></button>
+          </p>
+          <div class="foot-panel" id={`foot-${i}`}>
+            <ul>
+              {g.links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+            </ul>
+          </div>
         </div>
       ))}
     </nav>
@@ -39,3 +46,24 @@ const year = new Date().getFullYear();
     <span>© {year} AAYERA. All rights reserved.</span>
   </div>
 </footer>
+
+<script>
+  /* phones: footer groups are an accordion (one open at a time); wider screens show everything */
+  const phone = matchMedia('(max-width:760px)');
+  const cols = [...document.querySelectorAll<HTMLElement>('.foot-col')];
+  const set = (col: HTMLElement, open: boolean) => {
+    col.classList.toggle('open', open);
+    col.querySelector('.foot-toggle')!.setAttribute('aria-expanded', String(open));
+    (col.querySelector('.foot-panel') as HTMLElement).inert = phone.matches && !open;
+  };
+  const reset = () => cols.forEach((c) => set(c, false));
+  cols.forEach((col) =>
+    col.querySelector('.foot-toggle')!.addEventListener('click', () => {
+      const open = !col.classList.contains('open');
+      cols.forEach((c) => c !== col && set(c, false));
+      set(col, open);
+    }),
+  );
+  reset();
+  phone.addEventListener('change', reset);
+</script>

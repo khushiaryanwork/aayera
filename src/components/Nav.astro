@@ -34,12 +34,23 @@ const caret = '<svg viewBox="0 0 12 12" width="10" height="10" fill="none" strok
 <div class="mnav" id="mnav" hidden>
   <ul>
     <li><a href="/">Home</a></li>
-    {site.nav.map((item) => (
-      <li>
-        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>
-        {item.children?.length ? <ul>{item.children.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul> : null}
-      </li>
-    ))}
+    {site.nav.map((item, i) => {
+      if (!item.children?.length) return <li><a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a></li>;
+      // the group's own page goes first unless one of its sub-links already points to it
+      const hasOverview = item.children.some((c) => c.href.replace(/\/?$/, '/') === item.href.replace(/\/?$/, '/'));
+      const links = hasOverview ? item.children : [{ label: `${item.label} overview`, href: item.href }, ...item.children];
+      const open = isCurrent(item.href);
+      return (
+        <li class={'macc' + (open ? ' open' : '')}>
+          <button class="macc-btn" type="button" aria-expanded={String(open)} aria-controls={`macc-${i}`}>
+            <span class={open ? 'cur' : undefined}>{item.label}</span><Fragment set:html={caret} />
+          </button>
+          <div class="macc-panel" id={`macc-${i}`} inert={!open}>
+            <ul>{links.map((c) => <li><a href={c.href} aria-current={path === c.href.replace(/\/?$/, '/') ? 'page' : undefined}>{c.label}</a></li>)}</ul>
+          </div>
+        </li>
+      );
+    })}
     <li><a href={site.navCta.href}>{site.navCta.label}</a></li>
   </ul>
   <p class="mnav-foot"><a href={`mailto:${site.email}`}>{site.email}</a>{site.phones[0] && <><br><a href={`tel:${site.phones[0].number}`}>{site.phones[0].label}</a></>}</p>
@@ -58,4 +69,19 @@ const caret = '<svg viewBox="0 0 12 12" width="10" height="10" fill="none" strok
   menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) set(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) set(false); });
   matchMedia('(min-width:861px)').addEventListener('change', (m) => { if (m.matches) set(false); });
+
+  /* accordion: one group open at a time */
+  const groups = [...menu.querySelectorAll<HTMLElement>('.macc')];
+  const toggle = (g: HTMLElement, open: boolean) => {
+    g.classList.toggle('open', open);
+    g.querySelector('.macc-btn')!.setAttribute('aria-expanded', String(open));
+    (g.querySelector('.macc-panel') as HTMLElement).inert = !open;
+  };
+  groups.forEach((g) =>
+    g.querySelector('.macc-btn')!.addEventListener('click', () => {
+      const open = !g.classList.contains('open');
+      groups.forEach((o) => o !== g && toggle(o, false));
+      toggle(g, open);
+    }),
+  );
 </script>
