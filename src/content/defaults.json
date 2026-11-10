@@ -136,7 +136,11 @@
           },
           "tag": "Mobility",
           "title": "THE ADAS SHOW",
-          "meta": "4th edition · Pune · 3 December 2026"
+          "meta": "4th edition · Pune · 3 December 2026",
+          "imageMobile": {
+            "src": "/assets/img/hero-mobile/home-1-adas-show.jpg",
+            "alt": ""
+          }
         },
         {
           "image": {
@@ -145,7 +149,11 @@
           },
           "tag": "Technology",
           "title": "SDV SUMMIT",
-          "meta": "Bengaluru · September 2025"
+          "meta": "Bengaluru · September 2025",
+          "imageMobile": {
+            "src": "/assets/img/hero-mobile/home-2-sdv-summit.jpg",
+            "alt": ""
+          }
         },
         {
           "image": {
@@ -154,7 +162,11 @@
           },
           "tag": "Energy",
           "title": "Smart Meter Summit",
-          "meta": "Bengaluru · June 2021"
+          "meta": "Bengaluru · June 2021",
+          "imageMobile": {
+            "src": "/assets/img/hero-mobile/home-3-smart-meter.jpg",
+            "alt": ""
+          }
         },
         {
           "image": {
@@ -164,7 +176,11 @@
           "tag": "Healthcare",
           "title": "Turkey Healthcare Project Delivery Conference",
           "short": "Turkey Healthcare Conference",
-          "meta": "Ankara · April 2020"
+          "meta": "Ankara · April 2020",
+          "imageMobile": {
+            "src": "/assets/img/hero-mobile/home-4-healthcare.jpg",
+            "alt": ""
+          }
         }
       ],
       "mosaic": [],

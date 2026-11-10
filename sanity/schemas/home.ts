@@ -28,13 +28,14 @@ export const home = defineType({
           of: [defineArrayMember({
             type: 'object', name: 'slide',
             fields: [
-              defineField({ name: 'image', type: 'imageWithAlt', validation: (r) => r.required() }),
+              defineField({ name: 'image', title: 'Desktop photo', type: 'imageWithAlt', description: 'Landscape, at least 2400px wide.', validation: (r) => r.required() }),
+              defineField({ name: 'imageMobile', title: 'Mobile photo', type: 'imageWithAlt', description: 'Portrait (about 9:16), shown on phones. Leave empty to use the desktop photo.' }),
               defineField({ name: 'tag', title: 'Tag (pill)', type: 'string' }),
               defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
               defineField({ name: 'short', title: 'Short title', type: 'string', description: 'Optional shorter title shown on the slide (the full title is used for screen readers).' }),
               defineField({ name: 'meta', title: 'Place · date', type: 'string' }),
             ],
-            preview: { select: { title: 'title', subtitle: 'meta', media: 'image' } },
+            preview: { select: { title: 'title', meta: 'meta', media: 'image', mobile: 'imageMobile' }, prepare: ({ title, meta, media, mobile }) => ({ title, subtitle: `${meta || ''}${mobile ? '' : ' · no mobile photo'}`, media }) },
           })],
         }),
         defineField({ name: 'slideCta', title: 'Button on each slide', type: 'link' }),

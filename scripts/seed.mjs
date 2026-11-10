@@ -156,7 +156,7 @@ async function main() {
       primaryCta: link(H.hero.primaryCta),
       secondaryCta: link(H.hero.secondaryCta),
       slideCta: link(H.hero.slideCta),
-      slides: await Promise.all(H.hero.slides.map(async (s) => ({ _key: key(), _type: 'slide', image: await image(s.image), tag: s.tag, title: s.title, ...(s.short ? { short: s.short } : {}), meta: s.meta }))),
+      slides: await Promise.all(H.hero.slides.map(async (s) => ({ _key: key(), _type: 'slide', image: await image(s.image), ...(s.imageMobile ? { imageMobile: await image(s.imageMobile) } : {}), tag: s.tag, title: s.title, ...(s.short ? { short: s.short } : {}), meta: s.meta }))),
       mosaic: [],
     },
     whoWeAre: { ...H.whoWeAre, cta: link(H.whoWeAre.cta) },

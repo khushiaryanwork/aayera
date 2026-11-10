@@ -58,6 +58,9 @@ function img(v: any, width: number, fallbackAlt = ''): Img | null {
 }
 const imgOr = (v: any, def: any, width: number, alt = '') => img(v, width, alt) ?? img(def, width, alt);
 
+/** Portrait hero images are requested at this width from Sanity (≈ a 390pt phone at 3×). */
+const MOBILE_WIDTH = 1170;
+
 const SECTOR: Record<string, string> = { energy: 'Energy', mobility: 'Mobility', health: 'Healthcare', tech: 'Technology' };
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -162,6 +165,7 @@ function toPage(def: any, cms: any): Page {
       heading: pick(ch.heading, dh.heading || c.title || ''),
       intro: pick(ch.intro, dh.intro || ''),
       image: imgOr(ch.image, dh.image, 2400, dh.image?.alt || ''),
+      imageMobile: imgOr(ch.imageMobile, dh.imageMobile, MOBILE_WIDTH, dh.image?.alt || ''),
     },
     sections: sections.map(normSection).filter(Boolean) as Section[],
   };
@@ -212,8 +216,8 @@ export async function getContent(): Promise<{ site: Site; home: Home; noindex: b
   /* hero */
   const hh = h.hero || {};
   const slides = has(hh.slides)
-    ? hh.slides.map((x: any) => ({ image: img(x.image, 2400) as Img, tag: x.tag || '', title: x.title || '', short: x.short, meta: x.meta || '' }))
-    : DH.hero.slides.map((x) => ({ ...x, image: img(x.image, 2400) as Img }));
+    ? hh.slides.map((x: any) => ({ image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH), tag: x.tag || '', title: x.title || '', short: x.short, meta: x.meta || '' }))
+    : DH.hero.slides.map((x: any) => ({ ...x, image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH) }));
 
   /* events */
   const es = h.eventsSection || {};

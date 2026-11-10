@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap, EASE, MQ, SCRUB, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
+import { MOBILE_MEDIA } from '../lib/breakpoints';
 import type { Home } from '../lib/types';
 import { Rich, plain } from './Rich';
 
@@ -231,7 +232,11 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
           <div>
             {slides.map((s, i) => (
               <div className={'slide' + (i === cur ? ' on' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} key={i}>
-                <img src={s.image.src} alt={s.image.alt} {...(i ? { loading: 'lazy' as const } : { fetchPriority: 'high' as const })} />
+                {/* phones get the portrait image when one is set; the browser downloads only one of the two */}
+                <picture>
+                  {s.imageMobile && <source media={MOBILE_MEDIA} srcSet={s.imageMobile.src} />}
+                  <img src={s.image.src} alt={s.image.alt} {...(i ? { loading: 'lazy' as const } : { fetchPriority: 'high' as const })} />
+                </picture>
                 <div className="slide-copy">
                   <p className="eyebrow">{s.tag}</p>
                   <h2>{s.short || s.title}</h2>

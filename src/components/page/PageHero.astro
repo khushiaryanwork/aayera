@@ -1,12 +1,21 @@
 ---
 import type { Page } from '../../lib/types';
+import { MOBILE_MEDIA } from '../../lib/breakpoints';
 import { Rich } from '../Rich';
 interface Props { page: Page; crumbs: { label: string; href?: string }[] }
 const { page, crumbs } = Astro.props;
 const { hero } = page;
 ---
 <section class="phero" id="phero">
-  <div class="phero-bg" aria-hidden="true">{hero.image && <img src={hero.image.src} alt="" fetchpriority="high" style={hero.image.pos ? `object-position:${hero.image.pos}` : undefined}>}</div>
+  <div class="phero-bg" aria-hidden="true">
+    {hero.image && (
+      <picture>
+        {/* phones get the portrait image when one is set */}
+        {hero.imageMobile && <source media={MOBILE_MEDIA} srcset={hero.imageMobile.src}>}
+        <img src={hero.image.src} alt="" fetchpriority="high" style={hero.image.pos ? `object-position:${hero.image.pos}` : undefined}>
+      </picture>
+    )}
+  </div>
   <div class="phero-in">
     <nav class="crumbs" aria-label="Breadcrumb">
       {crumbs.map((c, i) => (

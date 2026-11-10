@@ -6,6 +6,7 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CustomEase } from 'gsap/CustomEase';
+import { DESKTOP_MEDIA } from '../breakpoints';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger, CustomEase);
@@ -48,7 +49,7 @@ export const SCRUB = {
 export const MQ = {
   motion: '(prefers-reduced-motion: no-preference)',
   reduce: '(prefers-reduced-motion: reduce)',
-  desktop: '(min-width: 761px)',
+  desktop: DESKTOP_MEDIA,
 } as const;
 
 export const prefersReducedMotion = (): boolean =>

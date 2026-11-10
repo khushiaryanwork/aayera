@@ -12,6 +12,10 @@
           "src": "/assets/img/04-numbers/02-cities.jpg",
           "alt": "The Aayera convention venue in Bengaluru",
           "position": "90% 55%"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/about.jpg",
+          "alt": "The Aayera convention venue in Bengaluru"
         }
       },
       "sections": [
@@ -103,6 +107,10 @@
         "image": {
           "src": "/assets/img/01-opening/01-keynote-auditorium.jpg",
           "alt": "A keynote in a packed auditorium"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/business-verticals.jpg",
+          "alt": "A keynote in a packed auditorium"
         }
       },
       "sections": [
@@ -187,6 +195,10 @@
         "intro": "Industry summits, international conferences, exhibitions, trade shows, leadership forums and corporate events.",
         "image": {
           "src": "/assets/img/01-opening/04-healthcare-congress.jpg",
+          "alt": "A large conference hall during a plenary session"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/events-conferences.jpg",
           "alt": "A large conference hall during a plenary session"
         }
       },
@@ -304,6 +316,10 @@
         "image": {
           "src": "/assets/img/05-photo-wall/05-networking.jpg",
           "alt": "Delegates networking at an Aayera event"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/business-platforms.jpg",
+          "alt": "Delegates networking at an Aayera event"
         }
       },
       "sections": [
@@ -392,6 +408,10 @@
         "image": {
           "src": "/assets/img/05-photo-wall/07-exhibition.jpg",
           "alt": "A busy exhibition floor"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/exhibitions-experiences.jpg",
+          "alt": "A busy exhibition floor"
         }
       },
       "sections": [
@@ -431,6 +451,10 @@
         "intro": "Brand strategy, corporate communications, digital marketing, public relations, media partnerships and campaign management.",
         "image": {
           "src": "/assets/img/01-opening/02-energy-summit.jpg",
+          "alt": "A speaker on stage at an industry summit"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/marketing-communications.jpg",
           "alt": "A speaker on stage at an industry summit"
         }
       },
@@ -472,6 +496,10 @@
         "intro": "Executive learning, technical workshops, leadership programmes, corporate training and industry development initiatives.",
         "image": {
           "src": "/assets/img/05-photo-wall/08-workshop.jpg",
+          "alt": "Delegates at an interactive workshop"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/academy.jpg",
           "alt": "Delegates at an interactive workshop"
         }
       },
@@ -627,6 +655,10 @@
         "image": {
           "src": "/assets/img/01-opening/03-mobility-forum.jpg",
           "alt": "Delegates at an industry forum"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/industries.jpg",
+          "alt": "Delegates at an industry forum"
         }
       },
       "sections": [
@@ -649,6 +681,10 @@
         "intro": "AAYERA develops industry-focused platforms that bring together business leaders, policymakers, technology providers, researchers and decision-makers.",
         "image": {
           "src": "/assets/img/01-opening/05-technology-confex.jpg",
+          "alt": "A technology conference in session"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/our-platforms.jpg",
           "alt": "A technology conference in session"
         }
       },
@@ -680,6 +716,10 @@
         "image": {
           "src": "/assets/img/05-photo-wall/12-group.jpg",
           "alt": "A group of delegates together at an event"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/clients.jpg",
+          "alt": "A group of delegates together at an event"
         }
       },
       "sections": [
@@ -699,6 +739,10 @@
         "intro": "Start a conversation with AAYERA about partnerships, events, sponsorship, exhibiting or our business verticals.",
         "image": {
           "src": "/assets/img/07-sliding-rows/14-roundtable.jpg",
+          "alt": "A roundtable discussion"
+        },
+        "imageMobile": {
+          "src": "/assets/img/hero-mobile/contact.jpg",
           "alt": "A roundtable discussion"
         }
       },

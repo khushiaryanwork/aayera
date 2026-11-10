@@ -2,7 +2,8 @@ export type Img = { src: string; alt: string; pos?: string }; // pos: CSS object
 export type Link = { label: string; href: string };
 export type NavItem = Link & { children?: Link[] };
 
-export type Slide = { image: Img; tag: string; title: string; short?: string; meta: string };
+/** `imageMobile`: optional portrait image served on phones (see lib/breakpoints.ts). */
+export type Slide = { image: Img; imageMobile: Img | null; tag: string; title: string; short?: string; meta: string };
 export type MosaicTile = { image: Img; caption: string };
 export type EventCard = { image: Img; tag: string; title: string; meta: string; upcoming?: boolean };
 export type Head = { eyebrow: string; heading: string; intro: string };
@@ -81,6 +82,6 @@ export interface Page {
   seoTitle: string;
   description: string;
   showCta: boolean;
-  hero: { eyebrow: string; heading: string; intro: string; image: Img | null };
+  hero: { eyebrow: string; heading: string; intro: string; image: Img | null; imageMobile: Img | null };
   sections: Section[];
 }

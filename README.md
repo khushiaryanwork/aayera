@@ -41,6 +41,12 @@ partner ecosystem → contact. In the Studio:
 - **Platforms**: THE ADAS SHOW and SDV SUMMIT, with editions (dates, venues, exact partner wording).
 - **Events**: the track record. Events dated in the future show as *Upcoming*.
 
+### Mobile hero images
+Every hero (homepage slides and each page header) has a **Desktop photo** and an optional
+**Mobile photo** in the Studio. Phones (≤ 760px, `src/lib/breakpoints.ts`) get the portrait
+image through `<picture>`, so each device downloads only its own image. The bundled portrait
+set lives in `public/assets/img/hero-mobile/`.
+
 ### Inner pages
 The pages from the old aayera.com (About us, Events → Training / Conference / Webinar, Networking,
 Clients, News & Events, Contact) are built from `src/content/pages.json`, using the live site's copy.
