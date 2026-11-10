@@ -237,7 +237,7 @@ footer a:hover{color:var(--gold)}
 .lb .nav-l{left:16px}.lb .nav-r{right:16px}
 
 /* reveal: GSAP (lib/motion/page.ts) animates .rv in; hidden up-front only when motion is allowed */
-.motion .rv{opacity:0;transform:translateY(36px)}
+.motion .rv{opacity:0}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
