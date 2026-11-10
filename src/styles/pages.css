@@ -187,10 +187,16 @@ html.bar-off .nav.has-bar,html.menu-open .nav.has-bar{top:0}
 html.menu-open .abar{transform:translateY(-100%)}
 @media (max-width:1100px){.abar-contact .abar-hours{display:none}}
 @media (max-width:860px){.abar-contact .abar-more,.abar-msg{display:none}}
+/* phones: email + the first phone number, both written out */
 @media (max-width:600px){
   .abar{font-size:12px;gap:10px}
   .abar-contact{gap:14px;overflow:hidden}
-  .abar-contact li:not(:first-child) span{display:none} /* phone shows as an icon */
+  .abar-contact a,.abar-hours{gap:5px}
+}
+@media (max-width:374px){
+  .abar{font-size:11px}
+  .abar-contact{gap:10px}
+  .abar svg{width:13px;height:13px}
 }
 
 /* ---------- floating "Follow us" button: opens LinkedIn / X above it (hover or tap) ---------- */
