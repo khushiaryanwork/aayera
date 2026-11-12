@@ -140,11 +140,6 @@
           "imageMobile": {
             "src": "/assets/img/hero-mobile/home-1-adas-show.jpg",
             "alt": ""
-          },
-          "video": {
-            "kind": "video",
-            "src": "/assets/video/home-reel.mp4",
-            "mobileSrc": "/assets/video/home-reel-mobile.mp4"
           }
         },
         {
