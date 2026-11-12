@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '../ArrowIcon.astro';
 import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import type { Platform, Head } from '../../lib/types';
 import SecHead from './SecHead.astro';
@@ -33,7 +34,7 @@ const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./,
               </ol>
             )}
             <p class="plinks">
-              {compact && <a class="erow-link" href={`/our-platforms/#${p.key}`}>Platform details <span aria-hidden="true">→</span></a>}
+              {compact && <a class="erow-link" href={`/our-platforms/#${p.key}`}>Platform details <ArrowIcon /></a>}
               {p.website && <a class="erow-link" href={p.website} target="_blank" rel="noopener">{host(p.website)} <span aria-hidden="true">↗</span></a>}
             </p>
           </div>

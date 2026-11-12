@@ -127,7 +127,7 @@ html.menu-open .nav{background:var(--black)}
 .kcard-txt{padding:clamp(22px,2.4vw,30px)}
 .kcard h3{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:clamp(24px,2.2vw,32px);font-weight:500;letter-spacing:-.02em}
 .kcard h3 span{display:grid;place-items:center;flex:none;width:40px;height:40px;border-radius:50%;background:var(--gold);color:var(--black);font-size:16px;transition:transform .3s}
-.kcard:hover h3 span{transform:translateX(4px)}
+.kcard:hover h3 span{transform:translate(2px,-2px)}
 .kcard p{margin-top:10px;font-size:15px;line-height:1.55;color:oklch(88% .006 260)}
 
 /* events list */
@@ -143,7 +143,7 @@ html.menu-open .nav{background:var(--black)}
 .erow .erow-title{font-size:clamp(26px,3vw,44px);line-height:1.05;font-weight:500;letter-spacing:-.025em;margin:14px 0 16px}
 .erow-sum{color:oklch(84% .008 260);font-size:16px;line-height:1.7;max-width:64ch}
 .erow-sum+.erow-sum{margin-top:.9em}
-.erow-link{display:inline-flex;gap:8px;margin-top:22px;padding-bottom:3px;border-bottom:1px solid var(--gold);color:var(--gold);font-size:15px}
+.erow-link{display:inline-flex;align-items:center;gap:6px;margin-top:22px;padding-bottom:3px;border-bottom:1px solid var(--gold);color:var(--gold);font-size:15px}
 .erow-link:hover{color:var(--on);border-color:var(--on)}
 @media (max-width:760px){.erow{grid-template-columns:1fr}}
 
@@ -218,7 +218,7 @@ html.menu-open .nav{background:var(--black)}
 .abar svg{flex:none;color:var(--gold)}
 .abar a:hover{color:var(--gold)}
 .abar-msg{order:-1;flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:22px;border-right:1px solid var(--rule)}
-.abar-msg strong{margin-left:10px;color:var(--gold);font-weight:500}
+.abar-msg strong{margin-left:10px;color:var(--gold);font-weight:500;display:inline-flex;align-items:center;gap:4px}
 .nav.has-bar{top:38px;transition:top .4s cubic-bezier(.2,.7,.2,1),background .4s,padding .4s,backdrop-filter .4s}
 html.bar-off .abar{transform:translateY(-100%)}
 html.bar-off .nav.has-bar,html.menu-open .nav.has-bar{top:0}
@@ -290,7 +290,7 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 .vtile h3{font-size:clamp(20px,1.7vw,24px);font-weight:500;letter-spacing:-.02em;line-height:1.15}
 .vcap{font-family:var(--serif);font-style:italic;font-size:18px;line-height:1.3;color:var(--gold)}
 .vdesc{font-size:14px;line-height:1.6;color:var(--muted)}
-.vmore{margin-top:auto;padding-top:8px;font-size:14px;color:var(--on)}
+.vmore{margin-top:auto;padding-top:8px;font-size:14px;color:var(--on);display:inline-flex;align-items:center;gap:6px}
 .vsoon{position:absolute;top:22px;right:22px;padding:5px 11px;border-radius:999px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;background:oklch(96% .004 260 / .1);color:var(--on);border:1px solid var(--rule)}
 .vtile.soon .vtile-img img{filter:grayscale(1) brightness(.55)}
 .vtile.soon h3,.vtile.soon .vcap{opacity:.75}
@@ -354,3 +354,7 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 .cinfo dd a{display:inline-block;padding-block:7px;margin-block:-4px}
 /* footer links on touch screens */
 @media (pointer:coarse){.foot-contact a,.foot-col ul a{display:inline-block;padding-block:6px}.foot-col ul,.foot-contact{gap:4px}}
+
+/* arrow icon on text links: nudges diagonally on hover */
+.ico-arrow{flex:none;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+.erow-link:hover .ico-arrow,.vtile:hover .vmore .ico-arrow,.abar-msg a:hover .ico-arrow{transform:translate(2px,-2px)}

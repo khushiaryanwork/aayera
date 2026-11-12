@@ -1,0 +1,5 @@
+---
+/** Thin "arrow up-right" line icon used on text links and cards; sized to the text, coloured by currentColor. */
+const { size = '1em', class: cls = '' } = Astro.props as { size?: string; class?: string };
+---
+<svg class={`ico-arrow ${cls}`.trim()} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>

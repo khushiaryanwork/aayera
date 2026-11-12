@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from './ArrowIcon.astro';
 import type { Site } from '../lib/types';
 const { site } = Astro.props as { site: Site };
 const { announcement: a } = site;
@@ -22,7 +23,7 @@ const icon = (k: string) => `<svg viewBox="0 0 24 24" width="15" height="15" fil
     </ul>
     {a.message && (
       <p class="abar-msg">
-        {a.href ? <a href={a.href}>{a.message}{a.linkLabel && <strong>{a.linkLabel} →</strong>}</a> : a.message}
+        {a.href ? <a href={a.href}>{a.message}{a.linkLabel && <strong>{a.linkLabel} <ArrowIcon /></strong>}</a> : a.message}
       </p>
     )}
   </div>

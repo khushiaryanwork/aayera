@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '../ArrowIcon.astro';
 import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import SecHead from './SecHead.astro';
 const { s } = Astro.props as { s: any };
@@ -10,7 +11,7 @@ const { s } = Astro.props as { s: any };
       <a class="kcard rv" href={c.href}>
         {c.image && <img {...imgAttrs(c.image, SIZES.quarter)} alt="" loading="lazy" decoding="async">}
         <div class="kcard-txt">
-          <h3>{c.title}<span aria-hidden="true">→</span></h3>
+          <h3>{c.title}<span aria-hidden="true"><ArrowIcon size="18" /></span></h3>
           <p>{c.text}</p>
         </div>
       </a>
