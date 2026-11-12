@@ -9,13 +9,17 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 /**
  * Pinned section whose cards travel horizontally as the page scrolls vertically.
- * The section is made exactly `100vh + travel` tall and its inner wrapper is CSS-sticky,
+ * The section is made exactly `content height + travel` tall and its inner wrapper is CSS-sticky,
  * so the vertical scroll distance equals the horizontal distance the track moves.
  */
+/** Minimum distance (px) from the top of the screen while pinned: clears the fixed nav. */
+const PIN_MIN_TOP = 96;
+
 export default function EventsTrack({ heading, intro, items }: Home['events']) {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const bar = useRef<HTMLElement>(null);
+  const sticky = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
@@ -28,9 +32,13 @@ export default function EventsTrack({ heading, intro, items }: Home['events']) {
         const contentEnd = last.offsetLeft + last.offsetWidth + parseFloat(getComputedStyle(el).paddingRight);
         return Math.max(0, Math.ceil(contentEnd - document.documentElement.clientWidth));
       };
+      // The pinned block is only as tall as its content, so the space above and below it is the
+      // normal section gap. While pinned it sits centred in the screen, but never under the nav.
+      const pinTop = () => Math.max(PIN_MIN_TOP, Math.round((window.innerHeight - sticky.current!.offsetHeight) / 2));
       // size the section before ScrollTrigger measures, on every refresh (resize, fonts, images)
       const size = () => {
-        section.current!.style.height = `${window.innerHeight + travel()}px`;
+        sticky.current!.style.top = `${pinTop()}px`;
+        section.current!.style.height = `${sticky.current!.offsetHeight + travel()}px`;
       };
       size();
       ScrollTrigger.addEventListener('refreshInit', size);
@@ -38,7 +46,7 @@ export default function EventsTrack({ heading, intro, items }: Home['events']) {
       gsap
         .timeline({
           defaults: { ease: EASE.none },
-          scrollTrigger: { trigger: section.current, start: 'top top', end: () => `+=${travel()}`, scrub: SCRUB.section, invalidateOnRefresh: true },
+          scrollTrigger: { trigger: section.current, start: () => `top ${pinTop()}px`, end: () => `+=${travel()}`, scrub: SCRUB.section, invalidateOnRefresh: true },
         })
         .fromTo(track.current, { x: 0 }, { x: () => -travel() }, 0)
         .fromTo(bar.current, { scaleX: 0 }, { scaleX: 1 }, 0);
@@ -51,7 +59,7 @@ export default function EventsTrack({ heading, intro, items }: Home['events']) {
 
   return (
     <section className="hscroll" id="events" ref={section}>
-      <div className="hscroll-sticky">
+      <div className="hscroll-sticky" ref={sticky}>
         <div className="hscroll-head">
           <h2><Rich text={heading} /></h2>
           <p>{intro}</p>
