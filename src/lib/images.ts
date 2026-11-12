@@ -15,6 +15,10 @@ import type { Img } from './types';
 /** Candidate widths for srcset. Each image only gets the ones up to its natural / requested width. */
 export const WIDTHS = [400, 640, 960, 1280, 1600, 2000, 2400] as const;
 const QUALITY = 72;
+/** Full-screen images (hero photos, requested ≥ 1170px wide) use lighter compression: artefacts show most there. */
+export const LARGE_MIN_WIDTH = 1170;
+const LARGE_QUALITY = 82;
+export const qualityFor = (requestedWidth?: number) => ((requestedWidth ?? 0) >= LARGE_MIN_WIDTH ? LARGE_QUALITY : QUALITY);
 const LOCAL_PREFIX = '/assets/img/';
 
 const files = import.meta.glob<ImageMetadata>('/src/assets/img/**/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' });
@@ -34,7 +38,7 @@ async function optimise(image: Img): Promise<void> {
     return;
   }
   const widths = widthsFor(meta.width, image.w ?? 2400);
-  const out = await getImage({ src: meta, widths, format: 'webp', quality: QUALITY });
+  const out = await getImage({ src: meta, widths, format: 'webp', quality: qualityFor(image.w) });
   const largest = widths[widths.length - 1];
   image.src = out.src;
   image.srcset = out.srcSet.attribute;

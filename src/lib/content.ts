@@ -5,7 +5,7 @@
  */
 import { createClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
-import { optimiseImages, widthsFor } from './images';
+import { optimiseImages, widthsFor, LARGE_MIN_WIDTH } from './images';
 import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
@@ -60,7 +60,8 @@ function img(v: any, width: number, fallbackAlt = ''): Img | null {
   if (v.src) return { src: v.src, alt: v.alt ?? fallbackAlt, w: width, ...(v.position ? { pos: v.position } : {}) };
   if (v.asset) {
     const h = v.hotspot;
-    const url = (w: number) => builder.image(v).width(w).fit('max').auto('format').quality(78).url();
+    const q = width >= LARGE_MIN_WIDTH ? 85 : 78; // full-screen images get lighter compression
+    const url = (w: number) => builder.image(v).width(w).fit('max').auto('format').quality(q).url();
     const dims = sanityDims(v.asset._ref);
     const widths = widthsFor(dims?.[0] ?? width, width);
     const largest = widths[widths.length - 1];
