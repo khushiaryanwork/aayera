@@ -95,7 +95,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   background:oklch(10% .012 260 / .35);border:1px solid oklch(96% .004 260 / .25);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:background .25s,border-color .25s}
 .hero-arrow:hover{background:var(--gold);border-color:var(--gold);color:var(--black)}
 .hero-arrow svg{width:18px;height:18px}
-.slide-copy .eyebrow{display:inline-block;padding:7px 14px;border-radius:999px;background:oklch(8% .01 260 / .6);border:1px solid oklch(81% .155 82 / .35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.slide-copy .eyebrow{display:inline-block;letter-spacing:0;padding:7px 14px;border-radius:999px;background:oklch(8% .01 260 / .6);border:1px solid oklch(81% .155 82 / .35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .hero-arrow{top:auto;bottom:clamp(28px,5vh,44px);transform:none}
 .hero-arrow.prev{right:calc(var(--gutter) + 64px)}.hero-arrow.next{right:var(--gutter)}
 .icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid oklch(96% .004 260 / .35);display:grid;place-items:center;transition:background .2s}
