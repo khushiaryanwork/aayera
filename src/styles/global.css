@@ -43,6 +43,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ---------- HERO SLIDER ---------- */
 .hero{position:relative;height:250svh;background:#000}
+/* phones: shorter scroll from the slides to the photo grid (swipes cover less distance per gesture) */
+@media (max-width:760px){.hero{height:190svh}}
 .hero-sticky{position:sticky;top:0;height:100svh;min-height:560px;overflow:hidden;touch-action:pan-y}
 /* the wall: end-state grid of event photos; the centre cell is an empty slot the slider lands in */
 .mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(3,1fr);gap:12px;padding:12px;opacity:0}
