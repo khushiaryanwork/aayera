@@ -142,9 +142,9 @@
             "alt": ""
           },
           "video": {
-            "kind": "gif",
-            "src": "/assets/video/home-reel.gif",
-            "mobileSrc": "/assets/video/home-reel-mobile.gif"
+            "kind": "video",
+            "src": "/assets/video/home-reel.mp4",
+            "mobileSrc": "/assets/video/home-reel-mobile.mp4"
           }
         },
         {

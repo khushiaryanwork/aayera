@@ -161,4 +161,4 @@ The slide's photo is still required: it shows while the video loads and for visi
 Videos play muted and looping, only while their slide is on screen, and a video slide stays up for 10 s.
 Prefer MP4 over GIF: the same clip is roughly 5× smaller (the placeholder reel is 0.8 MB as MP4 vs 4.3 MB as GIF).
 
-Until real videos arrive, slide 1 uses a placeholder GIF reel (`public/assets/video/home-reel*.gif`), set in `src/content/defaults.json`.
+Until real videos arrive, slide 1 uses a placeholder MP4 reel made from event photos (`public/assets/video/home-reel*.mp4`), set in `src/content/defaults.json`. (A GIF was tried first, but GIFs are limited to 256 colours and look grainy full-screen.)
