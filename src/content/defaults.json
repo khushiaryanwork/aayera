@@ -117,7 +117,7 @@
       "eyebrow": "A Diversified Business & Industry Engagement Group",
       "heading": "Beyond events.\nBuilding industry *ecosystems.*",
       "primaryCta": {
-        "label": "Explore our business verticals →",
+        "label": "Explore our business verticals",
         "href": "/business-verticals/"
       },
       "secondaryCta": {
@@ -125,7 +125,7 @@
         "href": "/contact/"
       },
       "slideCta": {
-        "label": "Discover our platforms →",
+        "label": "Discover our platforms",
         "href": "/our-platforms/"
       },
       "slides": [
@@ -570,7 +570,7 @@
       },
       "buttons": [
         {
-          "label": "Partner with AAYERA →",
+          "label": "Partner with AAYERA",
           "href": "/contact/",
           "style": "gold"
         },
@@ -586,7 +586,7 @@
       "heading": "Ideas. Industries.\n*Opportunities.*",
       "body": "AAYERA is a diversified business and industry engagement company. We create platforms and deliver solutions across events, exhibitions, business engagement, research, communications, corporate services and digital commerce—connecting organisations and industry communities to opportunities for collaboration and growth.",
       "cta": {
-        "label": "About AAYERA →",
+        "label": "About AAYERA",
         "href": "/about/"
       }
     },
