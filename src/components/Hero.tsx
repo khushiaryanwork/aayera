@@ -9,7 +9,7 @@ import { Rich, plain } from './Rich';
 type Props = Home['hero'];
 
 /** Slider timing (seconds) — identical to the original CSS version. */
-const AUTOPLAY = { desktop: 4, mobile: 6 } as const;
+const AUTOPLAY = { desktop: 4, mobile: 6, video: 10 } as const; // slides with a video/GIF stay up longer
 const SLIDE = {
   fade: 1.1, // crossfade between slides (CSS `ease`)
   kenBurns: 7, // slow zoom from 108% to 100% (CSS `ease-out`)
@@ -38,6 +38,17 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   // slides 2+ and the photo wall are only needed later: load them once the page has finished
   // loading, so the first slide gets all the bandwidth (also when autoplay may start)
   const [restLoaded, setRestLoaded] = useState(false);
+  // which moving-media file to use (portrait on phones); decided on the client only
+  const [phone, setPhone] = useState(false);
+  const [stillOnly, setStillOnly] = useState(false); // reduced motion: keep the photo, skip video/GIF
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_MEDIA);
+    const update = () => setPhone(mq.matches);
+    update();
+    setStillOnly(prefersReducedMotion());
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
   const go = (i: number) => {
     setRestLoaded(true);
     setCur(((i % count) + count) % count);
@@ -70,12 +81,22 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   /* ---------- autoplay: restarts on every slide change, paused on hover / reduced motion ---------- */
   useEffect(() => {
     if (count < 2 || hovering || !restLoaded || prefersReducedMotion()) return;
-    const delay = window.matchMedia(MQ.desktop).matches ? AUTOPLAY.desktop : AUTOPLAY.mobile;
+    const delay = slides[cur]?.video && !stillOnly ? AUTOPLAY.video : window.matchMedia(MQ.desktop).matches ? AUTOPLAY.desktop : AUTOPLAY.mobile;
     const next = gsap.delayedCall(delay, () => setCur((c) => (c + 1) % count));
     return () => {
       next.kill();
     };
-  }, [cur, hovering, count, restLoaded]);
+  }, [cur, hovering, count, restLoaded, stillOnly]);
+
+  /* ---------- videos: only the visible slide plays, from the start ---------- */
+  useEffect(() => {
+    section.current?.querySelectorAll<HTMLVideoElement>('.slide video').forEach((v) => {
+      if (v.closest('.slide')?.classList.contains('on')) {
+        v.currentTime = 0;
+        v.play().catch(() => {}); // autoplay can be refused (e.g. low-power mode); the photo stays visible
+      } else v.pause();
+    });
+  }, [cur, restLoaded, phone]);
 
   /* ---------- slide change: crossfade, Ken Burns zoom, caption stagger ---------- */
   const firstRun = useRef(true);
@@ -89,7 +110,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       const t = (seconds: number) => (reduce ? 0 : seconds);
       const captionOf = (el: HTMLElement) => el.querySelectorAll<HTMLElement>('.slide-copy > *');
       const kenBurns = (el: HTMLElement) => {
-        const img = el.querySelector('img');
+        const img = el.querySelector('.slide-media');
         if (img) gsap.fromTo(img, { scale: SLIDE.kenBurnsFrom }, { scale: 1, duration: t(SLIDE.kenBurns), ease: EASE.cssOut, overwrite: true });
       };
 
@@ -108,7 +129,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
 
       // outgoing slides: photo resets to its start zoom, caption drops away (no delay)
       others.forEach((el) => {
-        const img = el.querySelector('img');
+        const img = el.querySelector('.slide-media');
         if (img) {
           gsap.killTweensOf(img);
           gsap.set(img, { scale: SLIDE.kenBurnsFrom });
@@ -254,12 +275,16 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
             {slides.map((s, i) => (
               <div className={'slide' + (i === cur ? ' on' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} key={i}>
                 {/* phones get the portrait image when one is set; the browser downloads only one of the two */}
-                {(i === 0 || restLoaded) && (
-                  <picture>
-                    {s.imageMobile && <source media={MOBILE_MEDIA} srcSet={s.imageMobile.srcset || s.imageMobile.src} sizes={SIZES.full} />}
-                    <img {...imgProps(s.image, SIZES.full)} alt={s.image.alt} {...(i ? {} : { fetchPriority: 'high' as const })} />
-                  </picture>
-                )}
+                <div className="slide-media">
+                  {(i === 0 || restLoaded) && (
+                    <picture>
+                      {s.imageMobile && <source media={MOBILE_MEDIA} srcSet={s.imageMobile.srcset || s.imageMobile.src} sizes={SIZES.full} />}
+                      <img {...imgProps(s.image, SIZES.full)} alt={s.image.alt} {...(i ? {} : { fetchPriority: 'high' as const })} />
+                    </picture>
+                  )}
+                  {/* video / GIF: loads after the page, fades in over the photo once it can play */}
+                  {s.video && restLoaded && !stillOnly && <SlideMotion video={s.video} phone={phone} />}
+                </div>
                 <div className="slide-copy">
                   <p className="eyebrow">{s.tag}</p>
                   <h2>{s.short || s.title}</h2>
@@ -298,5 +323,18 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         </div>
       </div>
     </section>
+  );
+}
+
+/** A slide's moving media: a GIF (plain <img>) or a muted, looping, inline <video>. */
+function SlideMotion({ video, phone }: { video: NonNullable<Props['slides'][number]['video']>; phone: boolean }) {
+  const [ready, setReady] = useState(false);
+  const src = (phone && video.mobileSrc) || video.src;
+  useEffect(() => setReady(false), [src]);
+  const cls = 'slide-motion' + (ready ? ' ready' : '');
+  return video.kind === 'gif' ? (
+    <img key={src} className={cls} src={src} alt="" aria-hidden="true" decoding="async" onLoad={() => setReady(true)} />
+  ) : (
+    <video key={src} className={cls} src={src} muted loop playsInline preload="auto" aria-hidden="true" onPlaying={() => setReady(true)} />
   );
 }

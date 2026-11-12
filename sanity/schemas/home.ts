@@ -28,14 +28,39 @@ export const home = defineType({
           of: [defineArrayMember({
             type: 'object', name: 'slide',
             fields: [
-              defineField({ name: 'image', title: 'Desktop photo', type: 'imageWithAlt', description: 'Landscape, at least 2400px wide.', validation: (r) => r.required() }),
+              defineField({
+                name: 'mediaType', title: 'Media', type: 'string', initialValue: 'image',
+                description: 'Photo only, or a video / GIF that plays over the photo.',
+                options: { list: [{ title: 'Image', value: 'image' }, { title: 'Video', value: 'video' }], layout: 'radio', direction: 'horizontal' },
+              }),
+              defineField({
+                name: 'image', title: 'Desktop photo', type: 'imageWithAlt',
+                description: 'Landscape, at least 2400px wide. With a video it is shown while the video loads (and to visitors who turn motion off).',
+                validation: (r) => r.required(),
+              }),
               defineField({ name: 'imageMobile', title: 'Mobile photo', type: 'imageWithAlt', description: 'Portrait (about 9:16), shown on phones. Leave empty to use the desktop photo.' }),
+              defineField({
+                name: 'video', title: 'Desktop video', type: 'file',
+                description: 'MP4 or WebM (recommended: 1920×1080, under 10 MB, no sound — it plays muted and loops). A GIF also works but is much heavier.',
+                options: { accept: 'video/mp4,video/webm,image/gif' },
+                hidden: ({ parent }) => parent?.mediaType !== 'video',
+                validation: (r) => r.custom((v, ctx: any) => (ctx.parent?.mediaType === 'video' && !v?.asset ? 'Upload a video, or switch Media back to Image.' : true)),
+              }),
+              defineField({
+                name: 'videoMobile', title: 'Mobile video', type: 'file',
+                description: 'Optional portrait (9:16) version for phones, e.g. 1080×1920. Leave empty to use the desktop video.',
+                options: { accept: 'video/mp4,video/webm,image/gif' },
+                hidden: ({ parent }) => parent?.mediaType !== 'video',
+              }),
               defineField({ name: 'tag', title: 'Tag (pill)', type: 'string' }),
               defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
               defineField({ name: 'short', title: 'Short title', type: 'string', description: 'Optional shorter title shown on the slide (the full title is used for screen readers).' }),
               defineField({ name: 'meta', title: 'Place · date', type: 'string' }),
             ],
-            preview: { select: { title: 'title', meta: 'meta', media: 'image', mobile: 'imageMobile' }, prepare: ({ title, meta, media, mobile }) => ({ title, subtitle: `${meta || ''}${mobile ? '' : ' · no mobile photo'}`, media }) },
+            preview: {
+              select: { title: 'title', meta: 'meta', media: 'image', mobile: 'imageMobile', type: 'mediaType' },
+              prepare: ({ title, meta, media, mobile, type }) => ({ title, subtitle: [type === 'video' ? '▶ Video' : '', meta, mobile ? '' : 'no mobile photo'].filter(Boolean).join(' · '), media }),
+            },
           })],
         }),
         defineField({ name: 'slideCta', title: 'Button on each slide', type: 'link' }),

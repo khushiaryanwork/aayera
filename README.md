@@ -152,3 +152,13 @@ scripts/seed.mjs        one-time CMS import
   Cloudflare compresses it.
 - `SANITY_CONTENT_FILE=path.json npm run build` builds from a saved query result instead of the
   API (useful offline).
+
+## Hero slide videos
+
+Each home page slide has a **Media** choice in Sanity (Home page → Hero → Slides): **Image** or **Video**.
+With Video, upload a **Desktop video** (MP4/WebM, or a GIF) and optionally a portrait **Mobile video**.
+The slide's photo is still required: it shows while the video loads and for visitors who turn motion off.
+Videos play muted and looping, only while their slide is on screen, and a video slide stays up for 10 s.
+Prefer MP4 over GIF: the same clip is roughly 5× smaller (the placeholder reel is 0.8 MB as MP4 vs 4.3 MB as GIF).
+
+Until real videos arrive, slide 1 uses a placeholder GIF reel (`public/assets/video/home-reel*.gif`), set in `src/content/defaults.json`.

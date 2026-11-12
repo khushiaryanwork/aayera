@@ -9,7 +9,7 @@ import { optimiseImages, widthsFor } from './images';
 import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
-import type { Home, Img, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head } from './types';
+import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head } from './types';
 
 const client = createClient({
   projectId,
@@ -75,6 +75,23 @@ function img(v: any, width: number, fallbackAlt = ''): Img | null {
   return null;
 }
 const imgOr = (v: any, def: any, width: number, alt = '') => img(v, width, alt) ?? img(def, width, alt);
+
+/** CDN URL of an uploaded Sanity file (ref looks like "file-<id>-<ext>"). */
+function fileUrl(f: any): string {
+  const ref: string | undefined = f?.asset?._ref;
+  if (!ref) return '';
+  const [, id, ext] = ref.match(/^file-(.+)-([a-z0-9]+)$/i) || [];
+  return id ? `https://cdn.sanity.io/files/${projectId}/${dataset}/${id}.${ext}` : '';
+}
+
+/** A slide's video (or GIF) when the editor chose "Video" as its media type. */
+function slideVideo(x: any): SlideVideo | null {
+  if (x?.mediaType !== 'video') return null;
+  const src = fileUrl(x.video);
+  if (!src) return null;
+  const mobileSrc = fileUrl(x.videoMobile) || undefined;
+  return { kind: /\.gif$/i.test(src) ? 'gif' : 'video', src, mobileSrc };
+}
 
 /** Portrait hero images are requested at this width from Sanity (≈ a 390pt phone at 3×). */
 const MOBILE_WIDTH = 1170;
@@ -243,7 +260,7 @@ async function buildContent(): Promise<Content> {
   /* hero */
   const hh = h.hero || {};
   const slides = has(hh.slides)
-    ? hh.slides.map((x: any) => ({ image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH), tag: x.tag || '', title: x.title || '', short: x.short, meta: x.meta || '' }))
+    ? hh.slides.map((x: any) => ({ image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH), video: slideVideo(x), tag: x.tag || '', title: x.title || '', short: x.short, meta: x.meta || '' }))
     : DH.hero.slides.map((x: any) => ({ ...x, image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH) }));
 
   /* events */

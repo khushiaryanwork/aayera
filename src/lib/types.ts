@@ -9,7 +9,9 @@ export type Link = { label: string; href: string };
 export type NavItem = Link & { children?: Link[] };
 
 /** `imageMobile`: optional portrait image served on phones (see lib/breakpoints.ts). */
-export type Slide = { image: Img; imageMobile: Img | null; tag: string; title: string; short?: string; meta: string };
+/** Moving media for a hero slide. `kind` decides the element: an <img> for GIFs, a muted looping <video> for MP4/WebM. */
+export type SlideVideo = { kind: 'gif' | 'video'; src: string; mobileSrc?: string };
+export type Slide = { image: Img; imageMobile: Img | null; video?: SlideVideo | null; tag: string; title: string; short?: string; meta: string };
 export type MosaicTile = { image: Img; caption: string };
 export type EventCard = { image: Img; tag: string; title: string; meta: string; upcoming?: boolean };
 export type Head = { eyebrow: string; heading: string; intro: string };
