@@ -323,7 +323,7 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 .peds li{display:grid;grid-template-columns:160px 1fr;gap:4px 16px;padding:14px 0;border-bottom:1px solid var(--rule);font-size:14px;line-height:1.5}
 .ped-date{color:var(--gold)}
 .ped-main strong{font-weight:500;margin-right:8px}
-.ped-main .pill{font-size:12px;padding:3px 9px}
+.ped-main .pill{font-size:10px;padding:3px 9px}
 .ped-note{grid-column:2;color:var(--muted);font-size:13px}
 .plinks{display:flex;flex-wrap:wrap;gap:22px}
 .plinks .erow-link{margin-top:4px}
