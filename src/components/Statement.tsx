@@ -58,10 +58,22 @@ export default function Statement({ image, words }: Home['statement']) {
 
         /* pin + play once, on the way down; it then stays finished.
            The pin is CSS sticky (.expand is taller than the screen, .expand-sticky sticks), so it works the
-           same on every browser, including iOS momentum scrolling. While the sequence plays, GSAP Observer
-           swallows new wheel / touch gestures; a glide already in progress runs out inside the pinned stretch. */
+           same on every browser. While the sequence plays, GSAP Observer swallows new wheel / touch gestures,
+           and on touch screens the page is frozen in place, so nothing scrolls until it has finished. */
         const hold = ScrollTrigger.observe({ type: 'wheel,touch', preventDefault: true, allowClicks: true });
         hold.disable();
+
+        // Touch screens: freeze the page exactly at the section until the sequence ends. A glide (momentum)
+        // already in flight ignores blocked gestures and only stops when the page itself is frozen, which on
+        // iOS needs <body> fixed in place (overflow: hidden is not enough there).
+        const touch = window.matchMedia('(pointer: coarse)').matches;
+        const freeze = (y: number) => {
+          Object.assign(document.body.style, { position: 'fixed', top: `-${y}px`, left: '0', right: '0', width: '100%' });
+        };
+        const unfreeze = (y: number) => {
+          Object.assign(document.body.style, { position: '', top: '', left: '', right: '', width: '' });
+          window.scrollTo(0, y);
+        };
 
         const finish = () => tl.progress(END / tl.duration());
         // fires once when the section's top reaches the top of the screen going down
@@ -73,12 +85,18 @@ export default function Statement({ image, words }: Home['statement']) {
             // a jump (anchor link, restored position) that lands past the pinned stretch: just show it finished
             const pinned = section.current!.offsetHeight - window.innerHeight;
             if (window.scrollY - self.start > pinned) return finish();
+            const at = Math.round(self.start); // the section exactly at the top of the screen
             hold.enable();
+            if (touch) freeze(at);
             gsap.to(tl, {
               progress: END / tl.duration(),
               duration: PLAY.duration,
               ease: EASE.none, // each part keeps its own ease inside the timeline
-              onComplete: () => hold.disable(), // the page scrolls on from here
+              onComplete: () => {
+                // the page scrolls on from here
+                if (touch) unfreeze(at);
+                hold.disable();
+              },
             });
           },
         });
@@ -86,6 +104,7 @@ export default function Statement({ image, words }: Home['statement']) {
         return () => {
           hold.kill();
           st.kill();
+          if (document.body.style.position === 'fixed') unfreeze(Math.round(-parseFloat(document.body.style.top) || 0));
         };
       });
 

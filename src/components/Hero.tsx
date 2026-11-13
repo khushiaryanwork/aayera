@@ -292,12 +292,13 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       // back at the very top: listen for gestures again (to reverse, or to scroll on)
       // anything that moved the page without a gesture (scrollbar drag, anchor link, restored position) skips straight to the grid
       const onScroll = () => {
-        if (atTop()) intent.enable();
-        else if (state === 'slides' && !playing) {
+        if (atTop()) return intent.enable();
+        if (state === 'slides' && !playing) {
           tl.progress(END / tl.duration());
           state = 'grid';
-          intent.disable();
         }
+        // away from the top the intro never blocks scrolling (e.g. after another section briefly froze the page)
+        if (!playing) intent.disable();
       };
       const onResize = () => {
         measure();

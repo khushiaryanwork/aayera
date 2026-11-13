@@ -132,10 +132,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hprogress i{display:block;height:100%;background:var(--gold);transform-origin:left;transform:scaleX(0)}
 
 /* ---------- EXPANDING IMAGE ---------- */
-/* the stage pins (sticky) for the extra height while the sequence plays (Statement.tsx).
-   Touch screens get a longer pinned stretch so a flick's glide runs out while it is still pinned. */
+/* the stage pins (sticky) for the extra height; the sequence plays as soon as it pins (Statement.tsx) */
 .expand{position:relative;height:160svh;pointer-events:none}
-@media (pointer:coarse){.expand{height:260svh}}
 .expand-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;place-items:center}
 .expand-media{position:absolute;inset:0;clip-path:inset(22% 30% 22% 30% round 28px);will-change:clip-path}
 .expand-media img{width:100%;height:100%;object-fit:cover;transform:scale(1.25);will-change:transform}
