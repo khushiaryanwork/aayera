@@ -15,8 +15,8 @@ const PLAY = { duration: 2.2 } as const;
 
 /**
  * Image that grows from a rounded card to full-bleed, with words revealing on top.
- * When the section reaches the top of the screen the page holds (GSAP Observer) while the whole
- * sequence plays, then scrolling continues. Coming back up, it holds again and plays in reverse.
+ * The first time the section reaches the top of the screen it is pinned (GSAP Observer holds the page)
+ * while the whole sequence plays, then scrolling continues. It stays finished: no reverse on the way up.
  */
 export default function Statement({ image, words }: Home['statement']) {
   const section = useRef<HTMLElement>(null);
@@ -55,9 +55,7 @@ export default function Statement({ image, words }: Home['statement']) {
         // the last word is in a little after its threshold: stop there
         const END = Math.min(1, WORD_START + (spans.length - 1) * WORD_STEP + 0.08);
 
-        /* hold the page while the sequence plays */
-        let state: 'start' | 'end' = 'start';
-        let playing = false;
+        /* pin the section while the sequence plays — once, on the way down; it then stays finished */
         // Scrolling is switched off (overflow: hidden on <html>) rather than undone frame by frame:
         // snapping the position back fights phone momentum scrolling and makes the page shake.
         // The Observer swallows wheel / touch gestures meanwhile, so nothing queues up.
@@ -71,41 +69,24 @@ export default function Statement({ image, words }: Home['statement']) {
         });
         hold.disable();
 
-        const play = (to: 'start' | 'end') => {
-          if (playing || state === to) return;
-          playing = true;
-          gsap.to(tl, {
-            progress: to === 'end' ? END : 0,
-            duration: PLAY.duration * Math.abs((to === 'end' ? END : 0) - tl.progress()) / END,
-            ease: EASE.none, // each part keeps its own ease inside the timeline
-            onComplete: () => {
-              state = to;
-              playing = false;
-              hold.disable(); // the page scrolls on from here
-            },
-          });
-        };
-
-        const lock = (self: ScrollTrigger, from: 'start' | 'end') => {
-          // a jump (anchor link, restored position) that lands well past the section skips the hold
-          if (Math.abs(window.scrollY - self.start) > window.innerHeight * 0.5) {
-            tl.progress(from === 'start' ? END : 0);
-            state = from === 'start' ? 'end' : 'start';
-            return;
-          }
-          if (state !== from || playing) return;
-          window.scrollTo(0, self.start); // section exactly at the top of the screen
-          hold.enable();
-          play(from === 'start' ? 'end' : 'start'); // already scrolling this way: play straight away
-        };
-
-        // a zero-length trigger at the section top: onEnter = crossing it going down, onLeaveBack = going up
+        const finish = () => tl.progress(END / tl.duration());
+        // fires once when the section's top reaches the top of the screen going down
         const st = ScrollTrigger.create({
           trigger: section.current,
           start: 'top top',
-          end: 'top top',
-          onEnter: (self) => lock(self, 'start'),
-          onLeaveBack: (self) => lock(self, 'end'),
+          once: true,
+          onEnter: (self) => {
+            // a jump (anchor link, restored position) that lands well past the section: just show it finished
+            if (window.scrollY - self.start > window.innerHeight * 0.5) return finish();
+            window.scrollTo(0, self.start); // section exactly at the top of the screen
+            hold.enable();
+            gsap.to(tl, {
+              progress: END / tl.duration(),
+              duration: PLAY.duration,
+              ease: EASE.none, // each part keeps its own ease inside the timeline
+              onComplete: () => hold.disable(), // the page scrolls on from here
+            });
+          },
         });
 
         return () => {
