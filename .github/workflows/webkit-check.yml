@@ -9,7 +9,7 @@ jobs:
     container: mcr.microsoft.com/playwright:v1.49.1-jammy
     steps:
       - uses: actions/checkout@v4
-      - run: npm i --no-save playwright@1.49.1
+      - run: npm i --no-save playwright@1.49.1 pngjs@7
       - run: node scripts/ci/webkit-check.mjs
         env: { HOME: /root }
       - uses: actions/upload-artifact@v4
