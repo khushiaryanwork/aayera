@@ -66,7 +66,8 @@ export default function Statement({ image, words }: Home['statement']) {
         // Touch screens: freeze the page exactly at the section until the sequence ends. A glide (momentum)
         // already in flight ignores blocked gestures and only stops when the page itself is frozen, which on
         // iOS needs <body> fixed in place (overflow: hidden is not enough there).
-        const touch = window.matchMedia('(pointer: coarse)').matches;
+        // any touchscreen (an iPad with a trackpad reports a fine pointer but still flicks and glides)
+        const touch = window.matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
         const freeze = (y: number) => {
           Object.assign(document.body.style, { position: 'fixed', top: `-${y}px`, left: '0', right: '0', width: '100%' });
         };
