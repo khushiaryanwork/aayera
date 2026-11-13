@@ -3,7 +3,7 @@
 import { webkit, devices } from 'playwright';
 import { PNG } from 'pngjs';
 const BASE = process.env.URL || 'https://aayera.pages.dev';
-const PAGES = ['/', '/about/', '/business-verticals/', '/business-verticals/events-conferences/', '/business-verticals/academy/', '/clients/', '/contact/', '/industries/', '/our-platforms/'];
+const PAGES = process.env.ONLY === 'none' ? [] : ['/', '/about/', '/business-verticals/', '/business-verticals/events-conferences/', '/business-verticals/academy/', '/clients/', '/contact/', '/industries/', '/our-platforms/'];
 const DEVICES = {
   'iPhone 16 Plus': { ...devices['iPhone 15 Pro Max'], viewport: { width: 430, height: 739 }, screen: { width: 430, height: 932 }, deviceScaleFactor: 3 },
   'iPhone SE': devices['iPhone SE'],
@@ -55,9 +55,10 @@ for (const [dname, dev] of Object.entries(DEVICES).filter(([n]) => !process.env.
     await withTimeout(b2.close(), 10000, 'close').catch(() => {});
   }
 }
-if (!process.env.ONLY) {
+if (!process.env.ONLY || process.env.ONLY === 'none') {
 // home page interactions on iPhone 16 Plus: swipe to change slide, swipe up for the photo-grid intro
 {
+  const errsHome = [];
   const ctx = await browser.newContext(DEVICES['iPhone 16 Plus']);
   const page = await ctx.newPage();
   const errs = [];
