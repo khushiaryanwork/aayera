@@ -15,8 +15,9 @@ const PLAY = { duration: 2.2 } as const;
 
 /**
  * Image that grows from a rounded card to full-bleed, with words revealing on top.
- * The first time the section reaches the top of the screen it is pinned (GSAP Observer holds the page)
- * while the whole sequence plays, then scrolling continues. It stays finished: no reverse on the way up.
+ * The first time the section reaches the top of the screen it pins and the whole sequence plays
+ * (scroll gestures are held by GSAP Observer meanwhile), then scrolling continues.
+ * It stays finished: no reverse on the way up.
  */
 export default function Statement({ image, words }: Home['statement']) {
   const section = useRef<HTMLElement>(null);
@@ -55,18 +56,11 @@ export default function Statement({ image, words }: Home['statement']) {
         // the last word is in a little after its threshold: stop there
         const END = Math.min(1, WORD_START + (spans.length - 1) * WORD_STEP + 0.08);
 
-        /* pin the section while the sequence plays — once, on the way down; it then stays finished */
-        // Scrolling is switched off (overflow: hidden on <html>) rather than undone frame by frame:
-        // snapping the position back fights phone momentum scrolling and makes the page shake.
-        // The Observer swallows wheel / touch gestures meanwhile, so nothing queues up.
-        const root = document.documentElement;
-        const hold = ScrollTrigger.observe({
-          type: 'wheel,touch',
-          preventDefault: true,
-          allowClicks: true,
-          onEnable: () => root.classList.add('scroll-held'),
-          onDisable: () => root.classList.remove('scroll-held'),
-        });
+        /* pin + play once, on the way down; it then stays finished.
+           The pin is CSS sticky (.expand is taller than the screen, .expand-sticky sticks), so it works the
+           same on every browser, including iOS momentum scrolling. While the sequence plays, GSAP Observer
+           swallows new wheel / touch gestures; a glide already in progress runs out inside the pinned stretch. */
+        const hold = ScrollTrigger.observe({ type: 'wheel,touch', preventDefault: true, allowClicks: true });
         hold.disable();
 
         const finish = () => tl.progress(END / tl.duration());
@@ -76,9 +70,9 @@ export default function Statement({ image, words }: Home['statement']) {
           start: 'top top',
           once: true,
           onEnter: (self) => {
-            // a jump (anchor link, restored position) that lands well past the section: just show it finished
-            if (window.scrollY - self.start > window.innerHeight * 0.5) return finish();
-            window.scrollTo(0, self.start); // section exactly at the top of the screen
+            // a jump (anchor link, restored position) that lands past the pinned stretch: just show it finished
+            const pinned = section.current!.offsetHeight - window.innerHeight;
+            if (window.scrollY - self.start > pinned) return finish();
             hold.enable();
             gsap.to(tl, {
               progress: END / tl.duration(),
@@ -91,7 +85,6 @@ export default function Statement({ image, words }: Home['statement']) {
 
         return () => {
           hold.kill();
-          root.classList.remove('scroll-held');
           st.kill();
         };
       });

@@ -15,8 +15,6 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;scrollbar-gutter:stable} /* gutter: no sideways jump when scrolling is held */
-/* page held while the statement sequence plays (Statement.tsx) */
-html.scroll-held,html.scroll-held body{overflow:hidden;overscroll-behavior:none}
 body{background:var(--black);color:var(--on);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img,video{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
@@ -134,7 +132,10 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hprogress i{display:block;height:100%;background:var(--gold);transform-origin:left;transform:scaleX(0)}
 
 /* ---------- EXPANDING IMAGE ---------- */
-.expand{position:relative;height:100svh;pointer-events:none} /* one screen: the sequence is played by GSAP Observer in Statement.tsx */
+/* the stage pins (sticky) for the extra height while the sequence plays (Statement.tsx).
+   Touch screens get a longer pinned stretch so a flick's glide runs out while it is still pinned. */
+.expand{position:relative;height:160svh;pointer-events:none}
+@media (pointer:coarse){.expand{height:260svh}}
 .expand-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;place-items:center}
 .expand-media{position:absolute;inset:0;clip-path:inset(22% 30% 22% 30% round 28px);will-change:clip-path}
 .expand-media img{width:100%;height:100%;object-fit:cover;transform:scale(1.25);will-change:transform}
