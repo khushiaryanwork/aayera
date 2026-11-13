@@ -5,13 +5,13 @@ on:
     branches: [ci/webkit-check]
 jobs:
   check:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.49.1-jammy
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20 }
-      - run: npm i --no-save playwright@latest && npx playwright install webkit
+      - run: npm i --no-save playwright@1.49.1
       - run: node scripts/ci/webkit-check.mjs
+        env: { HOME: /root }
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: webkit-out, path: out }
