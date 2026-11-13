@@ -6,7 +6,9 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    container: mcr.microsoft.com/playwright:v1.49.1-jammy
+    container:
+      image: mcr.microsoft.com/playwright:v1.49.1-jammy
+      options: --ipc=host
     steps:
       - uses: actions/checkout@v4
       - run: npm i --no-save playwright@1.49.1 pngjs@7

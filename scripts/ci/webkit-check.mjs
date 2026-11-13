@@ -19,7 +19,10 @@ for (const [dname, dev] of Object.entries(DEVICES)) {
   for (const path of PAGES) {
     const page = await ctx.newPage();
     const errs = [];
+    let crashed = false;
     page.on('pageerror', (e) => errs.push(e.message));
+    page.on('crash', () => (crashed = true));
+    try {
     await page.goto(BASE + path, { waitUntil: 'load' });
     await page.waitForTimeout(2500);
     const info = await page.evaluate(() => {
@@ -37,7 +40,11 @@ for (const [dname, dev] of Object.entries(DEVICES)) {
     const bad = errs.length || info.header === 'MISSING' || info.headerH < 100 || info.sideScroll || Math.max(...b) < 12;
     if (bad) problems++;
     console.log(`${bad ? 'PROBLEM' : 'ok     '} ${dname.padEnd(15)} ${path.padEnd(42)} header=${info.header}(${info.headerH}px) brightness=${JSON.stringify(b)}${info.sideScroll ? ' SIDEWAYS-SCROLL' : ''}${errs.length ? ' ERRORS: ' + errs.join(' | ') : ''}`);
-    await page.close();
+    } catch (e) {
+      problems++;
+      console.log(`PROBLEM ${dname.padEnd(15)} ${path.padEnd(42)} ${crashed ? 'PAGE CRASHED' : 'FAILED'}: ${e.message.split('\n')[0]}${errs.length ? ' ERRORS: ' + errs.join(' | ') : ''}`);
+    }
+    await page.close().catch(() => {});
   }
   await ctx.close();
 }
