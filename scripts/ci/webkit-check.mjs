@@ -18,7 +18,7 @@ const step = (msg) => console.log(`  [${((Date.now() - T0) / 1000).toFixed(1)}s]
 const withTimeout = (p, ms, what) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error(`TIMEOUT after ${ms / 1000}s: ${what}`)), ms))]);
 setTimeout(() => { console.log('GLOBAL TIMEOUT: script exceeded 25 minutes'); process.exit(2); }, 25 * 60 * 1000);
 let problems = 0;
-for (const [dname, dev] of Object.entries(DEVICES)) {
+for (const [dname, dev] of Object.entries(DEVICES).filter(([n]) => !process.env.ONLY || n === process.env.ONLY)) {
   for (const path of PAGES) {
     const b2 = await webkit.launch();
     const ctx = await b2.newContext(dev);
@@ -55,6 +55,7 @@ for (const [dname, dev] of Object.entries(DEVICES)) {
     await withTimeout(b2.close(), 10000, 'close').catch(() => {});
   }
 }
+if (!process.env.ONLY) {
 // home page interactions on iPhone 16 Plus: swipe to change slide, swipe up for the photo-grid intro
 {
   const ctx = await browser.newContext(DEVICES['iPhone 16 Plus']);
@@ -95,6 +96,7 @@ for (const [dname, dev] of Object.entries(DEVICES)) {
   if (!ok) problems++;
   console.log(`${ok ? 'ok     ' : 'PROBLEM'} statement freeze (iPhone 16 Plus): section ${top} during ${JSON.stringify(during)} after ${JSON.stringify(after)} then ${JSON.stringify(scrolls)}${errs.length ? ' ERRORS: ' + errs.join(' | ') : ''}`);
   await ctx.close();
+}
 }
 await browser.close();
 console.log(problems ? `${problems} PROBLEM(S)` : 'ALL OK');

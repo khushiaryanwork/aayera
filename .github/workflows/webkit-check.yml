@@ -13,5 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm i --no-save playwright@1.49.1 pngjs@7
-      - run: node scripts/ci/webkit-check.mjs
-        env: { HOME: /root }
+      - name: OLD build (9 Nov), iPhone 16 Plus
+        run: node scripts/ci/webkit-check.mjs
+        env: { HOME: /root, ONLY: iPhone 16 Plus, URL: 'https://27ffce5f.aayera.pages.dev' }
+      - name: CURRENT build, iPhone 16 Plus
+        run: node scripts/ci/webkit-check.mjs
+        env: { HOME: /root, ONLY: iPhone 16 Plus, URL: 'https://1f57b403.aayera.pages.dev' }
