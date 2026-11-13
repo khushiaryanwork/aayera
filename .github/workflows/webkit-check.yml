@@ -1,0 +1,17 @@
+name: WebKit iPhone check
+on:
+  workflow_dispatch:
+  push:
+    branches: [ci/webkit-check]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm i --no-save playwright@1.48.2 && npx playwright install --with-deps webkit
+      - run: node scripts/ci/webkit-check.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: webkit-out, path: out }
