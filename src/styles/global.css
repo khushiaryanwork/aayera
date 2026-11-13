@@ -134,9 +134,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hprogress i{display:block;height:100%;background:var(--gold);transform-origin:left;transform:scaleX(0)}
 
 /* ---------- EXPANDING IMAGE ---------- */
-/* the photo starts as a framed image 22% down its full-screen stage: pull the stage up by that much so
-   the visible gap above it is the normal section gap (the stage area it overlaps is empty) */
-.expand{position:relative;height:100svh;margin-top:-22svh;pointer-events:none} /* one screen: the sequence is played by a scroll gesture (GSAP Observer in Statement.tsx) */
+.expand{position:relative;height:100svh;pointer-events:none} /* one screen: the sequence is played by GSAP Observer in Statement.tsx */
 .expand-sticky{position:sticky;top:0;height:100svh;overflow:hidden;display:grid;place-items:center}
 .expand-media{position:absolute;inset:0;clip-path:inset(22% 30% 22% 30% round 28px);will-change:clip-path}
 .expand-media img{width:100%;height:100%;object-fit:cover;transform:scale(1.25);will-change:transform}
