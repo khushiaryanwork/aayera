@@ -6,10 +6,11 @@
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { CustomEase } from 'gsap/CustomEase';
+import { Observer } from 'gsap/Observer';
 import { DESKTOP_MEDIA } from '../breakpoints';
 
 if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger, CustomEase);
+  gsap.registerPlugin(ScrollTrigger, CustomEase, Observer);
   // exact copies of the curves the original CSS used, so motion feels identical
   CustomEase.create('siteOut', '0.2,0.7,0.2,1'); // cubic-bezier(.2,.7,.2,1): the site's "settle" curve
   CustomEase.create('cssEase', '0.25,0.1,0.25,1'); // CSS `ease`
@@ -65,4 +66,4 @@ export function requestRefresh(): void {
   pendingRefresh = gsap.delayedCall(0.15, () => ScrollTrigger.refresh());
 }
 
-export { gsap, ScrollTrigger };
+export { gsap, ScrollTrigger, Observer };

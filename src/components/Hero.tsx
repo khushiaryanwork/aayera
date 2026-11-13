@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, EASE, MQ, SCRUB, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
+import { gsap, Observer, EASE, MQ, SCRUB, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
 import { MOBILE_MEDIA } from '../lib/breakpoints';
 import { imgProps, SIZES } from '../lib/img-attrs';
 import type { Home } from '../lib/types';
@@ -9,6 +9,8 @@ import { Rich, plain } from './Rich';
 type Props = Home['hero'];
 
 /** Slider timing (seconds) — identical to the original CSS version. */
+/** Horizontal distance (px) a finger must travel before a swipe changes slide. */
+const SWIPE_MIN = 40;
 const AUTOPLAY = { desktop: 4, mobile: 6, video: 10 } as const; // slides with a video/GIF stay up longer
 const SLIDE = {
   fade: 1.1, // crossfade between slides (CSS `ease`)
@@ -76,7 +78,29 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   const veil = useRef<HTMLDivElement>(null);
   const title = useRef<HTMLDivElement>(null);
   const ui = useRef<HTMLDivElement>(null);
-  const swipeX = useRef<number | null>(null);
+
+  /* ---------- swipe (touch): GSAP Observer, one slide per gesture ---------- */
+  useEffect(() => {
+    if (count < 2) return;
+    let used = false; // a long drag passes the tolerance several times; only the first counts
+    const step = (dir: 1 | -1) => {
+      if (used) return;
+      used = true;
+      setRestLoaded(true);
+      setCur((c) => (c + dir + count) % count);
+    };
+    const obs = Observer.create({
+      target: sticky.current!,
+      type: 'touch', // mouse users have the arrows, dots and keyboard, as before
+      lockAxis: true, // a vertical scroll that drifts sideways never changes slide
+      tolerance: SWIPE_MIN,
+      preventDefault: false, // vertical scrolling keeps working (CSS touch-action: pan-y)
+      onPress: () => (used = false),
+      onLeft: () => step(1),
+      onRight: () => step(-1),
+    });
+    return () => obs.kill();
+  }, [count]);
 
   /* ---------- autoplay: restarts on every slide change, paused on hover / reduced motion ---------- */
   useEffect(() => {
@@ -244,15 +268,6 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         onKeyDown={(e) => {
           if (e.key === 'ArrowLeft') go(cur - 1);
           if (e.key === 'ArrowRight') go(cur + 1);
-        }}
-        onPointerDown={(e) => {
-          if (e.pointerType !== 'mouse') swipeX.current = e.clientX;
-        }}
-        onPointerUp={(e) => {
-          if (swipeX.current === null) return;
-          const dx = e.clientX - swipeX.current;
-          swipeX.current = null;
-          if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
         }}
       >
         <div className="mosaic" ref={mosaicEl} aria-hidden="true">
