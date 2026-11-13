@@ -12,6 +12,3 @@ jobs:
       - run: npm i --no-save playwright@1.49.1 pngjs@7
       - run: node scripts/ci/webkit-check.mjs
         env: { HOME: /root }
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with: { name: webkit-out, path: out }
