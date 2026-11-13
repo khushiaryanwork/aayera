@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
-import { gsap, Observer, EASE, MQ, SCRUB, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
+import { gsap, Observer, EASE, MQ, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
 import { MOBILE_MEDIA } from '../lib/breakpoints';
 import { imgProps, SIZES } from '../lib/img-attrs';
 import type { Home } from '../lib/types';
@@ -11,6 +11,8 @@ type Props = Home['hero'];
 /** Slider timing (seconds) — identical to the original CSS version. */
 /** Horizontal distance (px) a finger must travel before a swipe changes slide. */
 const SWIPE_MIN = 40;
+/** Slides → photo grid, played by GSAP Observer on one scroll / swipe gesture (seconds). */
+const INTRO = { duration: 1.8, tolerance: 10 } as const;
 const AUTOPLAY = { desktop: 4, mobile: 6, video: 10 } as const; // slides with a video/GIF stay up longer
 const SLIDE = {
   fade: 1.1, // crossfade between slides (CSS `ease`)
@@ -173,10 +175,12 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
     { scope: section, dependencies: [cur] },
   );
 
-  /* ---------- scroll: the slider zooms out into the wall, then the headline rises in ---------- */
+  /* ---------- the slider zooms out into the wall, then the headline rises in ----------
+     Same timeline as before; GSAP Observer plays it on the first scroll / swipe down at the top of the
+     page (and back in reverse on scroll up at the top), instead of tying it to the scrollbar. */
   useGSAP(
     () => {
-      const heroEl = section.current!, wall = mosaicEl.current!, frameEl = frame.current!;
+      const wall = mosaicEl.current!, frameEl = frame.current!;
       const rect: Rect = { x: 0, y: 0, w: 1, h: 1 };
       const measure = () => {
         const s = slot.current!;
@@ -216,20 +220,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         ui.current!.classList.toggle('off', e > ZOOM.uiOffAt);
       };
 
-      const tl = gsap.timeline({
-        defaults: { ease: EASE.none },
-        scrollTrigger: {
-          trigger: heroEl,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: SCRUB.section,
-          invalidateOnRefresh: true,
-          onRefresh: () => {
-            measure();
-            render();
-          },
-        },
-      });
+      const tl = gsap.timeline({ paused: true, defaults: { ease: EASE.none } });
       tl.to(zoom, { p: 1, duration: ZOOM.end, ease: EASE.inOut, onUpdate: render }, 0)
         .fromTo(wall, { '--lbl': 0 }, { '--lbl': 1, duration: ZOOM.labels[1] }, ZOOM.labels[0])
         .fromTo(veil.current!, { opacity: 0 }, { opacity: 1, duration: ZOOM.title[1] }, ZOOM.title[0])
@@ -246,11 +237,80 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
           },
           ZOOM.title[0],
         )
-        .to({}, { duration: 1 - (ZOOM.title[0] + ZOOM.title[1]) }); // pad so the timeline spans the whole scroll
+        .to({}, { duration: 1 - (ZOOM.title[0] + ZOOM.title[1]) }); // keeps the original timing proportions
+      const END = ZOOM.title[0] + ZOOM.title[1]; // the headline is fully in: nothing changes after this
+
+      /* playback */
+      const reduce = prefersReducedMotion();
+      let state: 'slides' | 'grid' = 'slides';
+      let playing = false;
+      const play = (to: 'slides' | 'grid', onDone?: () => void) => {
+        if (playing || state === to) return;
+        playing = true;
+        tl.tweenTo(to === 'grid' ? END : 0, {
+          duration: reduce ? 0.01 : INTRO.duration,
+          ease: EASE.none, // the zoom keeps its own inOut ease inside the timeline
+          onComplete: () => {
+            state = to;
+            playing = false;
+            onDone?.();
+          },
+        });
+      };
+      const atTop = () => window.scrollY <= 1;
+
+      // While active, the page can't scroll: gestures drive the intro instead.
+      // wheelSpeed -1 makes "wheel down" and "finger moves up" both report onUp (= forward).
+      const intent = Observer.create({
+        target: window,
+        type: 'wheel,touch',
+        wheelSpeed: -1,
+        tolerance: INTRO.tolerance,
+        lockAxis: true, // sideways swipes stay with the slide swiper
+        preventDefault: true,
+        onUp: () => (state === 'slides' ? play('grid', () => intent.disable()) : intent.disable()),
+        onDown: () => {
+          if (state === 'grid') play('slides');
+        },
+      });
+
+      // keyboard scrolling at the top plays the intro too
+      const KEYS = ['ArrowDown', 'PageDown', ' ', 'Spacebar'];
+      const onKey = (e: KeyboardEvent) => {
+        if (!intent.isEnabled || !KEYS.includes(e.key) || (e.target as HTMLElement)?.closest?.('input,textarea,select,button,a')) return;
+        e.preventDefault();
+        if (state === 'slides') play('grid', () => intent.disable());
+        else intent.disable();
+      };
+      // back at the very top: listen for gestures again (to reverse, or to scroll on)
+      // anything that moved the page without a gesture (scrollbar drag, anchor link, restored position) skips straight to the grid
+      const onScroll = () => {
+        if (atTop()) intent.enable();
+        else if (state === 'slides' && !playing) {
+          tl.progress(END / tl.duration());
+          state = 'grid';
+          intent.disable();
+        }
+      };
+      const onResize = () => {
+        measure();
+        render();
+      };
+      window.addEventListener('keydown', onKey);
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onResize);
 
       measure();
       render();
-      requestRefresh();
+      if (!atTop()) onScroll(); // page opened part-way down (refresh, back button)
+      requestRefresh(); // the hero is one screen tall now: let the sections below re-measure
+
+      return () => {
+        intent.kill();
+        window.removeEventListener('keydown', onKey);
+        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', onResize);
+      };
     },
     { scope: section },
   );
