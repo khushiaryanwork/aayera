@@ -58,13 +58,16 @@ export default function Statement({ image, words }: Home['statement']) {
         /* hold the page while the sequence plays */
         let state: 'start' | 'end' = 'start';
         let playing = false;
-        let heldAt = 0;
+        // Scrolling is switched off (overflow: hidden on <html>) rather than undone frame by frame:
+        // snapping the position back fights phone momentum scrolling and makes the page shake.
+        // The Observer swallows wheel / touch gestures meanwhile, so nothing queues up.
+        const root = document.documentElement;
         const hold = ScrollTrigger.observe({
-          type: 'wheel,touch,scroll,pointer',
+          type: 'wheel,touch',
           preventDefault: true,
           allowClicks: true,
-          onEnable: () => (heldAt = window.scrollY),
-          onChangeY: () => window.scrollTo(0, heldAt), // undo scrollbar drags / momentum while held
+          onEnable: () => root.classList.add('scroll-held'),
+          onDisable: () => root.classList.remove('scroll-held'),
         });
         hold.disable();
 
@@ -107,6 +110,7 @@ export default function Statement({ image, words }: Home['statement']) {
 
         return () => {
           hold.kill();
+          root.classList.remove('scroll-held');
           st.kill();
         };
       });

@@ -14,7 +14,9 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;scrollbar-gutter:stable} /* gutter: no sideways jump when scrolling is held */
+/* page held while the statement sequence plays (Statement.tsx) */
+html.scroll-held,html.scroll-held body{overflow:hidden;overscroll-behavior:none}
 body{background:var(--black);color:var(--on);font-family:var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 img,video{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
