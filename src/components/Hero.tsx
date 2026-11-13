@@ -189,7 +189,14 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       };
 
       // per-frame writes go through quickSetter (no tween objects created on scroll)
-      const setWallScale = gsap.quickSetter(wall, 'scale');
+      // scaleX / scaleY separately: quickSetter(…, 'scale') throws in WebKit (Safari / every iPhone browser)
+      // and the error took the whole hero down there
+      const setWallScaleX = gsap.quickSetter(wall, 'scaleX');
+      const setWallScaleY = gsap.quickSetter(wall, 'scaleY');
+      const setWallScale = (v: number) => {
+        setWallScaleX(v);
+        setWallScaleY(v);
+      };
       const setWallAlpha = gsap.quickSetter(wall, 'opacity');
       const setFrame = {
         x: gsap.quickSetter(frameEl, 'x', 'px'),
