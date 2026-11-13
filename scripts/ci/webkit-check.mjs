@@ -84,9 +84,9 @@ if (!process.env.ONLY || process.env.ONLY === 'none') {
   await page.waitForTimeout(1500);
   const top = await page.evaluate(() => Math.round(document.querySelector('.expand').getBoundingClientRect().top + scrollY));
   const st = () => page.evaluate(() => ({ pageY: Math.round(scrollY), stageTop: Math.round(document.querySelector('.expand-sticky').getBoundingClientRect().top), frozen: document.body.style.position === 'fixed', words: [...document.querySelectorAll('.expand-words span')].map((e) => (+getComputedStyle(e).opacity).toFixed(0)).join('') }));
-  await page.evaluate((y) => scrollTo(0, y - 400), top);
+  await page.evaluate((y) => scrollTo(0, y - 120), top);
   await page.waitForTimeout(500);
-  await page.evaluate(async () => { for (let i = 0; i < 40; i++) { scrollBy(0, 45); await new Promise((r) => requestAnimationFrame(r)); } });
+  await page.evaluate(async () => { for (let i = 0; i < 6; i++) { scrollBy(0, 45); await new Promise((r) => requestAnimationFrame(r)); } });
   const during = await st();
   await page.waitForTimeout(2600);
   const after = await st();

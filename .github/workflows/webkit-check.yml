@@ -17,5 +17,6 @@ jobs:
         run: node scripts/ci/webkit-check.mjs
         env: { HOME: /root, ONLY: 'none', URL: 'https://aayera.pages.dev' }
       - name: Live site, every page on Mac Safari
+        if: always()
         run: node scripts/ci/webkit-check.mjs
         env: { HOME: /root, ONLY: 'Safari Mac', URL: 'https://aayera.pages.dev' }
