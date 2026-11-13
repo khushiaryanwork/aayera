@@ -82,12 +82,14 @@ export default function Statement({ image, words }: Home['statement']) {
           start: 'top top',
           once: true,
           onEnter: (self) => {
-            // a jump (anchor link, restored position) that lands past the pinned stretch: just show it finished
-            const pinned = section.current!.offsetHeight - window.innerHeight;
-            if (window.scrollY - self.start > pinned) return finish();
+            // only a real jump (anchor link, restored position) that lands beyond the whole section skips it.
+            // Safari reports a fast glide's position a few frames late, so anything closer still plays,
+            // snapped back to the section.
+            if (window.scrollY - self.start > section.current!.offsetHeight) return finish();
             const at = Math.round(self.start); // the section exactly at the top of the screen
             hold.enable();
             if (touch) freeze(at);
+            else window.scrollTo(0, at);
             gsap.to(tl, {
               progress: END / tl.duration(),
               duration: PLAY.duration,
