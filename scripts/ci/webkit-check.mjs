@@ -65,5 +65,29 @@ for (const [dname, dev] of Object.entries(DEVICES)) {
   if (errs.length) problems++;
   await ctx.close();
 }
+// People. Knowledge. Possibility. on iPhone 16 Plus: a glide into it must stop; nothing scrolls until it finishes
+{
+  const ctx = await browser.newContext(DEVICES['iPhone 16 Plus']);
+  const page = await ctx.newPage();
+  const errs = [];
+  page.on('pageerror', (e) => errs.push(e.message));
+  await page.goto(BASE + '/', { waitUntil: 'load' });
+  await page.waitForTimeout(1500);
+  const top = await page.evaluate(() => Math.round(document.querySelector('.expand').getBoundingClientRect().top + scrollY));
+  const st = () => page.evaluate(() => ({ pageY: Math.round(scrollY), stageTop: Math.round(document.querySelector('.expand-sticky').getBoundingClientRect().top), frozen: document.body.style.position === 'fixed', words: [...document.querySelectorAll('.expand-words span')].map((e) => (+getComputedStyle(e).opacity).toFixed(0)).join('') }));
+  await page.evaluate((y) => scrollTo(0, y - 400), top);
+  await page.waitForTimeout(500);
+  await page.evaluate(async () => { for (let i = 0; i < 40; i++) { scrollBy(0, 45); await new Promise((r) => requestAnimationFrame(r)); } });
+  const during = await st();
+  await page.waitForTimeout(2600);
+  const after = await st();
+  await page.evaluate(() => scrollBy(0, 300));
+  await page.waitForTimeout(400);
+  const scrolls = await st();
+  const ok = during.frozen && during.stageTop === 0 && !after.frozen && after.pageY === top && after.words === '111' && scrolls.pageY > top && !errs.length;
+  if (!ok) problems++;
+  console.log(`${ok ? 'ok     ' : 'PROBLEM'} statement freeze (iPhone 16 Plus): section ${top} during ${JSON.stringify(during)} after ${JSON.stringify(after)} then ${JSON.stringify(scrolls)}${errs.length ? ' ERRORS: ' + errs.join(' | ') : ''}`);
+  await ctx.close();
+}
 await browser.close();
 console.log(problems ? `${problems} PROBLEM(S)` : 'ALL OK');
