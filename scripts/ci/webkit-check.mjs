@@ -16,11 +16,12 @@ const browser = await webkit.launch();
 const T0 = Date.now();
 const step = (msg) => console.log(`  [${((Date.now() - T0) / 1000).toFixed(1)}s] ${msg}`);
 const withTimeout = (p, ms, what) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error(`TIMEOUT after ${ms / 1000}s: ${what}`)), ms))]);
-setTimeout(() => { console.log('GLOBAL TIMEOUT: script exceeded 12 minutes'); process.exit(2); }, 12 * 60 * 1000);
+setTimeout(() => { console.log('GLOBAL TIMEOUT: script exceeded 25 minutes'); process.exit(2); }, 25 * 60 * 1000);
 let problems = 0;
 for (const [dname, dev] of Object.entries(DEVICES)) {
-  const ctx = await browser.newContext(dev);
   for (const path of PAGES) {
+    const b2 = await webkit.launch();
+    const ctx = await b2.newContext(dev);
     const page = await ctx.newPage();
     const errs = [];
     let crashed = false;
@@ -51,9 +52,8 @@ for (const [dname, dev] of Object.entries(DEVICES)) {
       problems++;
       console.log(`PROBLEM ${dname.padEnd(15)} ${path.padEnd(42)} ${crashed ? 'PAGE CRASHED' : 'FAILED'}: ${e.message.split('\n')[0]}${errs.length ? ' ERRORS: ' + errs.join(' | ') : ''}`);
     }
-    await page.close().catch(() => {});
+    await withTimeout(b2.close(), 10000, 'close').catch(() => {});
   }
-  await ctx.close();
 }
 // home page interactions on iPhone 16 Plus: swipe to change slide, swipe up for the photo-grid intro
 {
