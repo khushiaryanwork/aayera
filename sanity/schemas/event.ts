@@ -9,8 +9,12 @@ export const event = defineType({
   fields: [
     defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
     defineField({
-      name: 'sector', type: 'string', validation: (r) => r.required(),
-      options: { list: [{ title: 'Energy', value: 'energy' }, { title: 'Mobility', value: 'mobility' }, { title: 'Healthcare', value: 'health' }, { title: 'Technology', value: 'tech' }], layout: 'radio' },
+      name: 'sector', title: 'Category', type: 'string', validation: (r) => r.required(),
+      description: 'Shown as the label on the event card, e.g. Mobility, Healthcare, Technology.',
+    }),
+    defineField({
+      name: 'badge', title: 'Label before the category', type: 'string',
+      description: 'Shown before the category on the homepage card, e.g. Upcoming → "UPCOMING · MOBILITY". If left empty, "Upcoming" is added automatically until the event date has passed.',
     }),
     defineField({ name: 'startDate', type: 'date', validation: (r) => r.required() }),
     defineField({ name: 'endDate', type: 'date' }),

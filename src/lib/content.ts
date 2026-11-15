@@ -27,7 +27,7 @@ const QUERY = /* groq */ `{
   },
   "home": *[_id == "home"][0]{
     ...,
-    "eventsSection": eventsSection{ ..., "events": events[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage } },
+    "eventsSection": eventsSection{ ..., "events": events[]->{ title, sector, badge, city, location, startDate, endDate, displayDate, image, cardImage } },
     "platformsHead": platformsHead{ ..., "cards": cards[]->{ ..., "key": slug.current } },
     "industriesHead": industriesHead{ ..., "cards": cards[]->{ name, text } },
     "verticalsHead": verticalsHead{ ..., "cards": cards[]->{ ..., "key": slug.current } },
@@ -126,7 +126,8 @@ function toEventCard(e: any): EventCard {
   const upcoming = (e.endDate || e.startDate || '') >= new Date().toISOString().slice(0, 10);
   return {
     image: img(cardSource(e), 1400, e.title) as Img,
-    tag: (upcoming ? 'Upcoming · ' : '') + (SECTOR[e.sector] || e.sector || ''),
+    // label before the category: typed in Sanity, or "Upcoming" automatically until the event has passed
+    tag: [e.badge ?? (upcoming ? 'Upcoming' : ''), SECTOR[e.sector] || e.sector || ''].filter(Boolean).join(' · '),
     title: e.title,
     meta: [date, cityOf(e)].filter(Boolean).join(' · '),
     upcoming,
