@@ -80,9 +80,9 @@ export type Section =
   | (SectionBase & { _type: 'featuresSection'; layout: 'auto' | 'rows' | 'grid' | 'cards'; items: { title: string; text: string; image: Img | null }[] })
   | (SectionBase & { _type: 'linkCardsSection'; cards: { title: string; text: string; href: string; image: Img | null }[] })
   | (SectionBase & { _type: 'eventsSection'; showSummaries: boolean; anchor: string })
-  | (SectionBase & { _type: 'verticalsSection' })
-  | (SectionBase & { _type: 'industriesSection' })
-  | (SectionBase & { _type: 'platformsSection' })
+  | (SectionBase & { _type: 'verticalsSection'; picked?: Vertical[] | null })
+  | (SectionBase & { _type: 'industriesSection'; picked?: IndustryTile[] | null })
+  | (SectionBase & { _type: 'platformsSection'; picked?: Platform[] | null })
   | (SectionBase & { _type: 'clientsSection' })
   | (SectionBase & { _type: 'contactSection'; formHeading: string });
 

@@ -60,9 +60,9 @@ const crumbs = [
             />
           );
         case 'contactSection': return <ContactSection s={s} site={site} topics={enquiryTopics} />;
-        case 'verticalsSection': return <VerticalTiles head={s} verticals={verticals} />;
-        case 'industriesSection': return <IndustryGrid head={s} industries={industries} />;
-        case 'platformsSection': return <PlatformCards head={s} platforms={platforms} />;
+        case 'verticalsSection': return <VerticalTiles head={s} verticals={s.picked ?? verticals} />;
+        case 'industriesSection': return <IndustryGrid head={s} industries={s.picked ?? industries} />;
+        case 'platformsSection': return <PlatformCards head={s} platforms={s.picked ?? platforms} />;
       }
     })}
   </main>

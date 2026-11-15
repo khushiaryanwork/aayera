@@ -8,6 +8,13 @@ const head = [
   defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
 ]
 const intro = defineField({ name: 'intro', type: 'text', rows: 2 })
+/** Pick (and order) the shared vertical / industry / platform entries shown in a section. */
+const cardsField = (type: string, noun: string) => defineField({
+  name: 'cards', title: 'Cards', type: 'array',
+  of: [defineArrayMember({ type: 'reference', to: [{ type }] })],
+  validation: (r) => r.unique(),
+  description: `The ${noun} shown in this section, in this order. Drag to reorder, add or remove; click one to edit it (the same entry is used everywhere it appears on the site). Leave empty to show every one.`,
+})
 const preview = (label: string) => ({
   select: { title: 'heading', subtitle: 'eyebrow' },
   prepare: ({ title, subtitle }: any) => ({ title: (title || subtitle || label).replace(/\*/g, ''), subtitle: label }),
@@ -117,18 +124,18 @@ export const contactSection = defineType({
 
 export const verticalsSection = defineType({
   name: 'verticalsSection', title: 'Business vertical tiles', type: 'object',
-  description: 'Tiles for every Business vertical document (coming-soon ones greyed).',
-  fields: [...head, intro], preview: preview('Business vertical tiles'),
+  description: 'Business vertical cards (coming-soon ones greyed).',
+  fields: [...head, intro, cardsField('vertical', 'cards')], preview: preview('Business vertical tiles'),
 })
 export const industriesSection = defineType({
   name: 'industriesSection', title: 'Industries grid', type: 'object',
-  description: 'Grid of every Industry document.',
-  fields: [...head, intro], preview: preview('Industries grid'),
+  description: 'Grid of numbered industry blocks.',
+  fields: [...head, intro, cardsField('industry', 'blocks')], preview: preview('Industries grid'),
 })
 export const platformsSection = defineType({
   name: 'platformsSection', title: 'Flagship platforms', type: 'object',
-  description: 'A card for every Platform document, with its editions.',
-  fields: [...head, intro], preview: preview('Flagship platforms'),
+  description: 'A card per platform, with its editions.',
+  fields: [...head, intro, cardsField('platform', 'cards')], preview: preview('Flagship platforms'),
 })
 
 export const SECTION_TYPES = ['verticalsSection', 'industriesSection', 'platformsSection', 'textSection', 'groupsSection', 'listSection', 'featuresSection', 'linkCardsSection', 'eventsSection', 'clientsSection', 'contactSection']

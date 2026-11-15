@@ -34,7 +34,7 @@ const QUERY = /* groq */ `{
     "clientsSection": clientsSection{ ..., "clients": clients[]->{ name, logo, plainLogo } }
   },
   "allEvents": *[_type == "event" && !(_id in path("drafts.**"))] | order(startDate desc){ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website },
-  "pages": *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{ ..., "slug": slug.current },
+  "pages": *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{ ..., "slug": slug.current, "sections": sections[]{ ..., "cards": select(_type in ["verticalsSection", "industriesSection", "platformsSection"] => cards[]->{ ..., "key": slug.current }, cards) } },
   "verticals": *[_type == "vertical" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
   "industries": *[_type == "industry" && !(_id in path("drafts.**"))] | order(order asc, name asc){ name, text },
   "platforms": *[_type == "platform" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
@@ -192,7 +192,8 @@ function normSection(x: any): Section | null {
     case 'verticalsSection':
     case 'industriesSection':
     case 'platformsSection':
-      return { _type: x._type, ...base };
+      // cards picked in Sanity (mapped to tiles once verticals/industries/platforms are built)
+      return { _type: x._type, ...base, picked: (x.cards || []).filter((c: any) => c?.name) } as Section;
     case 'clientsSection':
       return { _type: 'clientsSection', ...base };
     case 'contactSection':
@@ -405,6 +406,13 @@ async function buildContent(): Promise<Content> {
   // the homepage shows the cards picked (and ordered) in Home → Flagship platforms; otherwise all of them
   const homePlatformCards = (h.platformsHead?.cards || []).filter((x: any) => x?.name);
   const homePlatforms: Platform[] = homePlatformCards.length ? homePlatformCards.map(toPlatform) : platforms;
+
+  // page sections: the cards picked in that section, in that order; otherwise every one
+  const toCard: Record<string, (x: any) => any> = { verticalsSection: toVertical, industriesSection: toIndustry, platformsSection: toPlatform };
+  for (const pg of pages) for (const sec of pg.sections as any[]) {
+    if (!toCard[sec._type]) continue;
+    sec.picked = sec.picked?.length ? sec.picked.map(toCard[sec._type]) : null;
+  }
 
   return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, homeVerticals, homeIndustries, homePlatforms, industries, platforms };
 }
