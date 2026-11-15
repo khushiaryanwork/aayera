@@ -196,7 +196,7 @@ export const home = defineType({
             type: 'object', name: 'wallTile',
             fields: [
               defineField({ name: 'image', type: 'imageWithAlt', validation: (r) => r.required() }),
-              defineField({ name: 'caption', type: 'string' }),
+              defineField({ name: 'caption', title: 'Text on hover', type: 'string', description: 'Shown over the photo when a visitor hovers it (and in the full-screen view), e.g. "Full house".' }),
               defineField({ name: 'ratio', title: 'Shape', type: 'string', initialValue: '4/5', options: { list: [{ title: 'Portrait 4:5', value: '4/5' }, { title: 'Landscape 3:2', value: '3/2' }, { title: 'Square', value: '1/1' }], layout: 'radio', direction: 'horizontal' } }),
             ],
             preview: { select: { title: 'caption', subtitle: 'ratio', media: 'image' } },
