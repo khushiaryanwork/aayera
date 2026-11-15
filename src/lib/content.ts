@@ -9,7 +9,7 @@ import { optimiseImages, widthsFor, LARGE_MIN_WIDTH } from './images';
 import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
-import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head } from './types';
+import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head, FooterCol, Link } from './types';
 
 const client = createClient({
   projectId,
@@ -132,6 +132,19 @@ function toEventCard(e: any): EventCard {
     meta: [date, cityOf(e)].filter(Boolean).join(' · '),
     upcoming,
   };
+}
+/** Footer link columns: as set in Home → Contact & footer, or built from the menu
+ *  (one column per menu group with sub-pages; single links and the header button under "Explore"). */
+function footerColumns(cms: any, site: Site): FooterCol[] {
+  const cols = (cms || [])
+    .map((c: any) => ({ title: c?.title || '', href: c?.href || '', links: (c?.links || []).filter((l: any) => l?.label && l?.href).map((l: any) => ({ label: l.label, href: l.href })) }))
+    .filter((c: FooterCol) => c.title && c.links.length);
+  if (cols.length) return cols;
+  const groups: FooterCol[] = site.nav.filter((n) => n.children?.length).map((n) => ({ title: n.label, href: n.href, links: n.children as Link[] }));
+  const singles: Link[] = site.nav.filter((n) => !n.children?.length).map(({ label, href }) => ({ label, href }));
+  if (site.navCta?.href && !singles.some((l) => l.label === site.navCta.label)) singles.push(site.navCta);
+  if (singles.length) groups.push({ title: 'Explore', href: '', links: singles });
+  return groups;
 }
 function formatAddress(a: any) {
   if (!a) return '';
@@ -260,7 +273,9 @@ async function buildContent(): Promise<Content> {
     announcement: { message: s.announcement?.message || '', linkLabel: s.announcement?.linkLabel || '', href: s.announcement?.href || '' },
     floatingSocials: s.floatingSocials ?? D.floatingSocials,
     socials: pick((s.socials || []).filter((x: any) => x?.platform && x?.url), D.socials as { platform: string; url: string }[]),
+    footerCols: [],
   };
+  site.footerCols = footerColumns(h.footer?.columns, site);
 
   /* hero */
   const hh = h.hero || {};

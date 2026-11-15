@@ -41,7 +41,9 @@ export interface Site {
   announcement: { message: string; linkLabel: string; href: string };
   socials: { platform: string; url: string }[];
   floatingSocials: boolean;
+  footerCols: FooterCol[];
 }
+export type FooterCol = { title: string; href: string; links: Link[] };
 
 export interface Home {
   hero: {

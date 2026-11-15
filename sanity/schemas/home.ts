@@ -21,7 +21,7 @@ export const home = defineType({
     { name: 'moments', title: '9 · Moments' },
     { name: 'clients', title: '10 · Filmstrip' },
     { name: 'partners', title: '11 · Partner ecosystem' },
-    { name: 'cta', title: '12 · Contact' },
+    { name: 'cta', title: '12 · Contact & footer' },
   ],
   fields: [
     /* ---------- hero ---------- */
@@ -230,6 +230,25 @@ export const home = defineType({
         defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
         defineField({ name: 'image', title: 'Background photo', type: 'imageWithAlt' }),
         defineField({ name: 'buttons', type: 'array', of: [{ type: 'button' }] }),
+      ],
+    }),
+    defineField({
+      name: 'footer', title: 'Footer', type: 'object', group: 'cta', options: { collapsible: false },
+      description: 'The footer is shown on every page. The address, email, phone numbers and office hours on its left are edited in Site settings.',
+      fields: [
+        defineField({
+          name: 'columns', title: 'Link columns', type: 'array',
+          description: 'One column per item, in this order (e.g. About, Business Verticals, Our Platforms, Explore). Leave empty to build the columns from the main menu.',
+          of: [defineArrayMember({
+            type: 'object', name: 'footerColumn',
+            fields: [
+              defineField({ name: 'title', title: 'Heading', type: 'string', validation: (r) => r.required() }),
+              defineField({ name: 'href', title: 'Heading link', type: 'string', description: 'Optional, e.g. /about/' }),
+              defineField({ name: 'links', type: 'array', of: [{ type: 'link' }] }),
+            ],
+            preview: { select: { title: 'title', links: 'links' }, prepare: ({ title, links }) => ({ title, subtitle: `${links?.length || 0} links` }) },
+          })],
+        }),
       ],
     }),
   ],
