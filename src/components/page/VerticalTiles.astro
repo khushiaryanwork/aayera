@@ -19,7 +19,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
             <h3>{v.short}</h3>
             <p class="vcap">{v.caption}</p>
             <p class="vdesc">{v.description}</p>
-            {v.href && <span class="vmore" aria-hidden="true">Explore <ArrowIcon /></span>}
+            {v.href && <span class="vmore" aria-hidden="true">{v.ctaLabel} <ArrowIcon /></span>}
           </div>
         </>
       );

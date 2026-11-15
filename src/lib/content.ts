@@ -362,7 +362,9 @@ async function buildContent(): Promise<Content> {
     return {
       key, name: v.name || '', short: v.short || (v.name || '').replace(/^Aayera\s+/i, ''), caption: v.caption || '', description: v.description || '',
       status: active ? 'active' : 'coming-soon', image: img(v.image, 900, ''),
-      href: active && key && pages.some((p) => p.slug === `business-verticals/${key}`) ? `/business-verticals/${key}/` : '',
+      // button: editable per card; without a link it goes to the vertical's own page, if there is one
+      href: active ? v.cta?.href || (key && pages.some((p) => p.slug === `business-verticals/${key}`) ? `/business-verticals/${key}/` : '') : '',
+      ctaLabel: v.cta?.label || 'Explore',
     };
   };
   const verticals: Vertical[] = (has(data.verticals) ? data.verticals : PD.verticals).map(toVertical);

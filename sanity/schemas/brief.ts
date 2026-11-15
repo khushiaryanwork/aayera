@@ -25,6 +25,10 @@ export const vertical = defineType({
       description: 'Coming soon: the tile is shown greyed with a badge and does not link anywhere.',
     }),
     defineField({ name: 'image', type: 'imageWithAlt' }),
+    defineField({
+      name: 'cta', title: 'Button', type: 'link',
+      description: 'The button at the bottom of the card, e.g. Explore → /business-verticals/academy/. If left empty the card shows "Explore" and links to its own page. Coming soon cards show no button.',
+    }),
     order,
   ],
   orderings: [{ title: 'Order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],
