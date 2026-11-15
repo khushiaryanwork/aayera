@@ -19,8 +19,9 @@ export const home = defineType({
     { name: 'events', title: '7 · Selected work' },
     { name: 'numbers', title: '8 · Numbers' },
     { name: 'moments', title: '9 · Moments' },
-    { name: 'clients', title: '10 · Filmstrip & clients' },
-    { name: 'cta', title: '11 · Contact' },
+    { name: 'clients', title: '10 · Filmstrip' },
+    { name: 'partners', title: '11 · Partner ecosystem' },
+    { name: 'cta', title: '12 · Contact' },
   ],
   fields: [
     /* ---------- hero ---------- */
@@ -212,12 +213,12 @@ export const home = defineType({
       of: [{ type: 'imageWithAlt' }],
     }),
     defineField({
-      name: 'clientsSection', title: 'Clients', type: 'object', group: 'clients', options: { collapsible: false },
+      name: 'clientsSection', title: 'Partner ecosystem', type: 'object', group: 'partners', options: { collapsible: false },
       fields: [
         defineField({ name: 'eyebrow', type: 'string' }),
         defineField({ name: 'heading', type: 'text', rows: 2, description: `${ACCENT_HELP} {count} is replaced by the number of logos.` }),
         defineField({ name: 'intro', type: 'text', rows: 2 }),
-        defineField({ name: 'clients', title: 'Logos', type: 'array', of: [{ type: 'reference', to: [{ type: 'client' }] }], description: 'Pick and order the logos. Leave empty to show every client.' }),
+        defineField({ name: 'clients', title: 'Companies', type: 'array', of: [{ type: 'reference', to: [{ type: 'client' }] }], validation: (r) => r.unique(), description: 'The company logos in the moving rows. Drag to reorder, add or remove; click a company to change its name or logo (the same company is used on the Clients page). Leave empty to show every client.' }),
       ],
     }),
 
