@@ -129,8 +129,32 @@ export const clientsSection = defineType({
 
 export const contactSection = defineType({
   name: 'contactSection', title: 'Contact details & form', type: 'object',
-  description: 'Email, phones, hours and address come from Site settings.',
-  fields: [...head, intro, defineField({ name: 'formHeading', type: 'string' })],
+  description: 'Any detail left empty here is taken from Site settings.',
+  fieldsets: [
+    { name: 'details', title: 'Contact details (left column)', options: { collapsible: true, collapsed: false } },
+    { name: 'form', title: 'Message form (right column)', options: { collapsible: true, collapsed: false } },
+  ],
+  fields: [
+    ...head, intro,
+    defineField({ name: 'emailLabel', title: 'Email label', type: 'string', fieldset: 'details', initialValue: 'Email' }),
+    defineField({ name: 'email', type: 'string', fieldset: 'details', description: 'Also where the form\'s messages are sent.' }),
+    defineField({ name: 'phoneLabel', title: 'Phone label', type: 'string', fieldset: 'details', initialValue: 'Phone' }),
+    defineField({ name: 'phones', type: 'array', of: [{ type: 'phone' }], fieldset: 'details' }),
+    defineField({ name: 'hoursLabel', title: 'Opening hours label', type: 'string', fieldset: 'details', initialValue: 'Opening hours' }),
+    defineField({ name: 'hours', title: 'Opening hours', type: 'string', fieldset: 'details' }),
+    defineField({ name: 'addressLabel', title: 'Location label', type: 'string', fieldset: 'details', initialValue: 'Company location' }),
+    defineField({ name: 'address', title: 'Location', type: 'text', rows: 2, fieldset: 'details' }),
+    defineField({ name: 'formHeading', type: 'string', fieldset: 'form' }),
+    defineField({ name: 'nameLabel', title: 'Name field label', type: 'string', fieldset: 'form', initialValue: 'Name' }),
+    defineField({ name: 'emailFieldLabel', title: 'Email field label', type: 'string', fieldset: 'form', initialValue: 'Email' }),
+    defineField({ name: 'orgLabel', title: 'Organisation field label', type: 'string', fieldset: 'form', initialValue: 'Organisation' }),
+    defineField({ name: 'topicLabel', title: 'Topic field label', type: 'string', fieldset: 'form', initialValue: "I'm interested in" }),
+    defineField({ name: 'topics', title: 'Topic options', type: 'array', of: [{ type: 'string' }], fieldset: 'form', description: 'The choices in the dropdown, in this order.' }),
+    defineField({ name: 'messageLabel', title: 'Message field label', type: 'string', fieldset: 'form', initialValue: 'Message' }),
+    defineField({ name: 'note', title: 'Note under the form', type: 'string', fieldset: 'form' }),
+    defineField({ name: 'errorText', title: 'Error message', type: 'string', fieldset: 'form', description: 'Shown when a required field is missing.' }),
+    defineField({ name: 'buttonLabel', title: 'Button', type: 'string', fieldset: 'form' }),
+  ],
   preview: preview('Contact details & form'),
 })
 

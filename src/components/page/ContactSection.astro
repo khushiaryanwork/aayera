@@ -2,6 +2,12 @@
 import type { Site } from '../../lib/types';
 import { Rich } from '../Rich';
 const { s, site, topics } = Astro.props as { s: any; site: Site; topics: string[] };
+// details set on this section, or the Site settings ones
+const email = s.email || site.email;
+const phones = s.phones?.length ? s.phones : site.phones;
+const hours = s.hours || site.hours;
+const address = s.address || site.address;
+const options = s.topics?.length ? s.topics : topics;
 const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURIComponent(site.mapQuery)}&output=embed` : '';
 ---
 <section class="sec csec">
@@ -11,33 +17,33 @@ const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURICompone
       {s.heading && <h2><Rich text={s.heading} /></h2>}
       {s.intro && <p class="sec-intro">{s.intro}</p>}
       <dl class="cinfo">
-        <div><dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
-        <div><dt>Phone</dt><dd>{site.phones.map((p) => <a href={`tel:${p.number}`}>{p.label}</a>)}</dd></div>
-        {site.hours && <div><dt>Opening hours</dt><dd>{site.hours}</dd></div>}
-        <div><dt>Company location</dt><dd>{site.address}</dd></div>
+        {email && <div><dt>{s.emailLabel}</dt><dd><a href={`mailto:${email}`}>{email}</a></dd></div>}
+        {phones.length > 0 && <div><dt>{s.phoneLabel}</dt><dd>{phones.map((p: { label: string; number: string }) => <a href={`tel:${p.number}`}>{p.label}</a>)}</dd></div>}
+        {hours && <div><dt>{s.hoursLabel}</dt><dd>{hours}</dd></div>}
+        {address && <div><dt>{s.addressLabel}</dt><dd>{address}</dd></div>}
       </dl>
     </div>
-    <form class="cform rv" id="enquiry" data-to={site.email} novalidate>
+    <form class="cform rv" id="enquiry" data-to={email} novalidate>
       {s.formHeading && <h3>{s.formHeading}</h3>}
       <div class="frow2">
-        <label>Name<input name="name" autocomplete="name" required></label>
-        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <label>{s.nameLabel}<input name="name" autocomplete="name" required></label>
+        <label>{s.emailFieldLabel}<input name="email" type="email" autocomplete="email" required></label>
       </div>
       <div class="frow2">
-        <label>Organisation<input name="org" autocomplete="organization"></label>
-        <label>I'm interested in
-          <select name="topic">{topics.map((t) => <option>{t}</option>)}</select>
+        <label>{s.orgLabel}<input name="org" autocomplete="organization"></label>
+        <label>{s.topicLabel}
+          <select name="topic">{options.map((t: string) => <option>{t}</option>)}</select>
         </label>
       </div>
-      <label>Message<textarea name="message" rows="5" required></textarea></label>
-      <p class="cform-note">This opens your email app with the message ready to send.</p>
-      <p class="cform-err" role="alert" hidden>Please add your name, a valid email and a message.</p>
-      <button class="btn btn-gold" type="submit">Prepare email</button>
+      <label>{s.messageLabel}<textarea name="message" rows="5" required></textarea></label>
+      {s.note && <p class="cform-note">{s.note}</p>}
+      <p class="cform-err" role="alert" hidden>{s.errorText}</p>
+      <button class="btn btn-gold" type="submit">{s.buttonLabel}</button>
     </form>
   </div>
   {mapSrc && (
     <div class="cmap rv">
-      <iframe src={mapSrc} title={`Map: ${site.address}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <iframe src={mapSrc} title={`Map: ${address}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   )}
 </section>

@@ -202,7 +202,18 @@ function normSection(x: any): Section | null {
     case 'clientsSection':
       return { _type: 'clientsSection', ...base };
     case 'contactSection':
-      return { _type: 'contactSection', ...base, formHeading: x.formHeading || '' };
+      return {
+        _type: 'contactSection', ...base, formHeading: x.formHeading || '',
+        emailLabel: x.emailLabel || 'Email', email: x.email || '',
+        phoneLabel: x.phoneLabel || 'Phone', phones: (x.phones || []).filter((p: any) => p?.label && p?.number).map((p: any) => ({ label: p.label, number: p.number })),
+        hoursLabel: x.hoursLabel || 'Opening hours', hours: x.hours || '',
+        addressLabel: x.addressLabel || 'Company location', address: x.address || '',
+        nameLabel: x.nameLabel || 'Name', emailFieldLabel: x.emailFieldLabel || 'Email', orgLabel: x.orgLabel || 'Organisation',
+        topicLabel: x.topicLabel || "I'm interested in", topics: strs(x.topics), messageLabel: x.messageLabel || 'Message',
+        note: x.note || 'This opens your email app with the message ready to send.',
+        errorText: x.errorText || 'Please add your name, a valid email and a message.',
+        buttonLabel: x.buttonLabel || 'Prepare email',
+      };
     default:
       return null;
   }

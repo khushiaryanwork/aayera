@@ -84,7 +84,13 @@ export type Section =
   | (SectionBase & { _type: 'industriesSection'; picked?: IndustryTile[] | null })
   | (SectionBase & { _type: 'platformsSection'; picked?: Platform[] | null })
   | (SectionBase & { _type: 'clientsSection' })
-  | (SectionBase & { _type: 'contactSection'; formHeading: string });
+  | (SectionBase & {
+      _type: 'contactSection'; formHeading: string;
+      emailLabel: string; email: string; phoneLabel: string; phones: { label: string; number: string }[];
+      hoursLabel: string; hours: string; addressLabel: string; address: string;
+      nameLabel: string; emailFieldLabel: string; orgLabel: string; topicLabel: string; topics: string[]; messageLabel: string;
+      note: string; errorText: string; buttonLabel: string;
+    });
 
 export interface Page {
   slug: string;
