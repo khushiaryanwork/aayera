@@ -35,7 +35,7 @@ const ZOOM = { end: 0.68, labels: [0.55, 0.25], title: [0.5, 0.3], uiOffAt: 0.34
 type Rect = { x: number; y: number; w: number; h: number };
 
 /** Full-screen slider that, on scroll, shrinks into the centre slot of a wall of event photos. */
-export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta, slideCta, slides, mosaic }: Props) {
+export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta, slides, mosaic }: Props) {
   const count = slides.length;
   const [cur, setCur] = useState(0);
   const [hovering, setHovering] = useState(false);
@@ -372,7 +372,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
                   <p className="eyebrow">{s.tag}</p>
                   <h2>{s.short || s.title}</h2>
                   <p className="meta">{s.meta}</p>
-                  <a className="btn btn-gold" href={slideCta.href}>{slideCta.label}</a>
+                  {s.cta && <a className="btn btn-gold" href={s.cta.href}>{s.cta.label}</a>}
                 </div>
               </div>
             ))}

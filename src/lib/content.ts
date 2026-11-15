@@ -260,9 +260,12 @@ async function buildContent(): Promise<Content> {
 
   /* hero */
   const hh = h.hero || {};
+  // each slide has its own button; a slide without one falls back to the old shared button, if any
+  const legacyCta = has(hh.slideCta?.label) ? hh.slideCta : null;
+  const slideCta = (c: any) => (has(c?.label) && has(c?.href) ? { label: c.label, href: c.href } : legacyCta);
   const slides = has(hh.slides)
-    ? hh.slides.map((x: any) => ({ image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH), video: slideVideo(x), tag: x.tag || '', title: x.title || '', short: x.short, meta: x.meta || '' }))
-    : DH.hero.slides.map((x: any) => ({ ...x, image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH) }));
+    ? hh.slides.map((x: any) => ({ image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH), video: slideVideo(x), tag: x.tag || '', title: x.title || '', short: x.short, meta: x.meta || '', cta: slideCta(x.cta) }))
+    : DH.hero.slides.map((x: any) => ({ ...x, image: img(x.image, 2400) as Img, imageMobile: img(x.imageMobile, MOBILE_WIDTH), cta: x.cta ?? null }));
 
   /* events */
   const es = h.eventsSection || {};
@@ -310,7 +313,6 @@ async function buildContent(): Promise<Content> {
       intro: pick(hh.intro, (DH.hero as any).intro || ''),
       primaryCta: has(hh.primaryCta?.label) ? hh.primaryCta : DH.hero.primaryCta,
       secondaryCta: has(hh.secondaryCta?.label) ? hh.secondaryCta : DH.hero.secondaryCta,
-      slideCta: has(hh.slideCta?.label) ? hh.slideCta : DH.hero.slideCta,
       slides,
       mosaic,
     },

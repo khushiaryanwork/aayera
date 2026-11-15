@@ -56,6 +56,7 @@ export const home = defineType({
               defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),
               defineField({ name: 'short', title: 'Short title', type: 'string', description: 'Optional shorter title shown on the slide (the full title is used for screen readers).' }),
               defineField({ name: 'meta', title: 'Place · date', type: 'string' }),
+              defineField({ name: 'cta', title: 'Button', type: 'link', description: 'The button on this slide. Leave the label empty to show no button.' }),
             ],
             preview: {
               select: { title: 'title', meta: 'meta', media: 'image', mobile: 'imageMobile', type: 'mediaType' },
@@ -63,7 +64,6 @@ export const home = defineType({
             },
           })],
         }),
-        defineField({ name: 'slideCta', title: 'Button on each slide', type: 'link' }),
         defineField({ name: 'eyebrow', title: 'Eyebrow above the headline', type: 'string' }),
         defineField({ name: 'heading', title: 'Headline (revealed on scroll)', type: 'text', rows: 2, description: ACCENT_HELP }),
         defineField({ name: 'intro', title: 'Supporting line', type: 'text', rows: 2 }),
