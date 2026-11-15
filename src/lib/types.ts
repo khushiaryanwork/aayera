@@ -42,6 +42,7 @@ export interface Site {
   socials: { platform: string; url: string }[];
   floatingSocials: boolean;
   footerCols: FooterCol[];
+  footer: { logo: Img; address: string; email: string; phones: { label: string; number: string }[]; hours: string; copyright: string };
 }
 export type FooterCol = { title: string; href: string; links: Link[] };
 

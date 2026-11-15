@@ -21,7 +21,7 @@ export const home = defineType({
     { name: 'moments', title: '9 · Moments' },
     { name: 'clients', title: '10 · Filmstrip' },
     { name: 'partners', title: '11 · Partner ecosystem' },
-    { name: 'cta', title: '12 · Contact & footer' },
+    { name: 'cta', title: '12 · Contact' },
   ],
   fields: [
     /* ---------- hero ---------- */
@@ -233,7 +233,7 @@ export const home = defineType({
       ],
     }),
     defineField({
-      name: 'footer', title: 'Footer', type: 'object', group: 'cta', options: { collapsible: false },
+      name: 'footer', title: 'Footer', type: 'object', group: 'cta', hidden: true, options: { collapsible: false },
       description: 'The footer is shown on every page. The address, email, phone numbers and office hours on its left are edited in Site settings.',
       fields: [
         defineField({

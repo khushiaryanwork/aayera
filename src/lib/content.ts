@@ -22,6 +22,8 @@ const client = createClient({
 const builder = createImageUrlBuilder({ projectId, dataset });
 
 const QUERY = /* groq */ `{
+  "header": *[_id == "header"][0],
+  "footer": *[_id == "footer"][0],
   "settings": *[_id == "siteSettings"][0]{
     title, description, shareImage, searchVisibility, logo, nav, navCta, email, phones, address, hours, mapQuery, enquiryTopics, announcementOn, announcement, socials, floatingSocials
   },
@@ -269,6 +271,8 @@ export function getContent(): Promise<Content> {
 
 async function buildContent(): Promise<Content> {
   const data: any = (await load()) || {};
+  const hd = data.header || {};
+  const ft = data.footer || {};
   const s = data.settings || {};
   const h = data.home || {};
   const D = defaults.settings;
@@ -278,21 +282,33 @@ async function buildContent(): Promise<Content> {
     title: pick(s.title, D.title),
     description: pick(s.description, D.description),
     shareImage: img(s.shareImage, 1200)?.src ?? null,
-    logo: imgOr(s.logo, D.logo, 400, 'Aayera') as Img,
-    nav: pick(s.nav, D.nav),
-    navCta: has(s.navCta?.label) ? s.navCta : D.navCta,
+    // Header document first, then the older Site settings fields, then the bundled defaults
+    logo: (img(hd.logo, 400, 'Aayera') ?? imgOr(s.logo, D.logo, 400, 'Aayera')) as Img,
+    nav: pick(hd.nav, pick(s.nav, D.nav)),
+    navCta: has(hd.navCta?.label) ? hd.navCta : has(s.navCta?.label) ? s.navCta : D.navCta,
     email: pick(s.email, D.email),
     phones: pick(s.phones, D.phones),
     address: pick(formatAddress(s.address), D.address),
     hours: pick(s.hours, PD.contact.hours),
     mapQuery: pick(s.mapQuery, PD.contact.mapQuery),
-    announcementOn: s.announcementOn ?? D.announcementOn,
-    announcement: { message: s.announcement?.message || '', linkLabel: s.announcement?.linkLabel || '', href: s.announcement?.href || '' },
+    announcementOn: hd.announcementOn ?? s.announcementOn ?? D.announcementOn,
+    announcement: (({ message = '', linkLabel = '', href = '' }: any) => ({ message, linkLabel, href }))(hd.announcement?.message ? hd.announcement : s.announcement || {}),
     floatingSocials: s.floatingSocials ?? D.floatingSocials,
     socials: pick((s.socials || []).filter((x: any) => x?.platform && x?.url), D.socials as { platform: string; url: string }[]),
     footerCols: [],
+    footer: null as any,
   };
-  site.footerCols = footerColumns(h.footer?.columns, site);
+  // footer: the Footer document, falling back to the header logo and the Site settings contact details
+  site.footerCols = footerColumns(has(ft.columns) ? ft.columns : h.footer?.columns, site);
+  const ftPhones = (ft.phones || []).filter((p: any) => p?.label && p?.number).map((p: any) => ({ label: p.label, number: p.number }));
+  site.footer = {
+    logo: img(ft.logo, 400, 'Aayera') ?? site.logo,
+    address: ft.address || site.address,
+    email: ft.email || site.email,
+    phones: ftPhones.length ? ftPhones : site.phones,
+    hours: ft.hours || site.hours,
+    copyright: (ft.copyright || '© {year} AAYERA. All rights reserved.').replace('{year}', String(new Date().getFullYear())),
+  };
 
   /* hero */
   const hh = h.hero || {};

@@ -3,19 +3,19 @@ import type { Site } from '../lib/types';
 const { site } = Astro.props as { site: Site };
 // link columns: set in Home → Contact & footer, or built from the menu (lib/content.ts)
 const groups = site.footerCols;
+const f = site.footer;
 
-const year = new Date().getFullYear();
 const caret = '<svg viewBox="0 0 12 12" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>';
 ---
 <footer class="foot">
   <div class="foot-top">
     <div class="foot-brand">
-      <a href="/" aria-label="Aayera home"><img src={site.logo.src} alt={site.logo.alt || 'Aayera'} width="120" height="38"></a>
-      {site.address && <address>{site.address}</address>}
+      <a href="/" aria-label="Aayera home"><img src={f.logo.src} alt={f.logo.alt || 'Aayera'} width="120" height="38"></a>
+      {f.address && <address>{f.address}</address>}
       <ul class="foot-contact">
-        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-        {site.phones.map((p) => <li><a href={`tel:${p.number}`}>{p.label}</a></li>)}
-        {site.hours && <li class="foot-hours">{site.hours}</li>}
+        {f.email && <li><a href={`mailto:${f.email}`}>{f.email}</a></li>}
+        {f.phones.map((p) => <li><a href={`tel:${p.number}`}>{p.label}</a></li>)}
+        {f.hours && <li class="foot-hours">{f.hours}</li>}
       </ul>
     </div>
     <nav class="foot-cols" aria-label="Footer">
@@ -36,7 +36,7 @@ const caret = '<svg viewBox="0 0 12 12" width="14" height="14" fill="none" strok
     </nav>
   </div>
   <div class="foot-bottom">
-    <span>© {year} AAYERA. All rights reserved.</span>
+    <span>{f.copyright}</span>
   </div>
 </footer>
 

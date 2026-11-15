@@ -6,11 +6,11 @@ export const siteSettings = defineType({
   title: 'Site settings',
   type: 'document',
   icon: CogIcon,
-  groups: [{ name: 'brand', title: 'Brand & navigation', default: true }, { name: 'contact', title: 'Contact' }, { name: 'bar', title: 'Announcement bar' }, { name: 'seo', title: 'SEO & sharing' }],
+  groups: [{ name: 'contact', title: 'Contact', default: true }, { name: 'bar', title: 'Social links' }, { name: 'seo', title: 'SEO & sharing' }],
   fields: [
-    defineField({ name: 'logo', type: 'imageWithAlt', group: 'brand', description: 'Light logo for the dark background (nav and footer).' }),
-    defineField({ name: 'nav', title: 'Menu', type: 'array', of: [{ type: 'navItem' }], group: 'brand', description: 'Leave empty to use the default menu (About us, Events ▾, Networking, Clients, News & Events).' }),
-    defineField({ name: 'navCta', title: 'Navigation button', type: 'link', group: 'brand' }),
+    defineField({ name: 'logo', type: 'imageWithAlt', group: 'contact', hidden: true, description: 'Light logo for the dark background (nav and footer).' }),
+    defineField({ name: 'nav', title: 'Menu', type: 'array', of: [{ type: 'navItem' }], group: 'contact', hidden: true, description: 'Leave empty to use the default menu (About us, Events ▾, Networking, Clients, News & Events).' }),
+    defineField({ name: 'navCta', title: 'Navigation button', type: 'link', group: 'contact', hidden: true }),
     defineField({ name: 'email', type: 'string', group: 'contact' }),
     defineField({ name: 'phones', type: 'array', of: [{ type: 'phone' }], group: 'contact' }),
     defineField({ name: 'hours', title: 'Opening hours', type: 'string', group: 'contact', description: 'e.g. Mon–Fri: 10:00am – 08:00pm' }),
@@ -21,11 +21,11 @@ export const siteSettings = defineType({
       fields: ['street', 'area', 'city', 'postalCode', 'country', 'countryCode'].map((name) => defineField({ name, type: 'string' })),
     }),
     defineField({
-      name: 'announcementOn', title: 'Show the announcement bar', type: 'boolean', group: 'bar', initialValue: true,
-      description: 'The slim bar above the menu with email, phones and opening hours (from the Contact tab).',
+      name: 'announcementOn', title: 'Show the announcement bar', type: 'boolean', group: 'bar', initialValue: true, hidden: true,
+      description: 'Moved to Header.',
     }),
     defineField({
-      name: 'announcement', title: 'Message (optional)', type: 'object', group: 'bar',
+      name: 'announcement', title: 'Message (optional)', type: 'object', group: 'bar', hidden: true,
       description: 'e.g. "Smart Meter Summit 2027 is open for registration" with a link. Leave empty for contact details only.',
       fields: [
         defineField({ name: 'message', type: 'string' }),

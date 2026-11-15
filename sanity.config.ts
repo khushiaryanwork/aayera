@@ -2,6 +2,8 @@ import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { HomeIcon } from '@sanity/icons/Home'
 import { CogIcon } from '@sanity/icons/Cog'
+import { MenuIcon } from '@sanity/icons/Menu'
+import { BlockElementIcon } from '@sanity/icons/BlockElement'
 import { schemaTypes, SINGLETONS } from './sanity/schemas'
 import { projectId, dataset } from './sanity/env.mjs'
 
@@ -16,7 +18,9 @@ export default defineConfig({
         S.list()
           .title('Content')
           .items([
+            S.listItem().title('Header').icon(MenuIcon).child(S.document().schemaType('header').documentId('header')),
             S.listItem().title('Home page').icon(HomeIcon).child(S.document().schemaType('home').documentId('home')),
+            S.listItem().title('Footer').icon(BlockElementIcon).child(S.document().schemaType('footer').documentId('footer')),
             S.listItem().title('Site settings').icon(CogIcon).child(S.document().schemaType('siteSettings').documentId('siteSettings')),
             S.documentTypeListItem('page').title('Pages'),
             S.divider(),
