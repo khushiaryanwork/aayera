@@ -28,6 +28,7 @@ const QUERY = /* groq */ `{
   "home": *[_id == "home"][0]{
     ...,
     "eventsSection": eventsSection{ ..., "events": events[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage } },
+    "verticalsHead": verticalsHead{ ..., "cards": cards[]->{ ..., "key": slug.current } },
     "clientsSection": clientsSection{ ..., "clients": clients[]->{ name, logo, plainLogo } }
   },
   "allEvents": *[_type == "event" && !(_id in path("drafts.**"))] | order(startDate desc){ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website },
@@ -224,7 +225,7 @@ function load() {
   return cached;
 }
 
-type Content = { site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; industries: IndustryTile[]; platforms: Platform[] };
+type Content = { site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; homeVerticals: Vertical[]; industries: IndustryTile[]; platforms: Platform[] };
 
 let content: Promise<Content> | null = null;
 /** All site content, built once per build and shared by every page. */
@@ -355,7 +356,7 @@ async function buildContent(): Promise<Content> {
     : DH.clients.logos.map((n) => ({ src: `/assets/clients/${n}.png`, alt: 'Client logo', plain: false }));
 
   /* business verticals, industries, platforms: Sanity documents, or the brief's defaults */
-  const verticals: Vertical[] = (has(data.verticals) ? data.verticals : PD.verticals).map((v: any) => {
+  const toVertical = (v: any): Vertical => {
     const key = v.key || '';
     const active = (v.status || 'active') === 'active';
     return {
@@ -363,7 +364,11 @@ async function buildContent(): Promise<Content> {
       status: active ? 'active' : 'coming-soon', image: img(v.image, 900, ''),
       href: active && key && pages.some((p) => p.slug === `business-verticals/${key}`) ? `/business-verticals/${key}/` : '',
     };
-  });
+  };
+  const verticals: Vertical[] = (has(data.verticals) ? data.verticals : PD.verticals).map(toVertical);
+  // the homepage shows the cards picked (and ordered) in Home → Business verticals; otherwise all of them
+  const homeCards = (h.verticalsHead?.cards || []).filter((v: any) => v?.name);
+  const homeVerticals: Vertical[] = homeCards.length ? homeCards.map(toVertical) : verticals;
   const industries: IndustryTile[] = (has(data.industries) ? data.industries : PD.industries).map((x: any) => ({ name: x.name || '', text: x.text || '' }));
   const platforms: Platform[] = (has(data.platforms) ? data.platforms : PD.platforms).map((x: any) => ({
     key: x.key || '', name: x.name || '', tagline: x.tagline || '', topics: strs(x.topics), summary: x.summary || '',
@@ -371,5 +376,5 @@ async function buildContent(): Promise<Content> {
     editions: (x.editions || []).map((e: any) => ({ label: e.label || '', date: e.date || '', venue: e.venue || '', note: e.note || '', status: e.status === 'upcoming' ? 'upcoming' : 'past' })),
   }));
 
-  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, industries, platforms };
+  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, homeVerticals, industries, platforms };
 }

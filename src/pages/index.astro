@@ -17,7 +17,7 @@ import Stats from '../components/Stats';
 import Clients from '../components/Clients';
 import { getContent } from '../lib/content';
 
-const { site, home, noindex, verticals, industries, platforms } = await getContent();
+const { site, home, noindex, homeVerticals, industries, platforms } = await getContent();
 ---
 <Base site={site} noindex={noindex}>
   <Nav site={site} />
@@ -25,7 +25,7 @@ const { site, home, noindex, verticals, industries, platforms } = await getConte
   <Marquee words={home.marquee} />
   <!-- order follows the content brief: who we are → verticals → industries → platforms → work → partners → contact -->
   <WhoWeAre who={home.whoWeAre} />
-  <VerticalTiles head={home.verticalsHead} verticals={verticals} />
+  <VerticalTiles head={home.verticalsHead} verticals={homeVerticals} />
   <IndustryGrid head={home.industriesHead} industries={industries} cta={{ label: 'Explore industries', href: '/industries/' }} />
   <Statement client:load {...home.statement} />
   <PlatformCards head={home.platformsHead} platforms={platforms} compact />

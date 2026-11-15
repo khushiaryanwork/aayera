@@ -105,8 +105,18 @@ export const home = defineType({
       ],
     }),
     defineField({
-      name: 'verticalsHead', title: 'Business verticals heading', type: 'object', group: 'verticals', options: { collapsible: false },
-      fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
+      name: 'verticalsHead', title: 'Business verticals', type: 'object', group: 'verticals', options: { collapsible: false },
+      fields: [
+        defineField({ name: 'eyebrow', type: 'string' }),
+        defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
+        defineField({ name: 'intro', type: 'text', rows: 2 }),
+        defineField({
+          name: 'cards', title: 'Cards', type: 'array',
+          description: 'The cards shown in this section, in this order. Drag to reorder, add or remove cards; click a card to edit its photo and text (the same card is used on the Business verticals pages). Leave empty to show every vertical.',
+          of: [defineArrayMember({ type: 'reference', to: [{ type: 'vertical' }] })],
+          validation: (r) => r.unique(),
+        }),
+      ],
     }),
     defineField({
       name: 'industriesHead', title: 'Industries heading', type: 'object', group: 'industries', options: { collapsible: false },
