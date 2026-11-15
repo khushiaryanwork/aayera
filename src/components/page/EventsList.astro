@@ -3,11 +3,14 @@ import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import type { EventItem } from '../../lib/types';
 import SecHead from './SecHead.astro';
 const { s, events } = Astro.props as { s: any; events: EventItem[] };
-const upcoming = events.filter((e) => e.upcoming).reverse(); // soonest first
-const past = events.filter((e) => !e.upcoming);
+// events picked in Sanity, in their order (an "upcoming" one whose date has passed moves to the top of the previous list);
+// with nothing picked, every event, split by date
+const picked = (s.upcoming?.length || 0) + (s.past?.length || 0) > 0;
+const upcoming: EventItem[] = picked ? s.upcoming.filter((e: EventItem) => e.upcoming) : events.filter((e) => e.upcoming).reverse(); // soonest first
+const past: EventItem[] = picked ? [...s.upcoming.filter((e: EventItem) => !e.upcoming), ...s.past] : events.filter((e) => !e.upcoming);
 const groups = [
-  { label: 'Upcoming events', items: upcoming },
-  { label: upcoming.length ? 'Previous events' : '', items: past },
+  { label: s.upcomingTitle || 'Upcoming events', items: upcoming },
+  { label: upcoming.length ? s.pastTitle || 'Previous events' : '', items: past },
 ].filter((g) => g.items.length);
 // keep heading levels in order whether or not the section has its own heading
 const G = s.heading ? 'h3' : 'h2';

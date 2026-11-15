@@ -99,11 +99,23 @@ export const linkCardsSection = defineType({
 
 export const eventsSection = defineType({
   name: 'eventsSection', title: 'Events list', type: 'object',
-  description: 'Lists every published Event, split into upcoming and previous by date.',
+  description: 'Upcoming and previous events, as picked below (or every event, split by date).',
   fields: [
     ...head, intro,
     defineField({ name: 'showSummaries', title: 'Show event descriptions', type: 'boolean', initialValue: true }),
     defineField({ name: 'anchor', type: 'string', description: 'Optional link target, e.g. track-record → /our-platforms/#track-record' }),
+    defineField({ name: 'upcomingTitle', title: 'Upcoming events heading', type: 'string', initialValue: 'Upcoming events' }),
+    defineField({
+      name: 'upcoming', title: 'Upcoming events', type: 'array',
+      of: [defineArrayMember({ type: 'reference', to: [{ type: 'event' }] })], validation: (r) => r.unique(),
+      description: 'In this order. Once an event\'s date has passed it moves to the top of Previous events automatically. Click an event to edit its photo, text, date or venue.',
+    }),
+    defineField({ name: 'pastTitle', title: 'Previous events heading', type: 'string', initialValue: 'Previous events' }),
+    defineField({
+      name: 'past', title: 'Previous events', type: 'array',
+      of: [defineArrayMember({ type: 'reference', to: [{ type: 'event' }] })], validation: (r) => r.unique(),
+      description: 'In this order. Leave both lists empty to show every event, sorted by date.',
+    }),
   ],
   preview: preview('Events list'),
 })

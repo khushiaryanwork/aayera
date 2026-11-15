@@ -34,7 +34,7 @@ const QUERY = /* groq */ `{
     "clientsSection": clientsSection{ ..., "clients": clients[]->{ name, logo, plainLogo } }
   },
   "allEvents": *[_type == "event" && !(_id in path("drafts.**"))] | order(startDate desc){ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website },
-  "pages": *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{ ..., "slug": slug.current, "sections": sections[]{ ..., "cards": select(_type in ["verticalsSection", "industriesSection", "platformsSection"] => cards[]->{ ..., "key": slug.current }, cards) } },
+  "pages": *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{ ..., "slug": slug.current, "sections": sections[]{ ..., "cards": select(_type in ["verticalsSection", "industriesSection", "platformsSection"] => cards[]->{ ..., "key": slug.current }, cards), "upcoming": upcoming[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website }, "past": past[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website } } },
   "verticals": *[_type == "vertical" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
   "industries": *[_type == "industry" && !(_id in path("drafts.**"))] | order(order asc, name asc){ name, text },
   "platforms": *[_type == "platform" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
@@ -188,7 +188,12 @@ function normSection(x: any): Section | null {
     case 'linkCardsSection':
       return { _type: 'linkCardsSection', ...base, cards: (x.cards || []).map((c: any) => ({ title: c.title || '', text: c.text || '', href: c.href || '#', image: img(c.image, 1000, c.title) })) };
     case 'eventsSection':
-      return { _type: 'eventsSection', ...base, showSummaries: x.showSummaries !== false, anchor: x.anchor || '' };
+      return {
+        _type: 'eventsSection', ...base, showSummaries: x.showSummaries !== false, anchor: x.anchor || '',
+        upcomingTitle: x.upcomingTitle || 'Upcoming events', pastTitle: x.pastTitle || 'Previous events',
+        upcoming: (x.upcoming || []).filter((e: any) => e?.title).map(toEventItem),
+        past: (x.past || []).filter((e: any) => e?.title).map(toEventItem),
+      };
     case 'verticalsSection':
     case 'industriesSection':
     case 'platformsSection':

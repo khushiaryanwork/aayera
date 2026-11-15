@@ -79,7 +79,7 @@ export type Section =
   | (SectionBase & { _type: 'listSection'; items: string[] })
   | (SectionBase & { _type: 'featuresSection'; layout: 'auto' | 'rows' | 'grid' | 'cards'; items: { title: string; text: string; image: Img | null }[] })
   | (SectionBase & { _type: 'linkCardsSection'; cards: { title: string; text: string; href: string; image: Img | null }[] })
-  | (SectionBase & { _type: 'eventsSection'; showSummaries: boolean; anchor: string })
+  | (SectionBase & { _type: 'eventsSection'; showSummaries: boolean; anchor: string; upcomingTitle: string; pastTitle: string; upcoming: EventItem[]; past: EventItem[] })
   | (SectionBase & { _type: 'verticalsSection'; picked?: Vertical[] | null })
   | (SectionBase & { _type: 'industriesSection'; picked?: IndustryTile[] | null })
   | (SectionBase & { _type: 'platformsSection'; picked?: Platform[] | null })
