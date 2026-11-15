@@ -66,6 +66,10 @@ export const platform = defineType({
     defineField({ name: 'image', type: 'imageWithAlt' }),
     defineField({ name: 'website', type: 'url' }),
     defineField({
+      name: 'cta', title: 'Button on the homepage card', type: 'link',
+      description: 'e.g. Platform details → /our-platforms/#adas. If left empty it links to this platform on the Our Platforms page.',
+    }),
+    defineField({
       name: 'editions', type: 'array', description: 'Newest first. Only publish dates and venues once confirmed.',
       of: [defineArrayMember({
         type: 'object', name: 'edition',

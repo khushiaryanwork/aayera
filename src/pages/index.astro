@@ -17,7 +17,7 @@ import Stats from '../components/Stats';
 import Clients from '../components/Clients';
 import { getContent } from '../lib/content';
 
-const { site, home, noindex, homeVerticals, homeIndustries, platforms } = await getContent();
+const { site, home, noindex, homeVerticals, homeIndustries, homePlatforms } = await getContent();
 ---
 <Base site={site} noindex={noindex}>
   <Nav site={site} />
@@ -28,7 +28,7 @@ const { site, home, noindex, homeVerticals, homeIndustries, platforms } = await 
   <VerticalTiles head={home.verticalsHead} verticals={homeVerticals} />
   <IndustryGrid head={home.industriesHead} industries={homeIndustries} cta={home.industriesCta ?? undefined} />
   <Statement client:load {...home.statement} />
-  <PlatformCards head={home.platformsHead} platforms={platforms} compact />
+  <PlatformCards head={home.platformsHead} platforms={homePlatforms} compact />
   <EventsTrack client:load {...home.events} />
   <Stats client:visible={{ rootMargin: '600px' }} items={home.stats} />
   <Moments moments={home.moments} />

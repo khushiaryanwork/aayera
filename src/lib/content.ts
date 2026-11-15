@@ -28,6 +28,7 @@ const QUERY = /* groq */ `{
   "home": *[_id == "home"][0]{
     ...,
     "eventsSection": eventsSection{ ..., "events": events[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage } },
+    "platformsHead": platformsHead{ ..., "cards": cards[]->{ ..., "key": slug.current } },
     "industriesHead": industriesHead{ ..., "cards": cards[]->{ name, text } },
     "verticalsHead": verticalsHead{ ..., "cards": cards[]->{ ..., "key": slug.current } },
     "clientsSection": clientsSection{ ..., "clients": clients[]->{ name, logo, plainLogo } }
@@ -226,7 +227,7 @@ function load() {
   return cached;
 }
 
-type Content = { site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; homeVerticals: Vertical[]; homeIndustries: IndustryTile[]; industries: IndustryTile[]; platforms: Platform[] };
+type Content = { site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; homeVerticals: Vertical[]; homeIndustries: IndustryTile[]; homePlatforms: Platform[]; industries: IndustryTile[]; platforms: Platform[] };
 
 let content: Promise<Content> | null = null;
 /** All site content, built once per build and shared by every page. */
@@ -378,11 +379,16 @@ async function buildContent(): Promise<Content> {
   // the homepage shows the cards picked (and ordered) in Home → Industries; otherwise all of them
   const homeIndustryCards = (h.industriesHead?.cards || []).filter((x: any) => x?.name);
   const homeIndustries: IndustryTile[] = homeIndustryCards.length ? homeIndustryCards.map(toIndustry) : industries;
-  const platforms: Platform[] = (has(data.platforms) ? data.platforms : PD.platforms).map((x: any) => ({
+  const toPlatform = (x: any): Platform => ({
     key: x.key || '', name: x.name || '', tagline: x.tagline || '', topics: strs(x.topics), summary: x.summary || '',
     image: img(x.image, 1600, x.name), website: x.website || '',
     editions: (x.editions || []).map((e: any) => ({ label: e.label || '', date: e.date || '', venue: e.venue || '', note: e.note || '', status: e.status === 'upcoming' ? 'upcoming' : 'past' })),
-  }));
+    cta: has(x.cta?.label) && has(x.cta?.href) ? { label: x.cta.label, href: x.cta.href } : { label: 'Platform details', href: `/our-platforms/#${x.key || ''}` },
+  });
+  const platforms: Platform[] = (has(data.platforms) ? data.platforms : PD.platforms).map(toPlatform);
+  // the homepage shows the cards picked (and ordered) in Home → Flagship platforms; otherwise all of them
+  const homePlatformCards = (h.platformsHead?.cards || []).filter((x: any) => x?.name);
+  const homePlatforms: Platform[] = homePlatformCards.length ? homePlatformCards.map(toPlatform) : platforms;
 
-  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, homeVerticals, homeIndustries, industries, platforms };
+  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, homeVerticals, homeIndustries, homePlatforms, industries, platforms };
 }

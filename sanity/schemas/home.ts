@@ -134,8 +134,18 @@ export const home = defineType({
       ],
     }),
     defineField({
-      name: 'platformsHead', title: 'Flagship platforms heading', type: 'object', group: 'platforms', options: { collapsible: false },
-      fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
+      name: 'platformsHead', title: 'Flagship platforms', type: 'object', group: 'platforms', options: { collapsible: false },
+      fields: [
+        defineField({ name: 'eyebrow', type: 'string' }),
+        defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
+        defineField({ name: 'intro', type: 'text', rows: 2 }),
+        defineField({
+          name: 'cards', title: 'Cards', type: 'array',
+          description: 'The platform cards shown in this section, in this order. Click a card to edit its photo, tagline, topics, editions and button (the same card is used on the Our Platforms page). Leave empty to show every platform.',
+          of: [defineArrayMember({ type: 'reference', to: [{ type: 'platform' }] })],
+          validation: (r) => r.unique(),
+        }),
+      ],
     }),
 
     /* ---------- events ---------- */
