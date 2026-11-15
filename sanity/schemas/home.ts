@@ -119,8 +119,19 @@ export const home = defineType({
       ],
     }),
     defineField({
-      name: 'industriesHead', title: 'Industries heading', type: 'object', group: 'industries', options: { collapsible: false },
-      fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
+      name: 'industriesHead', title: 'Industries', type: 'object', group: 'industries', options: { collapsible: false },
+      fields: [
+        defineField({ name: 'eyebrow', type: 'string' }),
+        defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
+        defineField({ name: 'intro', type: 'text', rows: 2 }),
+        defineField({
+          name: 'cards', title: 'Cards', type: 'array',
+          description: 'The blocks shown in this section, in this order (numbered automatically). Drag to reorder, add or remove; click a block to edit its title and text (the same block is used on the Industries page). Leave empty to show every industry.',
+          of: [defineArrayMember({ type: 'reference', to: [{ type: 'industry' }] })],
+          validation: (r) => r.unique(),
+        }),
+        defineField({ name: 'cta', title: 'Button under the blocks', type: 'link', description: 'e.g. Explore industries → /industries/' }),
+      ],
     }),
     defineField({
       name: 'platformsHead', title: 'Flagship platforms heading', type: 'object', group: 'platforms', options: { collapsible: false },

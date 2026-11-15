@@ -61,6 +61,7 @@ export interface Home {
   whoWeAre: Head & { body: string; cta: Link };
   verticalsHead: Head;
   industriesHead: Head;
+  industriesCta: Link | null;
   platformsHead: Head;
   filmstrip: Img[];
   clients: { eyebrow: string; heading: string; intro: string; logos: Logo[] };
