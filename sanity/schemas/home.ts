@@ -11,12 +11,16 @@ export const home = defineType({
   icon: HomeIcon,
   groups: [
     { name: 'hero', title: '1 · Hero', default: true },
-    { name: 'brief', title: '2 · Who we are, verticals, industries, platforms' },
-    { name: 'events', title: '3 · Selected work' },
-    { name: 'numbers', title: '3 · Statement & numbers' },
-    { name: 'moments', title: '4 · Moments' },
-    { name: 'clients', title: '6 · Filmstrip & clients' },
-    { name: 'cta', title: '7 · Contact' },
+    { name: 'brief', title: '2 · Who we are' },
+    { name: 'verticals', title: '3 · Business verticals' },
+    { name: 'industries', title: '4 · Industries' },
+    { name: 'statement', title: '5 · Statement' },
+    { name: 'platforms', title: '6 · Flagship platforms' },
+    { name: 'events', title: '7 · Selected work' },
+    { name: 'numbers', title: '8 · Numbers' },
+    { name: 'moments', title: '9 · Moments' },
+    { name: 'clients', title: '10 · Filmstrip & clients' },
+    { name: 'cta', title: '11 · Contact' },
   ],
   fields: [
     /* ---------- hero ---------- */
@@ -101,15 +105,15 @@ export const home = defineType({
       ],
     }),
     defineField({
-      name: 'verticalsHead', title: 'Business verticals heading', type: 'object', group: 'brief', options: { collapsible: false },
+      name: 'verticalsHead', title: 'Business verticals heading', type: 'object', group: 'verticals', options: { collapsible: false },
       fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
     }),
     defineField({
-      name: 'industriesHead', title: 'Industries heading', type: 'object', group: 'brief', options: { collapsible: false },
+      name: 'industriesHead', title: 'Industries heading', type: 'object', group: 'industries', options: { collapsible: false },
       fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
     }),
     defineField({
-      name: 'platformsHead', title: 'Flagship platforms heading', type: 'object', group: 'brief', options: { collapsible: false },
+      name: 'platformsHead', title: 'Flagship platforms heading', type: 'object', group: 'platforms', options: { collapsible: false },
       fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 2 })],
     }),
 
@@ -128,7 +132,7 @@ export const home = defineType({
 
     /* ---------- statement & numbers ---------- */
     defineField({
-      name: 'statement', title: 'Expanding image statement', type: 'object', group: 'numbers', options: { collapsible: false },
+      name: 'statement', title: 'Expanding image statement', type: 'object', group: 'statement', options: { collapsible: false },
       fields: [
         defineField({ name: 'image', type: 'imageWithAlt' }),
         defineField({ name: 'words', type: 'array', of: [{ type: 'string' }], description: 'One word or phrase per line. Wrap in *asterisks* for the gold serif style.' }),
