@@ -9,6 +9,7 @@ const { cta } = Astro.props as { cta: Home['cta'] };
   <div class="cta-in rv">
     <p class="eyebrow">{cta.eyebrow}</p>
     <h2><Rich text={cta.heading} /></h2>
+    {cta.text && <p class="cta-text">{cta.text}</p>}
     <div class="cta-actions">
       {cta.buttons.map((b) => <a class={`btn btn-${b.style === 'ghost' ? 'ghost' : 'gold'}`} href={b.href}>{b.label}</a>)}
     </div>

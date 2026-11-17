@@ -9,6 +9,7 @@ import IndustryGrid from '../components/page/IndustryGrid.astro';
 import PlatformCards from '../components/page/PlatformCards.astro';
 import Filmstrip from '../components/Filmstrip.astro';
 import Cta from '../components/Cta.astro';
+import SecHead from '../components/page/SecHead.astro';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero';
 import EventsTrack from '../components/EventsTrack';
@@ -25,11 +26,12 @@ const { site, home, noindex, homeVerticals, homeIndustries, homePlatforms } = aw
   <Marquee words={home.marquee} />
   <!-- order follows the content brief: who we are → verticals → industries → platforms → work → partners → contact -->
   <WhoWeAre who={home.whoWeAre} />
-  <VerticalTiles head={home.verticalsHead} verticals={homeVerticals} />
+  <VerticalTiles head={home.verticalsHead} verticals={homeVerticals} cta={home.verticalsCta} />
   <IndustryGrid head={home.industriesHead} industries={homeIndustries} cta={home.industriesCta ?? undefined} />
   <Statement client:load {...home.statement} />
-  <PlatformCards head={home.platformsHead} platforms={homePlatforms} compact />
+  <PlatformCards head={home.platformsHead} platforms={homePlatforms} compact cta={home.platformsCta} />
   <EventsTrack client:load {...home.events} />
+  {home.statsHead && <section class="sec stats-head"><SecHead {...home.statsHead} /></section>}
   <Stats client:visible={{ rootMargin: '600px' }} items={home.stats} />
   <Moments moments={home.moments} />
   <Filmstrip images={home.filmstrip} />

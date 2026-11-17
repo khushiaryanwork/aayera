@@ -101,7 +101,7 @@ export const home = defineType({
       fields: [
         defineField({ name: 'eyebrow', type: 'string' }),
         defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
-        defineField({ name: 'body', type: 'text', rows: 5 }),
+        defineField({ name: 'body', type: 'text', rows: 8, description: 'Leave an empty line between paragraphs. The first paragraph is shown larger.' }),
         defineField({ name: 'cta', title: 'Button', type: 'link' }),
       ],
     }),
@@ -117,6 +117,7 @@ export const home = defineType({
           of: [defineArrayMember({ type: 'reference', to: [{ type: 'vertical' }] })],
           validation: (r) => r.unique(),
         }),
+        defineField({ name: 'cta', title: 'Button under the cards', type: 'link', description: 'e.g. Explore all business verticals → /business-verticals/' }),
       ],
     }),
     defineField({
@@ -146,6 +147,7 @@ export const home = defineType({
           of: [defineArrayMember({ type: 'reference', to: [{ type: 'platform' }] })],
           validation: (r) => r.unique(),
         }),
+        defineField({ name: 'cta', title: 'Button under the cards', type: 'link', description: 'e.g. Discover our platforms → /our-platforms/' }),
       ],
     }),
 
@@ -169,6 +171,11 @@ export const home = defineType({
         defineField({ name: 'image', type: 'imageWithAlt' }),
         defineField({ name: 'words', type: 'array', of: [{ type: 'string' }], description: 'One word or phrase per line. Wrap in *asterisks* for the gold serif style.' }),
       ],
+    }),
+    defineField({
+      name: 'statsHead', title: 'Numbers heading', type: 'object', group: 'numbers', options: { collapsible: false },
+      description: 'Optional heading above the numbers.',
+      fields: [defineField({ name: 'eyebrow', type: 'string' }), defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }), defineField({ name: 'intro', type: 'text', rows: 3 })],
     }),
     defineField({
       name: 'stats', title: 'Numbers', type: 'array', group: 'numbers', validation: (r) => r.max(4),
@@ -217,7 +224,8 @@ export const home = defineType({
       fields: [
         defineField({ name: 'eyebrow', type: 'string' }),
         defineField({ name: 'heading', type: 'text', rows: 2, description: `${ACCENT_HELP} {count} is replaced by the number of logos.` }),
-        defineField({ name: 'intro', type: 'text', rows: 2 }),
+        defineField({ name: 'intro', type: 'text', rows: 3 }),
+        defineField({ name: 'partnerTypes', title: 'Partner types', type: 'array', of: [{ type: 'string' }], description: 'Optional tags under the intro, e.g. Institutional Partners, Media Partners.' }),
         defineField({ name: 'clients', title: 'Companies', type: 'array', of: [{ type: 'reference', to: [{ type: 'client' }] }], validation: (r) => r.unique(), description: 'The company logos in the moving rows. Drag to reorder, add or remove; click a company to change its name or logo (the same company is used on the Clients page). Leave empty to show every client.' }),
       ],
     }),
@@ -228,6 +236,7 @@ export const home = defineType({
       fields: [
         defineField({ name: 'eyebrow', type: 'string' }),
         defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
+        defineField({ name: 'text', type: 'text', rows: 3, description: 'Optional line under the heading.' }),
         defineField({ name: 'image', title: 'Background photo', type: 'imageWithAlt' }),
         defineField({ name: 'buttons', type: 'array', of: [{ type: 'button' }] }),
       ],

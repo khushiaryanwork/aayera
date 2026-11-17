@@ -10,7 +10,7 @@ const { who } = Astro.props as { who: Home['whoWeAre'] };
       <h2><Rich text={who.heading} /></h2>
     </div>
     <div class="tsec-body rv">
-      <p class="lede">{who.body}</p>
+      {who.body.split(/\n\s*\n/).map((p, i) => <p class={i === 0 ? 'lede' : undefined}>{p}</p>)}
       {who.cta?.label && <p><a class="btn btn-gold" href={who.cta.href}>{who.cta.label}</a></p>}
     </div>
   </div>

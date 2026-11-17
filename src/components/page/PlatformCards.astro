@@ -3,7 +3,8 @@ import ArrowIcon from '../ArrowIcon.astro';
 import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import type { Platform, Head } from '../../lib/types';
 import SecHead from './SecHead.astro';
-const { head, platforms, compact } = Astro.props as { head: Head; platforms: Platform[]; compact?: boolean };
+const { head, platforms, compact, cta } = Astro.props as { head: Head; platforms: Platform[]; compact?: boolean; cta?: { label: string; href: string } | null };
+const ext = (u: string) => /^https?:\/\//.test(u) ? { target: '_blank', rel: 'noopener' } : {};
 const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return u; } };
 ---
 <section class={'sec psec' + (compact ? ' compact' : '')}>
@@ -34,7 +35,7 @@ const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./,
               </ol>
             )}
             <p class="plinks">
-              {compact && <a class="erow-link" href={p.cta.href}>{p.cta.label} <ArrowIcon /></a>}
+              {compact && <a class="erow-link" href={p.cta.href} {...ext(p.cta.href)}>{p.cta.label} <ArrowIcon /></a>}
               {p.website && <a class="erow-link" href={p.website} target="_blank" rel="noopener">{host(p.website)} <span aria-hidden="true">↗</span></a>}
             </p>
           </div>
@@ -42,4 +43,5 @@ const host = (u: string) => { try { return new URL(u).hostname.replace(/^www\./,
       );
     })}
   </div>
+  {cta && <p class="sec-cta"><a class="btn btn-ghost" href={cta.href}>{cta.label}</a></p>}
 </section>

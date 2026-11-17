@@ -14,7 +14,7 @@ const MAX_BOOST = 8; // fastest multiplier while scrolling quickly
 const SHEEN = { cycle: 7, sweep: 0.28, step: 0.55 } as const; // logo highlight: every 7s, staggered
 
 /** Three marquee rows of client logos: alternate directions, scrolling speeds them up, hover slows a row. */
-export default function Clients({ eyebrow, heading, intro, logos }: Home['clients']) {
+export default function Clients({ eyebrow, heading, intro, partnerTypes, logos }: Home['clients']) {
   const root = useRef<HTMLElement>(null);
   const countEl = useRef<HTMLSpanElement>(null);
   const [copies, setCopies] = useState(COPIES);
@@ -35,7 +35,8 @@ export default function Clients({ eyebrow, heading, intro, logos }: Home['client
       mm.add(MQ.motion, () => {
         /* entrance: rows slide in from alternating sides, counter counts up */
         const counter = { v: 0 };
-        countEl.current!.textContent = '0';
+        // the heading may not show the {count} token
+        if (countEl.current) countEl.current.textContent = '0';
         gsap
           .timeline({ scrollTrigger: { trigger: section, start: 'top 85%', once: true } })
           // fade (1.1s, CSS ease) and slide (1.4s, site curve) run together, 0.12s apart per row
@@ -47,7 +48,7 @@ export default function Clients({ eyebrow, heading, intro, logos }: Home['client
             ease: EASE.count,
             snap: { v: 1 },
             onUpdate: () => {
-              countEl.current!.textContent = String(counter.v);
+              if (countEl.current) countEl.current.textContent = String(counter.v);
             },
           }, 0);
 
@@ -117,6 +118,7 @@ export default function Clients({ eyebrow, heading, intro, logos }: Home['client
         <p className="eyebrow">{eyebrow}</p>
         <h2><Rich text={heading} tokens={{ count: <span id="logoCount" ref={countEl}>{logos.length}</span> }} /></h2>
         <p>{intro}</p>
+        {partnerTypes?.length > 0 && <ul className="ptypes">{partnerTypes.map((t) => <li key={t}>{t}</li>)}</ul>}
       </div>
       <div className="lrows">
         {rows.map((r, i) => (

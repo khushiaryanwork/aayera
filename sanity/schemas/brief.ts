@@ -19,6 +19,7 @@ export const vertical = defineType({
     }),
     defineField({ name: 'caption', type: 'string', description: 'One line, e.g. "Creating platforms where industries meet."' }),
     defineField({ name: 'description', type: 'text', rows: 3 }),
+    defineField({ name: 'homeText', title: 'Short description (homepage)', type: 'text', rows: 2, description: 'Shown on the homepage card instead of the description. Leave empty to use the description.' }),
     defineField({
       name: 'status', type: 'string', initialValue: 'active', validation: (r) => r.required(),
       options: { list: [{ title: 'Active', value: 'active' }, { title: 'Coming soon', value: 'coming-soon' }], layout: 'radio', direction: 'horizontal' },
@@ -46,6 +47,7 @@ export const industry = defineType({
   fields: [
     defineField({ name: 'name', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'text', title: 'Topics / description', type: 'text', rows: 3 }),
+    defineField({ name: 'homeText', title: 'Short description (homepage)', type: 'text', rows: 2, description: 'Shown on the homepage block instead of the description. Leave empty to use the description.' }),
     order,
   ],
   orderings: [{ title: 'Order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],

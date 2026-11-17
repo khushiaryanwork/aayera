@@ -31,14 +31,14 @@ const QUERY = /* groq */ `{
     ...,
     "eventsSection": eventsSection{ ..., "events": events[]->{ title, sector, badge, city, location, startDate, endDate, displayDate, image, cardImage } },
     "platformsHead": platformsHead{ ..., "cards": cards[]->{ ..., "key": slug.current } },
-    "industriesHead": industriesHead{ ..., "cards": cards[]->{ name, text } },
+    "industriesHead": industriesHead{ ..., "cards": cards[]->{ name, text, homeText } },
     "verticalsHead": verticalsHead{ ..., "cards": cards[]->{ ..., "key": slug.current } },
     "clientsSection": clientsSection{ ..., "clients": clients[]->{ name, logo, plainLogo } }
   },
   "allEvents": *[_type == "event" && !(_id in path("drafts.**"))] | order(startDate desc){ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website },
   "pages": *[_type == "page" && defined(slug.current) && !(_id in path("drafts.**"))]{ ..., "slug": slug.current, "sections": sections[]{ ..., "cards": select(_type in ["verticalsSection", "industriesSection", "platformsSection"] => cards[]->{ ..., "key": slug.current }, cards), "upcoming": upcoming[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website }, "past": past[]->{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website } } },
   "verticals": *[_type == "vertical" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
-  "industries": *[_type == "industry" && !(_id in path("drafts.**"))] | order(order asc, name asc){ name, text },
+  "industries": *[_type == "industry" && !(_id in path("drafts.**"))] | order(order asc, name asc){ name, text, homeText },
   "platforms": *[_type == "platform" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
   "allClients": *[_type == "client" && !(_id in path("drafts.**"))] | order(name asc){ name, logo, plainLogo }
 }`;
@@ -371,6 +371,7 @@ async function buildContent(): Promise<Content> {
     marquee: pick(h.marquee, DH.marquee),
     events: { heading: pick(es.heading, DH.events.heading), intro: pick(es.intro, DH.events.intro), items: events },
     statement: { image: imgOr(st.image, DH.statement.image, 2400, DH.statement.image.alt), words: pick(st.words, DH.statement.words) },
+    statsHead: h.statsHead?.heading || h.statsHead?.eyebrow ? head(h.statsHead, {}) : null,
     stats: (has(h.stats) ? h.stats : DH.stats).map((x: any) => ({ value: Number(x.value) || 0, suffix: x.suffix || '', label: x.label || '', image: img(x.image, 1000) })),
     moments: { eyebrow: pick(mo.eyebrow, DH.moments.eyebrow), heading: pick(mo.heading, DH.moments.heading), tiles },
     whoWeAre: {
@@ -381,16 +382,19 @@ async function buildContent(): Promise<Content> {
       cta: has(h.whoWeAre?.cta?.label) ? h.whoWeAre.cta : DH.whoWeAre.cta,
     },
     verticalsHead: head(h.verticalsHead, DH.verticalsHead),
+    verticalsCta: (has(h.verticalsHead?.cta?.label) && has(h.verticalsHead?.cta?.href) ? { label: h.verticalsHead?.cta.label, href: h.verticalsHead?.cta.href } : null),
     industriesHead: head(h.industriesHead, DH.industriesHead),
     industriesCta: h.industriesHead?.cta === undefined ? { label: 'Explore industries', href: '/industries/' } : has(h.industriesHead.cta?.label) ? h.industriesHead.cta : null,
     platformsHead: head(h.platformsHead, DH.platformsHead),
+    platformsCta: (has(h.platformsHead?.cta?.label) && has(h.platformsHead?.cta?.href) ? { label: h.platformsHead?.cta.label, href: h.platformsHead?.cta.href } : null),
     filmstrip: has(h.filmstrip)
       ? h.filmstrip.map((x: any) => img(x, 600)).filter(Boolean)
       : DH.filmstrip.map((id) => ({ src: `/assets/img/07-sliding-rows/${id}.jpg`, alt: '', w: 600 })),
-    clients: { eyebrow: pick(cs.eyebrow, DH.clients.eyebrow), heading: pick(cs.heading, DH.clients.heading), intro: pick(cs.intro, DH.clients.intro), logos },
+    clients: { eyebrow: pick(cs.eyebrow, DH.clients.eyebrow), heading: pick(cs.heading, DH.clients.heading), intro: pick(cs.intro, DH.clients.intro), partnerTypes: strs(cs.partnerTypes), logos },
     cta: {
       eyebrow: pick(cta.eyebrow, DH.cta.eyebrow),
       heading: pick(cta.heading, DH.cta.heading),
+      text: cta.text || '',
       image: imgOr(cta.image, DH.cta.image, 2400),
       buttons: pick(cta.buttons, DH.cta.buttons as any),
     },
@@ -422,12 +426,14 @@ async function buildContent(): Promise<Content> {
   const verticals: Vertical[] = (has(data.verticals) ? data.verticals : PD.verticals).map(toVertical);
   // the homepage shows the cards picked (and ordered) in Home → Business verticals; otherwise all of them
   const homeCards = (h.verticalsHead?.cards || []).filter((v: any) => v?.name);
-  const homeVerticals: Vertical[] = homeCards.length ? homeCards.map(toVertical) : verticals;
+  const homeVertical = (v: any): Vertical => ({ ...toVertical(v), description: v.homeText || v.description || '' });
+  const homeVerticals: Vertical[] = (homeCards.length ? homeCards : has(data.verticals) ? data.verticals : PD.verticals).map(homeVertical);
   const toIndustry = (x: any): IndustryTile => ({ name: x.name || '', text: x.text || '' });
   const industries: IndustryTile[] = (has(data.industries) ? data.industries : PD.industries).map(toIndustry);
   // the homepage shows the cards picked (and ordered) in Home → Industries; otherwise all of them
   const homeIndustryCards = (h.industriesHead?.cards || []).filter((x: any) => x?.name);
-  const homeIndustries: IndustryTile[] = homeIndustryCards.length ? homeIndustryCards.map(toIndustry) : industries;
+  const homeIndustry = (x: any): IndustryTile => ({ name: x.name || '', text: x.homeText || x.text || '' });
+  const homeIndustries: IndustryTile[] = (homeIndustryCards.length ? homeIndustryCards : has(data.industries) ? data.industries : PD.industries).map(homeIndustry);
   const toPlatform = (x: any): Platform => ({
     key: x.key || '', name: x.name || '', tagline: x.tagline || '', topics: strs(x.topics), summary: x.summary || '',
     image: img(x.image, 1600, x.name), website: x.website || '',

@@ -3,7 +3,7 @@ import ArrowIcon from '../ArrowIcon.astro';
 import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import type { Vertical, Head } from '../../lib/types';
 import SecHead from './SecHead.astro';
-const { head, verticals } = Astro.props as { head: Head; verticals: Vertical[] };
+const { head, verticals, cta } = Astro.props as { head: Head; verticals: Vertical[]; cta?: { label: string; href: string } | null };
 const pad = (n: number) => String(n).padStart(2, '0');
 ---
 <section class="sec vsec">
@@ -30,4 +30,5 @@ const pad = (n: number) => String(n).padStart(2, '0');
       );
     })}
   </ul>
+  {cta && <p class="sec-cta"><a class="btn btn-ghost" href={cta.href}>{cta.label}</a></p>}
 </section>

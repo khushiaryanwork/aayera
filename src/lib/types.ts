@@ -60,15 +60,18 @@ export interface Home {
   events: { heading: string; intro: string; items: EventCard[] };
   statement: { image: Img | null; words: string[] };
   stats: Stat[];
+  statsHead: Head | null;
   moments: { eyebrow: string; heading: string; tiles: WallTile[] };
   whoWeAre: Head & { body: string; cta: Link };
   verticalsHead: Head;
+  verticalsCta: Link | null;
   industriesHead: Head;
   industriesCta: Link | null;
   platformsHead: Head;
+  platformsCta: Link | null;
   filmstrip: Img[];
-  clients: { eyebrow: string; heading: string; intro: string; logos: Logo[] };
-  cta: { eyebrow: string; heading: string; image: Img | null; buttons: Button[] };
+  clients: { eyebrow: string; heading: string; intro: string; partnerTypes: string[]; logos: Logo[] };
+  cta: { eyebrow: string; heading: string; text: string; image: Img | null; buttons: Button[] };
 }
 
 export type EventItem = { title: string; tag: string; date: string; location: string; summary: string; website: string; image: Img | null; upcoming: boolean };

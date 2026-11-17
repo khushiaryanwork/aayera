@@ -6,6 +6,6 @@ const { eyebrow, heading, intro, center } = Astro.props as { eyebrow?: string; h
   <div class={'sec-head rv' + (center ? ' center' : '')}>
     {eyebrow && <p class="eyebrow">{eyebrow}</p>}
     {heading && <h2><Rich text={heading} /></h2>}
-    {intro && <p class="sec-intro">{intro}</p>}
+    {intro && intro.split(/\n\s*\n/).map((p) => <p class="sec-intro">{p}</p>)}
   </div>
 )}
