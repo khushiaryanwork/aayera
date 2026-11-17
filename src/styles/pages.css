@@ -274,7 +274,7 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 
 /* ============ brief additions: verticals, industries, platforms ============ */
 /* h1 already has 30px below it; give the buttons the same breathing room */
-.hero-intro{margin:0 auto 32px;max-width:46ch;font-size:clamp(15px,1.3vw,18px);line-height:1.55;color:oklch(90% .006 260)}
+.hero-intro{margin:0 auto clamp(20px,3.5svh,32px);max-width:52ch;font-size:clamp(14px,min(1.3vw,2.1svh),18px);line-height:1.55;color:oklch(90% .006 260)}
 .sec-cta{margin-top:50px}
 .stats-head{padding-bottom:0}
 .sec-intro+.sec-intro{margin-top:1em}
