@@ -20,7 +20,7 @@ import { getContent } from '../lib/content';
 
 const { site, home, noindex, homeVerticals, homeIndustries, homePlatforms } = await getContent();
 ---
-<Base site={site} noindex={noindex}>
+<Base site={site} noindex={noindex} seo={home.seo} home>
   <Nav site={site} />
   <Hero client:load {...home.hero} />
   <Marquee words={home.marquee} />

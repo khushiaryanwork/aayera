@@ -36,7 +36,7 @@ const crumbs = [
   { label: page.title },
 ];
 ---
-<Base site={site} noindex={noindex} title={page.seoTitle || `${page.title} | AAYERA`} description={page.description || site.description}>
+<Base site={site} noindex={noindex} seo={{ ...page.seo, description: page.seo.description || site.description }} crumbs={crumbs}>
   <Nav site={site} />
   <main>
     <PageHero page={page} crumbs={crumbs} />

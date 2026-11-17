@@ -1,12 +1,41 @@
 ---
 import '../styles/global.css';
 import '../styles/pages.css';
-import type { Site } from '../lib/types';
+import type { Site, Seo } from '../lib/types';
 import FloatingSocials from '../components/FloatingSocials.astro';
-interface Props { site: Site; noindex?: boolean; title?: string; description?: string }
-const { site, noindex } = Astro.props;
-const title = Astro.props.title || site.title;
-const description = Astro.props.description || site.description;
+interface Props { site: Site; noindex?: boolean; seo?: Seo; title?: string; description?: string; crumbs?: { label: string; href?: string }[]; home?: boolean }
+const { site, noindex, seo, crumbs = [], home = false } = Astro.props;
+const title = seo?.title || Astro.props.title || site.title;
+const description = seo?.description || Astro.props.description || site.description;
+const base = site.url;
+const url = base + Astro.url.pathname;
+const canonical = seo?.canonical || url;
+const image = seo?.image || site.shareImage;
+const robotsOff = noindex || seo?.noIndex;
+
+// structured data (JSON-LD): the organisation and website on every page, plus this page and its breadcrumbs
+const org = {
+  '@type': 'Organization', '@id': `${base}/#organization`, name: 'AAYERA', url: `${base}/`,
+  logo: site.logo?.src, email: site.email, telephone: site.phones.map((p) => p.number), address: site.address || undefined,
+  sameAs: site.socials.map((s) => s.url).length ? site.socials.map((s) => s.url) : undefined,
+};
+const website = { '@type': 'WebSite', '@id': `${base}/#website`, url: `${base}/`, name: 'AAYERA', publisher: { '@id': `${base}/#organization` } };
+const graph: object[] = [org, website];
+if (!home) {
+  const type = seo?.schemaType || 'WebPage';
+  graph.push(type === 'Service'
+    ? { '@type': 'Service', '@id': `${canonical}#service`, name: title, description, url: canonical, provider: { '@id': `${base}/#organization` } }
+    : { '@type': type, '@id': `${canonical}#webpage`, name: title, description, url: canonical, isPartOf: { '@id': `${base}/#website` }, publisher: { '@id': `${base}/#organization` } });
+  if (crumbs.length) graph.push({
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.label, item: c.href ? base + c.href : canonical })),
+  });
+}
+const jsonLd = [JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })];
+if (seo?.schemaCustom) {
+  try { jsonLd.push(JSON.stringify(JSON.parse(seo.schemaCustom))); } catch { /* invalid JSON is rejected in the Studio */ }
+}
+const ld = (s: string) => s.replace(/</g, '\\u003c');
 ---
 <!doctype html>
 <html lang="en">
@@ -15,10 +44,19 @@ const description = Astro.props.description || site.description;
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <meta name="description" content={description}>
-  {noindex && <meta name="robots" content="noindex, nofollow">}
+  <link rel="canonical" href={canonical}>
+  {robotsOff && <meta name="robots" content="noindex, nofollow">}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AAYERA">
+  <meta property="og:url" content={canonical}>
   <meta property="og:title" content={title}>
   <meta property="og:description" content={description}>
-  {site.shareImage && <meta property="og:image" content={site.shareImage}>}
+  {image && <meta property="og:image" content={image}>}
+  <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'}>
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  {image && <meta name="twitter:image" content={image}>}
+  {jsonLd.map((j) => <script type="application/ld+json" set:html={ld(j)} />)}
   <link rel="icon" href={site.logo.src}>
   <script is:inline>if (matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.classList.add('motion');</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">

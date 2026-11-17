@@ -9,7 +9,7 @@ import { optimiseImages, widthsFor, LARGE_MIN_WIDTH } from './images';
 import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
-import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head, FooterCol, Link } from './types';
+import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head, FooterCol, Link, Seo } from './types';
 
 const client = createClient({
   projectId,
@@ -25,7 +25,7 @@ const QUERY = /* groq */ `{
   "header": *[_id == "header"][0],
   "footer": *[_id == "footer"][0],
   "settings": *[_id == "siteSettings"][0]{
-    title, description, shareImage, searchVisibility, logo, nav, navCta, email, phones, address, hours, mapQuery, enquiryTopics, announcementOn, announcement, socials, floatingSocials
+    siteUrl, title, description, shareImage, searchVisibility, logo, nav, navCta, email, phones, address, hours, mapQuery, enquiryTopics, announcementOn, announcement, socials, floatingSocials
   },
   "home": *[_id == "home"][0]{
     ...,
@@ -148,6 +148,18 @@ function footerColumns(cms: any, site: Site): FooterCol[] {
   if (singles.length) groups.push({ title: 'Explore', href: '', links: singles });
   return groups;
 }
+/** A page's SEO settings, with the given title / description as fallbacks. */
+function toSeo(x: any, title: string, description: string): Seo {
+  return {
+    title: x?.title || title,
+    description: x?.description || description,
+    canonical: x?.canonical || '',
+    image: img(x?.image, 1200)?.src ?? null,
+    noIndex: !!x?.noIndex,
+    schemaType: x?.schemaType || 'WebPage',
+    schemaCustom: x?.schemaCustom || '',
+  };
+}
 function formatAddress(a: any) {
   if (!a) return '';
   if (typeof a === 'string') return a;
@@ -231,6 +243,8 @@ function toPage(def: any, cms: any): Page {
     title: pick(c.title, def?.title || ''),
     seoTitle: pick(c.seoTitle, def?.seoTitle || ''),
     description: pick(c.description, def?.description || ''),
+    // SEO section first, then the older seoTitle / description fields
+    seo: toSeo(c.seo, pick(c.seoTitle, def?.seoTitle || '') || `${pick(c.title, def?.title || '')} | AAYERA`, pick(c.description, def?.description || '')),
     showCta: (c.showCta ?? def?.showCta) !== false,
     hero: {
       eyebrow: pick(ch.eyebrow, dh.eyebrow || ''),
@@ -282,6 +296,7 @@ async function buildContent(): Promise<Content> {
     title: pick(s.title, D.title),
     description: pick(s.description, D.description),
     shareImage: img(s.shareImage, 1200)?.src ?? null,
+    url: (s.siteUrl || 'https://aayera.pages.dev').replace(/\/+$/, ''),
     // Header document first, then the older Site settings fields, then the bundled defaults
     logo: (img(hd.logo, 400, 'Aayera') ?? imgOr(s.logo, D.logo, 400, 'Aayera')) as Img,
     nav: pick(hd.nav, pick(s.nav, D.nav)),
@@ -359,6 +374,7 @@ async function buildContent(): Promise<Content> {
   const cta = h.cta || {};
 
   const home: Home = {
+    seo: toSeo(h.seo, site.title, site.description),
     hero: {
       eyebrow: pick(hh.eyebrow, DH.hero.eyebrow),
       heading: pick(hh.heading, DH.hero.heading),

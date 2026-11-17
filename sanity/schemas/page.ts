@@ -185,7 +185,7 @@ export const page = defineType({
   groups: [{ name: 'content', title: 'Content', default: true }, { name: 'seo', title: 'SEO' }],
   fields: [
     defineField({ name: 'title', type: 'string', group: 'content', description: 'Used in the breadcrumb and browser tab.', validation: (r) => r.required() }),
-    defineField({ name: 'seoTitle', title: 'SEO title', type: 'string', group: 'seo', description: 'Browser tab / Google title. Defaults to "<Title> | AAYERA".' }),
+    defineField({ name: 'seoTitle', type: 'string', group: 'seo', hidden: true }),
     defineField({
       name: 'slug', title: 'URL', type: 'slug', group: 'content',
       description: 'e.g. about → /about/, events/training → /events/training/. The built-in pages fall back to their original content when a field here is empty.',
@@ -203,7 +203,8 @@ export const page = defineType({
     }),
     defineField({ name: 'sections', type: 'array', group: 'content', of: SECTION_TYPES.map((type) => defineArrayMember({ type })), description: 'Leave empty to keep the original sections for this page.' }),
     defineField({ name: 'showCta', title: 'Show the "Let\'s fill the next room" banner', type: 'boolean', group: 'content', initialValue: true }),
-    defineField({ name: 'description', title: 'Meta description', type: 'text', rows: 3, group: 'seo' }),
+    defineField({ name: 'description', type: 'text', group: 'seo', hidden: true }),
+    defineField({ name: 'seo', title: 'SEO', type: 'seo', group: 'seo', description: 'Empty fields fall back to "<Title> | AAYERA" and the Site settings description.' }),
   ],
   preview: { select: { title: 'title', slug: 'slug.current' }, prepare: ({ title, slug }) => ({ title, subtitle: slug ? `/${slug}/` : '' }) },
 })

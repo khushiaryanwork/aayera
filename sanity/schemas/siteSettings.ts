@@ -56,9 +56,10 @@ export const siteSettings = defineType({
       description: 'Round brand-coloured buttons for the social links above, fixed to the bottom-right corner of every page.',
     }),
     defineField({ name: 'footerTagline', type: 'string', group: 'contact', hidden: true }),
-    defineField({ name: 'title', title: 'Page title', type: 'string', group: 'seo' }),
-    defineField({ name: 'description', title: 'Meta description', type: 'text', rows: 3, group: 'seo' }),
-    defineField({ name: 'shareImage', title: 'Social share image', type: 'image', group: 'seo' }),
+    defineField({ name: 'siteUrl', title: 'Website address', type: 'url', group: 'seo', description: 'The live address, e.g. https://www.aayera.com. Used to build each page\'s canonical URL and share links. Update it when the site moves to its own domain.' }),
+    defineField({ name: 'title', title: 'Default title', type: 'string', group: 'seo', description: 'Used when a page has no SEO title of its own.' }),
+    defineField({ name: 'description', title: 'Default meta description', type: 'text', rows: 3, group: 'seo', description: 'Used when a page has no meta description of its own.' }),
+    defineField({ name: 'shareImage', title: 'Default social share image', type: 'image', group: 'seo' }),
     defineField({ name: 'shareTitle', type: 'string', group: 'seo', hidden: true }),
     defineField({ name: 'shareDescription', type: 'text', group: 'seo', hidden: true }),
     defineField({

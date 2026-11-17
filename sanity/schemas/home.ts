@@ -22,6 +22,7 @@ export const home = defineType({
     { name: 'clients', title: '10 · Filmstrip' },
     { name: 'partners', title: '11 · Partner ecosystem' },
     { name: 'cta', title: '12 · Contact' },
+    { name: 'seo', title: 'SEO' },
   ],
   fields: [
     /* ---------- hero ---------- */
@@ -260,6 +261,7 @@ export const home = defineType({
         }),
       ],
     }),
+    defineField({ name: 'seo', title: 'SEO', type: 'seo', group: 'seo', description: 'Empty fields fall back to the Site settings title and description.' }),
   ],
   preview: { prepare: () => ({ title: 'Home page', subtitle: fallbackNote }) },
 })

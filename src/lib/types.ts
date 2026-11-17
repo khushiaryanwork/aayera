@@ -25,7 +25,10 @@ export type Industry = { name: string; text: string; count: string; image: Img |
 export type Logo = { src: string; alt: string; plain: boolean };
 export type Button = Link & { style: 'gold' | 'ghost' };
 
+export type Seo = { title: string; description: string; canonical: string; image: string | null; noIndex: boolean; schemaType: string; schemaCustom: string };
+
 export interface Site {
+  url: string;
   title: string;
   description: string;
   shareImage: string | null;
@@ -47,6 +50,7 @@ export interface Site {
 export type FooterCol = { title: string; href: string; links: Link[] };
 
 export interface Home {
+  seo: Seo;
   hero: {
     eyebrow: string;
     heading: string;
@@ -101,6 +105,7 @@ export interface Page {
   title: string;
   seoTitle: string;
   description: string;
+  seo: Seo;
   showCta: boolean;
   hero: { eyebrow: string; heading: string; intro: string; image: Img | null; imageMobile: Img | null };
   sections: Section[];
