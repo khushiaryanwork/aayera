@@ -57,7 +57,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hero-veil{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,oklch(8% .01 260 / .82) 0%,oklch(8% .01 260 / .6) 45%,oklch(8% .01 260 / .35) 100%);opacity:0}
 .hero-title{position:absolute;inset:80px 0 0;display:grid;place-content:center;justify-items:center;text-align:center;padding:0 var(--gutter);opacity:0;pointer-events:none}
 .hero-title.live{pointer-events:auto}
-.hero-title h1{font-size:clamp(40px,min(9vw,12.5svh),156px);line-height:.92;font-weight:500;letter-spacing:-.04em;margin:clamp(10px,2svh,18px) 0 clamp(16px,3svh,30px)}
+.hero-title h1{font-size:clamp(48px,9vw,156px);line-height:.92;font-weight:500;letter-spacing:-.04em;margin:18px 0 clamp(18px,2.6svh,30px)}
 .hero-title h1 .serif{color:var(--gold)}
 .hero-title .hero-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
 /* phones: keep the hero copy clear of the menu bar; shorter screens get tighter type */
