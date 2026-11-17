@@ -177,6 +177,18 @@ export const platformsSection = defineType({
 export const SECTION_TYPES = ['verticalsSection', 'industriesSection', 'platformsSection', 'textSection', 'groupsSection', 'listSection', 'featuresSection', 'linkCardsSection', 'eventsSection', 'clientsSection', 'contactSection']
 
 /* ---------- page document ---------- */
+/** The header (eyebrow, heading, intro, photos) at the top of an inner page. */
+export const heroField = (group: string) => defineField({
+  name: 'hero', title: 'Header', type: 'object', group, options: { collapsible: false },
+      fields: [
+        defineField({ name: 'eyebrow', type: 'string' }),
+        defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
+        defineField({ name: 'intro', type: 'text', rows: 2 }),
+        defineField({ name: 'image', title: 'Desktop photo', type: 'imageWithAlt', description: 'Landscape, at least 2400px wide.' }),
+        defineField({ name: 'imageMobile', title: 'Mobile photo', type: 'imageWithAlt', description: 'Portrait (about 9:16), shown on phones. Leave empty to use the desktop photo.' }),
+      ],
+})
+
 export const page = defineType({
   name: 'page',
   title: 'Page',
@@ -191,16 +203,7 @@ export const page = defineType({
       description: 'e.g. about → /about/, events/training → /events/training/. The built-in pages fall back to their original content when a field here is empty.',
       options: { source: 'title' }, validation: (r) => r.required(),
     }),
-    defineField({
-      name: 'hero', title: 'Header', type: 'object', group: 'content', options: { collapsible: false },
-      fields: [
-        defineField({ name: 'eyebrow', type: 'string' }),
-        defineField({ name: 'heading', type: 'text', rows: 2, description: ACCENT_HELP }),
-        defineField({ name: 'intro', type: 'text', rows: 2 }),
-        defineField({ name: 'image', title: 'Desktop photo', type: 'imageWithAlt', description: 'Landscape, at least 2400px wide.' }),
-        defineField({ name: 'imageMobile', title: 'Mobile photo', type: 'imageWithAlt', description: 'Portrait (about 9:16), shown on phones. Leave empty to use the desktop photo.' }),
-      ],
-    }),
+    heroField('content'),
     defineField({ name: 'sections', type: 'array', group: 'content', of: SECTION_TYPES.map((type) => defineArrayMember({ type })), description: 'Leave empty to keep the original sections for this page.' }),
     defineField({ name: 'showCta', title: 'Show the "Let\'s fill the next room" banner', type: 'boolean', group: 'content', initialValue: true }),
     defineField({ name: 'description', type: 'text', group: 'seo', hidden: true }),

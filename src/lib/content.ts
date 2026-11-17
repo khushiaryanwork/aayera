@@ -10,6 +10,7 @@ import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
 import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head, FooterCol, Link, Seo } from './types';
+import { FIXED_PAGES } from '../../sanity/fixedPages.mjs';
 
 const client = createClient({
   projectId,
@@ -21,7 +22,21 @@ const client = createClient({
 });
 const builder = createImageUrlBuilder({ projectId, dataset });
 
+const EVENT_FIELDS = '{ title, sector, city, location, startDate, endDate, displayDate, image, cardImage, summary, website }';
+/** how each section's references are expanded, by section type */
+const SECTION_PROJECTION: Record<string, string> = {
+  verticalsSection: '{ ..., "cards": cards[]->{ ..., "key": slug.current } }',
+  industriesSection: '{ ..., "cards": cards[]->{ ..., "key": slug.current } }',
+  platformsSection: '{ ..., "cards": cards[]->{ ..., "key": slug.current } }',
+  eventsSection: `{ ..., "upcoming": upcoming[]->${EVENT_FIELDS}, "past": past[]->${EVENT_FIELDS} }`,
+};
+const FIXED_FIELDS = [...new Map<string, string>(FIXED_PAGES.flatMap((p: any) => p.sections.map((s: any) => [s.name, s.type] as [string, string]))).entries()]
+  .filter(([, type]) => SECTION_PROJECTION[type])
+  .map(([name, type]) => `"${name}": ${name}${SECTION_PROJECTION[type]}`).join(', ');
+const FIXED_TYPES = JSON.stringify(FIXED_PAGES.map((p: any) => p.type));
+
 const QUERY = /* groq */ `{
+  "fixedPages": *[_type in ${FIXED_TYPES} && !(_id in path("drafts.**"))]{ ..., ${FIXED_FIELDS} },
   "header": *[_id == "header"][0],
   "footer": *[_id == "footer"][0],
   "settings": *[_id == "siteSettings"][0]{
@@ -419,6 +434,15 @@ async function buildContent(): Promise<Content> {
   /* inner pages: every default page, overridden by a Sanity page with the same slug, plus any new Sanity pages */
   const cmsPages: any[] = data.pages || [];
   const bySlug = new Map(cmsPages.map((p) => [p.slug.replace(/^\/+|\/+$/g, ''), p]));
+  // built-in pages edited in their own editors: their named sections, in the page's order
+  for (const doc of data.fixedPages || []) {
+    const def: any = FIXED_PAGES.find((p: any) => p.type === doc._type);
+    if (!def) continue;
+    const sections = def.sections
+      .map((s: any) => (doc[s.name] ? { ...doc[s.name], _type: s.type, _key: s.name } : null)) // a cleared section is removed from the document
+      .filter(Boolean);
+    bySlug.set(def.slug, { ...doc, slug: def.slug, sections: sections.length ? sections : [{ _type: '__none', _key: 'none' }] });
+  }
   const pages: Page[] = PD.pages.map((d: any) => toPage(d, bySlug.get(d.slug)));
   for (const [slug, p] of bySlug) if (!PD.pages.some((d: any) => d.slug === slug)) pages.push(toPage({ slug }, { ...p, slug }));
 
