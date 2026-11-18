@@ -80,9 +80,16 @@ function img(v: any, width: number, fallbackAlt = ''): Img | null {
   if (v.src) return { src: v.src, alt: v.alt ?? fallbackAlt, w: width, ...(v.position ? { pos: v.position } : {}) };
   if (v.asset) {
     const h = v.hotspot;
-    const q = width >= LARGE_MIN_WIDTH ? 85 : 78; // full-screen images get lighter compression
-    const url = (w: number) => builder.image(v).width(w).fit('max').auto('format').quality(q).url();
+    // high quality throughout; full-screen images get the lightest compression
+    const q = width >= LARGE_MIN_WIDTH ? 90 : 86;
     const dims = sanityDims(v.asset._ref);
+    // photos are stored as lossless PNGs: browsers get WebP/AVIF (auto=format), and anything that can't
+    // take those gets a JPG rather than the multi-megabyte PNG. Small PNGs (logos) keep PNG for transparency.
+    const jpgFallback = /-png$/.test(v.asset._ref) && (dims?.[0] ?? 0) >= 700;
+    const url = (w: number) => {
+      const b = builder.image(v).width(w).fit('max').auto('format').quality(q);
+      return (jpgFallback ? b.format('jpg') : b).url();
+    };
     const widths = widthsFor(dims?.[0] ?? width, width);
     const largest = widths[widths.length - 1];
     return {
