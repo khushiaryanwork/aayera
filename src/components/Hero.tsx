@@ -13,7 +13,7 @@ type Props = Home['hero'];
 /** Horizontal distance (px) a finger must travel before a swipe changes slide. */
 const SWIPE_MIN = 40;
 /** Slides → photo grid, played by GSAP Observer on one scroll / swipe gesture (seconds). */
-const INTRO = { duration: 1.8, tolerance: 10 } as const;
+const INTRO = { duration: 1.8, tolerance: 10, settle: 0.2 } as const; // settle: quiet time (s) that ends a gesture
 const AUTOPLAY = { desktop: 4, mobile: 6, video: 10 } as const; // slides with a video/GIF stay up longer
 // a playing video keeps its slide up until the film ends (then the slider moves on); `video` above is only
 // the wait for a GIF, or for a video that never starts (autoplay refused, slow network)
@@ -283,6 +283,23 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
 
       // While active, the page can't scroll: gestures drive the intro instead.
       // wheelSpeed -1 makes "wheel down" and "finger moves up" both report onUp (= forward).
+      // The page only unlocks once the gesture that played the intro has stopped: a trackpad / touch flick
+      // keeps sending momentum for a second or more, and unlocking mid-flick let that tail scroll the page
+      // straight past the photo grid.
+      let lastInput = 0;
+      let freshGesture = true; // this gesture began after a pause (so it isn't the tail of the one that played the intro)
+      const gestureOver = () => performance.now() - lastInput > INTRO.settle * 1000;
+      const unlock = () => {
+        if (state === 'grid' && !playing) intent.disable();
+      };
+      // every raw wheel / touch-move counts (the Observer only reports movement past its tolerance,
+      // and the slow end of a momentum flick is many tiny events)
+      const onInput = () => {
+        if (gestureOver()) freshGesture = true;
+        lastInput = performance.now();
+      };
+      window.addEventListener('wheel', onInput, { passive: true, capture: true });
+      window.addEventListener('touchmove', onInput, { passive: true, capture: true });
       const intent = Observer.create({
         target: window,
         type: 'wheel,touch',
@@ -290,10 +307,20 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         tolerance: INTRO.tolerance,
         lockAxis: true, // sideways swipes stay with the slide swiper
         preventDefault: true,
-        onUp: () => (state === 'slides' ? play('grid', () => intent.disable()) : intent.disable()),
-        onDown: () => {
-          if (state === 'grid') play('slides');
+        onStopDelay: INTRO.settle,
+        onUp: () => {
+          if (state === 'slides') {
+            freshGesture = false;
+            play('grid', () => gestureOver() && unlock());
+          } else if (freshGesture) unlock(); // a new scroll with the grid showing: let the page move at once
         },
+        onDown: () => {
+          if (state === 'grid') {
+            freshGesture = false;
+            play('slides');
+          }
+        },
+        onStop: unlock, // the flick has died down: scrolling on now moves the page
       });
 
       // keyboard scrolling at the top plays the intro too
@@ -330,6 +357,8 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
 
       return () => {
         intent.kill();
+        window.removeEventListener('wheel', onInput, { capture: true });
+        window.removeEventListener('touchmove', onInput, { capture: true });
         window.removeEventListener('keydown', onKey);
         window.removeEventListener('scroll', onScroll);
         window.removeEventListener('resize', onResize);
