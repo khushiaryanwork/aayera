@@ -303,21 +303,31 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       // touch lock: while the slides show or the intro plays (with the grid up, a swipe scrolls the page)
       const touchLock = (on: boolean) => section.current!.classList.toggle('locked', on);
 
-      // every raw wheel / touch-move counts (the Observer only reports movement past its tolerance,
-      // and the slow end of a momentum flick is many tiny events)
-      const onInput = () => {
+      // Our own (non-passive) wheel / touch-move listener decides what to block, instead of the Observer
+      // blocking everything while active. Blocked: while the slides show, while the intro plays, and the
+      // tail (momentum) of the gesture that played it. Never blocked: a new gesture with the grid up, so the
+      // first swipe or scroll there moves the page at once. Every raw event counts towards "the gesture
+      // has stopped" (the Observer only reports movement past its tolerance, and a momentum tail is many
+      // tiny events).
+      const onInput = (e: Event) => {
         if (gestureOver()) freshGesture = true;
         lastInput = performance.now();
+        if (intent.isEnabled && (state === 'slides' || playing || !freshGesture) && e.cancelable) e.preventDefault();
       };
-      window.addEventListener('wheel', onInput, { passive: true, capture: true });
-      window.addEventListener('touchmove', onInput, { passive: true, capture: true });
+      // a new touch with nothing playing is always a new gesture
+      const onTouchStart = () => {
+        if (!playing) freshGesture = true;
+      };
+      window.addEventListener('wheel', onInput, { passive: false, capture: true });
+      window.addEventListener('touchmove', onInput, { passive: false, capture: true });
+      window.addEventListener('touchstart', onTouchStart, { passive: true, capture: true });
       const intent = Observer.create({
         target: window,
         type: 'wheel,touch',
         wheelSpeed: -1,
         tolerance: INTRO.tolerance,
         lockAxis: true, // sideways swipes stay with the slide swiper
-        preventDefault: true,
+        preventDefault: false, // see onInput
         onStopDelay: INTRO.settle,
         onUp: () => {
           if (state === 'slides') {
@@ -373,6 +383,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         section.current?.classList.remove('locked');
         window.removeEventListener('wheel', onInput, { capture: true });
         window.removeEventListener('touchmove', onInput, { capture: true });
+        window.removeEventListener('touchstart', onTouchStart, { capture: true });
         window.removeEventListener('keydown', onKey);
         window.removeEventListener('scroll', onScroll);
         window.removeEventListener('resize', onResize);
