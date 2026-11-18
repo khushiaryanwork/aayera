@@ -10,7 +10,9 @@ export type NavItem = Link & { children?: Link[] };
 
 /** `imageMobile`: optional portrait image served on phones (see lib/breakpoints.ts). */
 /** Moving media for a hero slide. `kind` decides the element: an <img> for GIFs, a muted looping <video> for MP4/WebM. */
-export type SlideVideo = { kind: 'gif' | 'video'; src: string; mobileSrc?: string };
+/** phoneMode 'button': phones show the photo plus a "watch" button that plays the film full-screen
+ *  (for wide films with text in the picture, which can't fill a tall screen). */
+export type SlideVideo = { kind: 'gif' | 'video'; src: string; mobileSrc?: string; phoneMode: 'autoplay' | 'button'; watchLabel: string };
 export type Slide = { image: Img; imageMobile: Img | null; video?: SlideVideo | null; tag: string; title: string; short?: string; meta: string; cta: Link | null };
 export type MosaicTile = { image: Img; caption: string };
 export type EventCard = { image: Img; tag: string; title: string; meta: string; upcoming?: boolean };

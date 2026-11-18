@@ -111,7 +111,9 @@ function slideVideo(x: any): SlideVideo | null {
   const src = fileUrl(x.video);
   if (!src) return null;
   const mobileSrc = fileUrl(x.videoMobile) || undefined;
-  return { kind: /\.gif$/i.test(src) ? 'gif' : 'video', src, mobileSrc };
+  const kind = /\.gif$/i.test(src) ? 'gif' : 'video';
+  const phoneMode = kind === 'video' && x.phoneMode === 'button' ? 'button' : 'autoplay';
+  return { kind, src, mobileSrc, phoneMode, watchLabel: x.watchLabel || 'Watch the film' };
 }
 
 /** Portrait hero images are requested at this width from Sanity (≈ a 390pt phone at 3×). */

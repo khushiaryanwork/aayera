@@ -56,7 +56,17 @@ export const home = defineType({
                 name: 'videoMobile', title: 'Mobile video', type: 'file',
                 description: 'Optional portrait (9:16) version for phones, e.g. 1080×1920. Leave empty to use the desktop video.',
                 options: { accept: 'video/mp4,video/webm,image/gif' },
+                hidden: ({ parent }) => parent?.mediaType !== 'video' || parent?.phoneMode === 'button',
+              }),
+              defineField({
+                name: 'phoneMode', title: 'On phones', type: 'string', initialValue: 'autoplay',
+                description: 'For a wide film with text in the picture, "Photo + Watch button" looks better: phones show the mobile photo, and the button plays the film full-screen.',
+                options: { list: [{ title: 'Play in the slide', value: 'autoplay' }, { title: 'Photo + Watch button', value: 'button' }], layout: 'radio', direction: 'horizontal' },
                 hidden: ({ parent }) => parent?.mediaType !== 'video',
+              }),
+              defineField({
+                name: 'watchLabel', title: 'Watch button text', type: 'string', placeholder: 'Watch the film',
+                hidden: ({ parent }) => parent?.mediaType !== 'video' || parent?.phoneMode !== 'button',
               }),
               defineField({ name: 'tag', title: 'Tag (pill)', type: 'string' }),
               defineField({ name: 'title', type: 'string', validation: (r) => r.required() }),

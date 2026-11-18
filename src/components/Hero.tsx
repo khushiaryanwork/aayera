@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useGSAP } from '@gsap/react';
 import { gsap, Observer, EASE, MQ, prefersReducedMotion, requestRefresh } from '../lib/motion/gsap';
 import { MOBILE_MEDIA } from '../lib/breakpoints';
@@ -41,6 +42,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   const count = slides.length;
   const [cur, setCur] = useState(0);
   const [hovering, setHovering] = useState(false);
+  const [film, setFilm] = useState<string | null>(null); // full-screen player (phones, "watch" button)
   // slides 2+ and the photo wall are only needed later: load them once the page has finished
   // loading, so the first slide gets all the bandwidth (also when autoplay may start)
   const [restLoaded, setRestLoaded] = useState(false);
@@ -118,14 +120,14 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
     } else setCur((c) => (c + 1) % count);
   };
   useEffect(() => {
-    if (count < 2 || hovering || !restLoaded || prefersReducedMotion()) return;
+    if (count < 2 || hovering || film || !restLoaded || prefersReducedMotion()) return;
     if (videoPlaying && slides[cur]?.video?.kind === 'video' && !stillOnly) return; // advances on 'ended'
     const delay = slides[cur]?.video && !stillOnly ? AUTOPLAY.video : window.matchMedia(MQ.desktop).matches ? AUTOPLAY.desktop : AUTOPLAY.mobile;
     const next = gsap.delayedCall(delay, () => setCur((c) => (c + 1) % count));
     return () => {
       next.kill();
     };
-  }, [cur, hovering, count, restLoaded, stillOnly, videoPlaying]);
+  }, [cur, hovering, film, count, restLoaded, stillOnly, videoPlaying]);
 
   /* ---------- videos: only the visible slide plays, from the start ---------- */
   useEffect(() => {
@@ -379,7 +381,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
                     </picture>
                   )}
                   {/* video / GIF: loads after the page, fades in over the photo once it can play */}
-                  {s.video && restLoaded && !stillOnly && (
+                  {s.video && restLoaded && !stillOnly && !(phone && s.video.phoneMode === 'button') && (
                     <SlideMotion
                       video={s.video}
                       phone={phone}
@@ -393,7 +395,17 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
                   <p className="eyebrow">{s.tag}</p>
                   <h2>{s.short || s.title}</h2>
                   <p className="meta">{s.meta}</p>
-                  {s.cta && <a className="btn btn-gold" href={s.cta.href}>{s.cta.label}</a>}
+                  {phone && s.video?.phoneMode === 'button' ? (
+                    <div className="slide-actions">
+                      <button type="button" className="btn btn-gold" onClick={() => setFilm(s.video!.src)}>
+                        <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor" /></svg>
+                        {s.video.watchLabel}
+                      </button>
+                      {s.cta && <a className="btn btn-ghost" href={s.cta.href}>{s.cta.label}</a>}
+                    </div>
+                  ) : (
+                    s.cta && <a className="btn btn-gold" href={s.cta.href}>{s.cta.label}</a>
+                  )}
                 </div>
               </div>
             ))}
@@ -426,7 +438,34 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
           </div>
         </div>
       </div>
+      {film && createPortal(<FilmPlayer src={film} onClose={() => setFilm(null)} />, document.body)}
     </section>
+  );
+}
+
+/** Full-screen film player for phones: native controls, sound available, rotate the phone for landscape. */
+function FilmPlayer({ src, onClose }: { src: string; onClose: () => void }) {
+  const box = useRef<HTMLDivElement>(null);
+  const vid = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
+    window.addEventListener('keydown', onKey);
+    vid.current?.play().catch(() => {});
+    box.current?.querySelector<HTMLButtonElement>('.film-close')?.focus();
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [onClose]);
+  return (
+    <div className="film-player" ref={box} role="dialog" aria-modal="true" aria-label="Film">
+      <video ref={vid} src={src} controls playsInline autoPlay onEnded={onClose} />
+      <button type="button" className="film-close" aria-label="Close film" onClick={onClose}>
+        <svg viewBox="0 0 16 16" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M3 3l10 10M13 3L3 13" /></svg>
+      </button>
+    </div>
   );
 }
 
