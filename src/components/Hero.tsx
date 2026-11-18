@@ -269,12 +269,14 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       const play = (to: 'slides' | 'grid', onDone?: () => void) => {
         if (playing || state === to) return;
         playing = true;
+        touchLock(true);
         tl.tweenTo(to === 'grid' ? END : 0, {
           duration: reduce ? 0.01 : INTRO.duration,
           ease: EASE.none, // the zoom keeps its own inOut ease inside the timeline
           onComplete: () => {
             state = to;
             playing = false;
+            touchLock(to === 'slides');
             onDone?.();
           },
         });
@@ -290,8 +292,17 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       let freshGesture = true; // this gesture began after a pause (so it isn't the tail of the one that played the intro)
       const gestureOver = () => performance.now() - lastInput > INTRO.settle * 1000;
       const unlock = () => {
-        if (state === 'grid' && !playing) intent.disable();
+        if (state === 'grid' && !playing) setLock(false);
       };
+      // Phones: blocking each touchmove isn't enough. Chrome and Safari stop honouring preventDefault once
+      // they have begun a scroll (common while the page is busy, e.g. a video loading), so a swipe could
+      // still move the page. While locked, the hero also says up front (CSS touch-action: none) that it
+      // can't be panned; the browser then never starts a native scroll. Our own touch handlers still see
+      // the swipe and play the intro.
+      const setLock = (on: boolean) => (on ? intent.enable() : intent.disable());
+      // touch lock: while the slides show or the intro plays (with the grid up, a swipe scrolls the page)
+      const touchLock = (on: boolean) => section.current!.classList.toggle('locked', on);
+
       // every raw wheel / touch-move counts (the Observer only reports movement past its tolerance,
       // and the slow end of a momentum flick is many tiny events)
       const onInput = () => {
@@ -328,24 +339,26 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       const onKey = (e: KeyboardEvent) => {
         if (!intent.isEnabled || !KEYS.includes(e.key) || (e.target as HTMLElement)?.closest?.('input,textarea,select,button,a')) return;
         e.preventDefault();
-        if (state === 'slides') play('grid', () => intent.disable());
-        else intent.disable();
+        if (state === 'slides') play('grid', () => setLock(false));
+        else setLock(false);
       };
       // back at the very top: listen for gestures again (to reverse, or to scroll on)
       // anything that moved the page without a gesture (scrollbar drag, anchor link, restored position) skips straight to the grid
       const onScroll = () => {
-        if (atTop()) return intent.enable();
+        if (atTop()) return setLock(true);
         if (state === 'slides' && !playing) {
           tl.progress(END / tl.duration());
           state = 'grid';
+          touchLock(false);
         }
         // away from the top the intro never blocks scrolling (e.g. after another section briefly froze the page)
-        if (!playing) intent.disable();
+        if (!playing) setLock(false);
       };
       const onResize = () => {
         measure();
         render();
       };
+      touchLock(true);
       window.addEventListener('keydown', onKey);
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', onResize);
@@ -357,6 +370,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
 
       return () => {
         intent.kill();
+        section.current?.classList.remove('locked');
         window.removeEventListener('wheel', onInput, { capture: true });
         window.removeEventListener('touchmove', onInput, { capture: true });
         window.removeEventListener('keydown', onKey);
