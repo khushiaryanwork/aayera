@@ -368,3 +368,6 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 /* industries page: one-line intro above the topics */
 .itile .ilead{color:var(--ink,inherit);font-size:14.5px;line-height:1.5;margin-bottom:6px;opacity:.92}
 .cform-intro{font-size:14.5px;color:var(--muted);margin-top:-2px}
+
+/* section headings and the closing banner on inner pages: even line lengths (no stranded single words) */
+.sec h2,.cta h2{text-wrap:balance}
