@@ -494,7 +494,9 @@ async function buildContent(): Promise<Content> {
   const platforms: Platform[] = (has(data.platforms) ? data.platforms : PD.platforms).map(toPlatform);
   // the homepage shows the cards picked (and ordered) in Home → Flagship platforms; otherwise all of them
   const homePlatformCards = (h.platformsHead?.cards || []).filter((x: any) => x?.name);
-  const homePlatforms: Platform[] = homePlatformCards.length ? homePlatformCards.map(toPlatform) : platforms;
+  // homepage cards use their short homepage tags when set
+  const toHomePlatform = (x: any): Platform => ({ ...toPlatform(x), topics: strs(x.homeTopics).length ? strs(x.homeTopics) : strs(x.topics) });
+  const homePlatforms: Platform[] = (homePlatformCards.length ? homePlatformCards : has(data.platforms) ? data.platforms : PD.platforms).map(toHomePlatform);
 
   // page sections: the cards picked in that section, in that order; otherwise every one
   const toCard: Record<string, (x: any) => any> = { verticalsSection: toVertical, industriesSection: toIndustry, platformsSection: toPlatform };
