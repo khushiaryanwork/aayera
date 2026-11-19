@@ -242,6 +242,7 @@ function normSection(x: any): Section | null {
     case 'contactSection':
       return {
         _type: 'contactSection', ...base, formHeading: x.formHeading || '', formIntro: x.formIntro || '',
+        formTo: (x.formTo || '').split(',').map((e: string) => e.trim()).filter(Boolean).join(','),
         phoneFieldLabel: x.phoneFieldLabel || 'Phone number', countryLabel: x.countryLabel || 'Country',
         emailLabel: x.emailLabel || 'Email', email: x.email || '',
         phoneLabel: x.phoneLabel || 'Phone', phones: (x.phones || []).filter((p: any) => p?.label && p?.number).map((p: any) => ({ label: p.label, number: p.number })),

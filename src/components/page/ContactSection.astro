@@ -27,7 +27,7 @@ const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURICompone
         {address && <div><dt>{s.addressLabel}</dt><dd>{address}</dd></div>}
       </dl>
     </div>
-    <form class="cform rv" id="enquiry" data-to={email} novalidate>
+    <form class="cform rv" id="enquiry" data-to={s.formTo || email} novalidate>
       {s.formHeading && <h3>{s.formHeading}</h3>}
       {s.formIntro && <p class="cform-intro">{s.formIntro}</p>}
       <div class="frow2">
