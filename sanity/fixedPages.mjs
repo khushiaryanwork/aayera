@@ -29,7 +29,19 @@ export const FIXED_PAGES = [
     { name: 'overview', title: 'Overview', type: 'textSection' },
     { name: 'offer', title: 'What we offer', type: 'listSection' },
   ] },
+  { type: 'intelligenceResearchPage', slug: 'business-verticals/intelligence-research', title: 'Intelligence & Research', parent: 'business-verticals', sections: [
+    { name: 'overview', title: 'Overview', type: 'textSection' },
+    { name: 'offer', title: 'What we offer', type: 'listSection' },
+  ] },
   { type: 'marketingCommunicationsPage', slug: 'business-verticals/marketing-communications', title: 'Marketing & Communications', parent: 'business-verticals', sections: [
+    { name: 'overview', title: 'Overview', type: 'textSection' },
+    { name: 'offer', title: 'What we offer', type: 'listSection' },
+  ] },
+  { type: 'corporateSolutionsPage', slug: 'business-verticals/corporate-solutions', title: 'Corporate Solutions', parent: 'business-verticals', sections: [
+    { name: 'overview', title: 'Overview', type: 'textSection' },
+    { name: 'offer', title: 'What we offer', type: 'listSection' },
+  ] },
+  { type: 'digitalCommercePage', slug: 'business-verticals/digital-commerce', title: 'Digital Commerce', parent: 'business-verticals', sections: [
     { name: 'overview', title: 'Overview', type: 'textSection' },
     { name: 'offer', title: 'What we offer', type: 'listSection' },
   ] },
