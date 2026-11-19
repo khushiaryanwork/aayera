@@ -54,7 +54,7 @@ html.menu-open .nav{background:var(--black)}
 .phero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 22%} /* desktop: keep the top of the photo (faces) in view; a hotspot set in Sanity overrides this */
 @media (max-width:760px){.phero-bg img{object-position:center!important}} /* portrait images are composed for phones */
 .phero-bg::after{content:"";position:absolute;inset:0;background:
-  linear-gradient(180deg,oklch(10% .012 260 / .6) 0%,oklch(10% .012 260 / .25) 35%,oklch(12% .012 260 / .5) 72%,oklch(12% .012 260 / .85) 92%,var(--black) 100%),
+  linear-gradient(180deg,oklch(10% .012 260 / .6) 0%,oklch(10% .012 260 / .25) 35%,oklch(12% .012 260 / .45) 72%,oklch(12% .012 260 / .65) 100%),
   linear-gradient(90deg,oklch(10% .012 260 / .55) 0%,transparent -76%)}
 .phero-in{max-width:1100px}
 .phero h1{font-size:clamp(46px,8.4vw,132px);line-height:.92;font-weight:500;letter-spacing:-.04em;margin:16px 0 0}
