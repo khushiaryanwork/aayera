@@ -18,7 +18,7 @@ export type MosaicTile = { image: Img; caption: string };
 export type EventCard = { image: Img; tag: string; title: string; meta: string; upcoming?: boolean };
 export type Head = { eyebrow: string; heading: string; intro: string };
 export type Vertical = { key: string; name: string; short: string; caption: string; description: string; status: 'active' | 'coming-soon'; image: Img | null; href: string; ctaLabel: string };
-export type IndustryTile = { name: string; text: string };
+export type IndustryTile = { name: string; text: string; lead?: string };
 export type Edition = { label: string; date: string; venue: string; note: string; status: 'upcoming' | 'past' };
 export type Platform = { key: string; name: string; tagline: string; topics: string[]; summary: string; image: Img | null; website: string; editions: Edition[]; cta: Link };
 export type Stat = { value: number; suffix: string; label: string; image: Img | null };
@@ -84,7 +84,7 @@ export type EventItem = { title: string; tag: string; date: string; location: st
 
 type SectionBase = { eyebrow: string; heading: string; intro: string };
 export type Section =
-  | (SectionBase & { _type: 'textSection'; paragraphs: string[]; chipsLabel: string; chips: string[]; image: Img | null })
+  | (SectionBase & { _type: 'textSection'; paragraphs: string[]; chipsLabel: string; chips: string[]; image: Img | null; cta: Link | null })
   | (SectionBase & { _type: 'groupsSection'; groups: { title: string; caption: string; items: string[] }[] })
   | (SectionBase & { _type: 'listSection'; items: string[] })
   | (SectionBase & { _type: 'featuresSection'; layout: 'auto' | 'rows' | 'grid' | 'cards'; items: { title: string; text: string; image: Img | null }[] })
@@ -95,7 +95,7 @@ export type Section =
   | (SectionBase & { _type: 'platformsSection'; picked?: Platform[] | null })
   | (SectionBase & { _type: 'clientsSection' })
   | (SectionBase & {
-      _type: 'contactSection'; formHeading: string;
+      _type: 'contactSection'; formHeading: string; formIntro: string; phoneFieldLabel: string; countryLabel: string;
       emailLabel: string; email: string; phoneLabel: string; phones: { label: string; number: string }[];
       hoursLabel: string; hours: string; addressLabel: string; address: string;
       nameLabel: string; emailFieldLabel: string; orgLabel: string; topicLabel: string; topics: string[]; messageLabel: string;
@@ -109,6 +109,8 @@ export interface Page {
   description: string;
   seo: Seo;
   showCta: boolean;
+  /** this page's own closing-banner text (empty parts use the homepage banner) */
+  pageCta: { eyebrow: string; heading: string; text: string; button: Link | null } | null;
   hero: { eyebrow: string; heading: string; intro: string; image: Img | null; imageMobile: Img | null };
   sections: Section[];
 }

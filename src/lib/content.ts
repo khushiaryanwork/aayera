@@ -216,7 +216,7 @@ function normSection(x: any): Section | null {
   const base = { eyebrow: x.eyebrow || '', heading: x.heading || '', intro: x.intro || '' };
   switch (x._type) {
     case 'textSection':
-      return { _type: 'textSection', ...base, paragraphs: strs(x.paragraphs), chipsLabel: x.chipsLabel || '', chips: strs(x.chips), image: img(x.image, 1800) };
+      return { _type: 'textSection', ...base, paragraphs: strs(x.paragraphs), chipsLabel: x.chipsLabel || '', chips: strs(x.chips), image: img(x.image, 1800), cta: x.cta?.label && x.cta?.href ? { label: x.cta.label, href: x.cta.href } : null };
     case 'groupsSection':
       return { _type: 'groupsSection', ...base, groups: (x.groups || []).map((g: any) => ({ title: g.title || '', caption: g.caption || '', items: strs(g.items) })) };
     case 'listSection':
@@ -241,7 +241,8 @@ function normSection(x: any): Section | null {
       return { _type: 'clientsSection', ...base };
     case 'contactSection':
       return {
-        _type: 'contactSection', ...base, formHeading: x.formHeading || '',
+        _type: 'contactSection', ...base, formHeading: x.formHeading || '', formIntro: x.formIntro || '',
+        phoneFieldLabel: x.phoneFieldLabel || 'Phone number', countryLabel: x.countryLabel || 'Country',
         emailLabel: x.emailLabel || 'Email', email: x.email || '',
         phoneLabel: x.phoneLabel || 'Phone', phones: (x.phones || []).filter((p: any) => p?.label && p?.number).map((p: any) => ({ label: p.label, number: p.number })),
         hoursLabel: x.hoursLabel || 'Opening hours', hours: x.hours || '',
@@ -270,6 +271,7 @@ function toPage(def: any, cms: any): Page {
     // SEO section first, then the older seoTitle / description fields
     seo: toSeo(c.seo, pick(c.seoTitle, def?.seoTitle || '') || `${pick(c.title, def?.title || '')} | AAYERA`, pick(c.description, def?.description || '')),
     showCta: (c.showCta ?? def?.showCta) !== false,
+    pageCta: c.pageCta ? { eyebrow: c.pageCta.eyebrow || '', heading: c.pageCta.heading || '', text: c.pageCta.text || '', button: c.pageCta.button?.label && c.pageCta.button?.href ? { label: c.pageCta.button.label, href: c.pageCta.button.href } : null } : null,
     hero: {
       eyebrow: pick(ch.eyebrow, dh.eyebrow || ''),
       heading: pick(ch.heading, dh.heading || c.title || ''),
@@ -477,7 +479,7 @@ async function buildContent(): Promise<Content> {
   const homeCards = (h.verticalsHead?.cards || []).filter((v: any) => v?.name);
   const homeVertical = (v: any): Vertical => ({ ...toVertical(v), description: v.homeText || v.description || '' });
   const homeVerticals: Vertical[] = (homeCards.length ? homeCards : has(data.verticals) ? data.verticals : PD.verticals).map(homeVertical);
-  const toIndustry = (x: any): IndustryTile => ({ name: x.name || '', text: x.text || '' });
+  const toIndustry = (x: any): IndustryTile => ({ name: x.name || '', text: x.text || '', lead: x.lead || '' });
   const industries: IndustryTile[] = (has(data.industries) ? data.industries : PD.industries).map(toIndustry);
   // the homepage shows the cards picked (and ordered) in Home → Industries; otherwise all of them
   const homeIndustryCards = (h.industriesHead?.cards || []).filter((x: any) => x?.name);

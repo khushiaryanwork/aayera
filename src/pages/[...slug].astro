@@ -66,6 +66,16 @@ const crumbs = [
       }
     })}
   </main>
-  {page.showCta && <Cta cta={home.cta} />}
+  {page.showCta && (
+    <Cta
+      cta={{
+        ...home.cta,
+        eyebrow: page.pageCta?.eyebrow || home.cta.eyebrow,
+        heading: page.pageCta?.heading || home.cta.heading,
+        text: page.pageCta?.text || home.cta.text,
+        buttons: page.pageCta?.button ? [{ ...page.pageCta.button, style: 'gold' }] : home.cta.buttons,
+      }}
+    />
+  )}
   <Footer site={site} />
 </Base>

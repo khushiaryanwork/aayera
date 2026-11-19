@@ -8,6 +8,10 @@ const phones = s.phones?.length ? s.phones : site.phones;
 const hours = s.hours || site.hours;
 const address = s.address || site.address;
 const options = s.topics?.length ? s.topics : topics;
+// every country, by name (English), for the Country dropdown
+const REGIONS = 'AD AE AF AG AI AL AM AO AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BW BY BZ CA CD CF CG CH CI CK CL CM CN CO CR CU CV CW CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GT GU GW GY HK HN HR HT HU ID IE IL IM IN IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG US UY UZ VA VC VE VG VI VN VU WF WS XK YE YT ZA ZM ZW'.split(' ');
+const regionName = new Intl.DisplayNames(['en'], { type: 'region' });
+const countries = REGIONS.map((c) => regionName.of(c) || c).sort((a, b) => a.localeCompare(b));
 const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURIComponent(site.mapQuery)}&output=embed` : '';
 ---
 <section class="sec csec">
@@ -25,12 +29,22 @@ const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURICompone
     </div>
     <form class="cform rv" id="enquiry" data-to={email} novalidate>
       {s.formHeading && <h3>{s.formHeading}</h3>}
+      {s.formIntro && <p class="cform-intro">{s.formIntro}</p>}
       <div class="frow2">
         <label>{s.nameLabel}<input name="name" autocomplete="name" required></label>
-        <label>{s.emailFieldLabel}<input name="email" type="email" autocomplete="email" required></label>
+        <label>{s.orgLabel}<input name="org" autocomplete="organization"></label>
       </div>
       <div class="frow2">
-        <label>{s.orgLabel}<input name="org" autocomplete="organization"></label>
+        <label>{s.emailFieldLabel}<input name="email" type="email" autocomplete="email" required></label>
+        <label>{s.phoneFieldLabel}<input name="phone" type="tel" autocomplete="tel"></label>
+      </div>
+      <div class="frow2">
+        <label>{s.countryLabel}
+          <select name="country" autocomplete="country-name">
+            <option value="">Select</option>
+            {countries.map((c) => <option>{c}</option>)}
+          </select>
+        </label>
         <label>{s.topicLabel}
           <select name="topic">{options.map((t: string) => <option>{t}</option>)}</select>
         </label>
@@ -59,7 +73,7 @@ const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURICompone
     err.hidden = !!ok;
     if (!ok) return;
     const subject = `Enquiry: ${v('topic')}${v('org') ? ` – ${v('org')}` : ''}`;
-    const body = `${v('message')}\n\n${v('name')}\n${v('email')}${v('org') ? `\n${v('org')}` : ''}`;
+    const body = [v('message'), '', v('name'), v('org'), v('email'), v('phone'), v('country')].filter((l, i) => i < 2 || l).join('\n');
     location.href = `mailto:${form.dataset.to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   });
 </script>

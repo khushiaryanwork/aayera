@@ -46,6 +46,7 @@ export const industry = defineType({
   icon: ThListIcon,
   fields: [
     defineField({ name: 'name', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'lead', title: 'One-line intro (Industries page)', type: 'string', description: 'Shown above the topics on the Industries page.' }),
     defineField({ name: 'text', title: 'Topics / description', type: 'text', rows: 3 }),
     defineField({ name: 'homeText', title: 'Short description (homepage)', type: 'text', rows: 2, description: 'Shown on the homepage block instead of the description. Leave empty to use the description.' }),
     order,

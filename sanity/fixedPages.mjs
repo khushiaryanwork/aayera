@@ -6,6 +6,7 @@ export const FIXED_PAGES = [
     { name: 'whoWeAre', title: 'Who we are', type: 'textSection' },
     { name: 'purpose', title: 'Vision & mission', type: 'featuresSection' },
     { name: 'values', title: 'Values', type: 'featuresSection' },
+    { name: 'approach', title: 'Our approach', type: 'textSection' },
     { name: 'verticals', title: 'Business verticals', type: 'verticalsSection' },
   ] },
   { type: 'businessVerticalsPage', slug: 'business-verticals', title: 'Business Verticals', sections: [
@@ -14,6 +15,7 @@ export const FIXED_PAGES = [
   ] },
   { type: 'eventsConferencesPage', slug: 'business-verticals/events-conferences', title: 'Events & Conferences', parent: 'business-verticals', sections: [
     { name: 'overview', title: 'Overview', type: 'textSection' },
+    { name: 'offer', title: 'What we offer', type: 'listSection' },
     { name: 'services', title: 'Our services', type: 'groupsSection' },
     { name: 'formats', title: 'Formats', type: 'listSection' },
     { name: 'platformLinks', title: 'Our platforms', type: 'linkCardsSection' },
@@ -33,6 +35,7 @@ export const FIXED_PAGES = [
   ] },
   { type: 'academyPage', slug: 'business-verticals/academy', title: 'Academy & Professional Development', parent: 'business-verticals', sections: [
     { name: 'training', title: 'Training', type: 'textSection' },
+    { name: 'offer', title: 'What we offer', type: 'listSection' },
     { name: 'categories', title: 'Training categories', type: 'groupsSection' },
     { name: 'courses', title: 'Courses', type: 'listSection' },
     { name: 'webinars', title: 'Webinars', type: 'textSection' },
@@ -43,6 +46,7 @@ export const FIXED_PAGES = [
   ] },
   { type: 'ourPlatformsPage', slug: 'our-platforms', title: 'Our Platforms', sections: [
     { name: 'platforms', title: 'Flagship platforms', type: 'platformsSection' },
+    { name: 'eventFormats', title: 'Event formats', type: 'featuresSection' },
     { name: 'events', title: 'Event track record', type: 'eventsSection' },
   ] },
   { type: 'clientsPage', slug: 'clients', title: 'Clients', sections: [

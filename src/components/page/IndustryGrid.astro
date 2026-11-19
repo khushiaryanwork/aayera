@@ -11,6 +11,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <li class="itile">
         <span class="inum">{pad(i + 1)}</span>
         <h3>{ind.name}</h3>
+        {ind.lead && <p class="ilead">{ind.lead}</p>}
         <p>{ind.text}</p>
       </li>
     ))}

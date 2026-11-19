@@ -360,3 +360,9 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 /* arrow icon on text links: nudges diagonally on hover */
 .ico-arrow{flex:none;transition:transform .3s cubic-bezier(.2,.7,.2,1)}
 .erow-link:hover .ico-arrow,.vtile:hover .vmore .ico-arrow,.abar-msg a:hover .ico-arrow{transform:translate(2px,-2px)}
+
+/* multi-line feature text (e.g. a mission written as separate points) keeps its line breaks */
+.frow dd,.fgrid dd{white-space:pre-line}
+/* industries page: one-line intro above the topics */
+.itile .ilead{color:var(--ink,inherit);font-size:14.5px;line-height:1.5;margin-bottom:6px;opacity:.92}
+.cform-intro{font-size:14.5px;color:var(--muted);margin-top:-2px}

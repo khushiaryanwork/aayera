@@ -12,6 +12,7 @@ const { s } = Astro.props as { s: any };
     <div class="tsec-body rv">
       {s.intro && <p class="lede">{s.intro}</p>}
       {s.paragraphs.map((p: string) => <p>{p}</p>)}
+      {s.cta && <p><a class="btn btn-gold" href={s.cta.href}>{s.cta.label}</a></p>}
       {s.chips.length > 0 && (
         <div class="chips">
           {s.chipsLabel && <p class="eyebrow">{s.chipsLabel}</p>}
