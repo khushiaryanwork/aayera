@@ -59,6 +59,7 @@ html.menu-open .nav{background:var(--black)}
 .phero-in{max-width:1100px}
 .phero h1{font-size:clamp(46px,8.4vw,132px);line-height:.92;font-weight:500;letter-spacing:-.04em;margin:16px 0 0}
 .phero h1 .serif{color:var(--gold)}
+@media (min-width:1024px){.phero h1{font-size:6rem}} /* desktop: fixed size for inner page headings */
 .phero-intro{margin-top:26px;max-width:56ch;font-size:clamp(16px,1.4vw,19px);line-height:1.55;color:oklch(90% .006 260)}
 .crumbs{display:flex;flex-wrap:wrap;gap:8px;font-size:13px;color:var(--muted);margin-bottom:22px}
 .crumbs a:hover{color:var(--gold)}
