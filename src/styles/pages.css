@@ -371,3 +371,7 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 
 /* section headings and the closing banner on inner pages: even line lengths (no stranded single words) */
 .sec h2,.cta h2{text-wrap:balance}
+/* feature text written as separate lines → bullet points (e.g. Our Mission) */
+.fbullets{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.fbullets li{position:relative;padding-left:22px}
+.fbullets li::before{content:"";position:absolute;left:2px;top:.68em;width:7px;height:7px;border-radius:50%;background:var(--gold)}

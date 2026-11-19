@@ -3,6 +3,8 @@ import { imgAttrs, SIZES } from '../../lib/img-attrs';
 import SecHead from './SecHead.astro';
 const { s } = Astro.props as { s: any };
 // 'auto' (default): photo cards when the items have images, otherwise title/description rows
+// text written on separate lines is shown as bullet points
+const lines = (t: string) => (t || '').split(/\r?\n/).map((l) => l.replace(/^\s*[•·\-–]\s*/, '').trim()).filter(Boolean);
 const withImages = s.layout === 'cards' || (s.layout === 'auto' && s.items.some((i: any) => i.image));
 ---
 <section class="sec fsec">
@@ -19,12 +21,12 @@ const withImages = s.layout === 'cards' || (s.layout === 'auto' && s.items.some(
     </div>
   ) : s.layout === 'grid' ? (
     <dl class="fgrid">
-      {s.items.map((it: any) => <div class="fgrid-item rv"><dt>{it.title}</dt><dd>{it.text}</dd></div>)}
+      {s.items.map((it: any) => <div class="fgrid-item rv"><dt>{it.title}</dt><dd>{lines(it.text).length > 1 ? <ul class="fbullets">{lines(it.text).map((l) => <li>{l}</li>)}</ul> : it.text}</dd></div>)}
     </dl>
   ) : (
     <dl class="frows">
       {s.items.map((it: any) => (
-        <div class="frow rv"><dt>{it.title}</dt><dd>{it.text}</dd></div>
+        <div class="frow rv"><dt>{it.title}</dt><dd>{lines(it.text).length > 1 ? <ul class="fbullets">{lines(it.text).map((l) => <li>{l}</li>)}</ul> : it.text}</dd></div>
       ))}
     </dl>
   )}
