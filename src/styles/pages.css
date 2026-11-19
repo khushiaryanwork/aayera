@@ -48,7 +48,7 @@ html.menu-open .nav{background:var(--black)}
 
 
 /* ---------- page hero ---------- */
-.phero{position:relative;min-height:min(78svh,820px);display:flex;align-items:flex-end;padding:140px var(--gutter) clamp(56px,8vw,110px);overflow:hidden;isolation:isolate}
+.phero{position:relative;min-height:100vh;min-height:100svh;display:flex;align-items:flex-end;padding:140px var(--gutter) clamp(56px,8vw,110px);overflow:hidden;isolation:isolate}
 .phero-bg{position:absolute;inset:0;z-index:-1}
 /* gentle zoom-in on load is a GSAP tween (lib/motion/page.ts) */
 .phero-bg img{width:100%;height:100%;object-fit:cover;object-position:50% 22%} /* desktop: keep the top of the photo (faces) in view; a hotspot set in Sanity overrides this */
