@@ -438,7 +438,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
                 {s.video?.kind === 'video' && !(phone && s.video.phoneMode === 'button') ? (
                   <FilmCopy
                     slide={s}
-                    onWatch={() => setFilm((phone && s.video!.mobileSrc) || s.video!.src)}
+                    onWatch={() => setFilm(s.video!.src)} // always the original landscape film, not the phone crop
                   />
                 ) : (
                 <div className="slide-copy">
@@ -566,22 +566,48 @@ function FilmCopy({ slide, onWatch }: { slide: Props['slides'][number]; onWatch:
   );
 }
 
-/** Full-screen film player for phones: native controls, sound available, rotate the phone for landscape. */
+/** Full-screen film player: the original landscape film with sound and native controls (phones: real full screen, landscape where allowed). */
 function FilmPlayer({ src, onClose }: { src: string; onClose: () => void }) {
   const box = useRef<HTMLDivElement>(null);
   const vid = useRef<HTMLVideoElement>(null);
+  // the latest onClose, so the setup below runs once per opening (not on every re-render)
+  const close = useRef(onClose);
+  close.current = onClose;
   useEffect(() => {
+    const onClose = () => close.current();
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     window.addEventListener('keydown', onKey);
-    vid.current?.play().catch(() => {});
+    const v = vid.current;
+    v?.play().catch(() => {});
     box.current?.querySelector<HTMLButtonElement>('.film-close')?.focus();
+    // phones: go full screen and turn to landscape where the browser allows it (Android); iPhones open
+    // their own full-screen player, which turns with the phone. Leaving full screen closes the film.
+    const onPhone = window.matchMedia(MOBILE_MEDIA).matches;
+    const orient = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void>; unlock?: () => void };
+    const onFsChange = () => !document.fullscreenElement && onClose();
+    const onIosEnd = () => onClose();
+    if (v && onPhone) {
+      if (v.requestFullscreen) {
+        v.requestFullscreen()
+          .then(() => { document.addEventListener('fullscreenchange', onFsChange); return orient?.lock?.('landscape'); })
+          .catch(() => {});
+      } else {
+        const ios = v as HTMLVideoElement & { webkitEnterFullscreen?: () => void };
+        v.addEventListener('webkitendfullscreen', onIosEnd);
+        try { ios.webkitEnterFullscreen?.(); } catch { /* stays in the in-page player */ }
+      }
+    }
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
+      document.removeEventListener('fullscreenchange', onFsChange);
+      v?.removeEventListener('webkitendfullscreen', onIosEnd);
+      try { orient?.unlock?.(); } catch { /* not supported */ }
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
     };
-  }, [onClose]);
+  }, []);
   return (
     <div className="film-player" ref={box} role="dialog" aria-modal="true" aria-label="Film">
       <video ref={vid} src={src} controls playsInline autoPlay onEnded={onClose} />
