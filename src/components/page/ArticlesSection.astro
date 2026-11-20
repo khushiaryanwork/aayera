@@ -37,6 +37,7 @@ const id = s.categorySlug ? `insights-${s.categorySlug}` : 'insights-all';
       const b = (e.target as HTMLElement).closest('button');
       if (!b) return;
       show(b.dataset.cat || '');
+      b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); // phones: keep the chosen tab in view
       const url = new URL(location.href);
       b.dataset.cat ? url.searchParams.set('category', b.dataset.cat) : url.searchParams.delete('category');
       history.replaceState(null, '', url);

@@ -436,3 +436,11 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
 /* "Keep reading": four across on desktop, two on tablets */
 @media (min-width:700px){.art-more .agrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (min-width:1180px){.art-more .agrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* phones: category filters in one swipeable row (edge to edge), smaller pills */
+@media (max-width:760px){
+  .afilters{flex-wrap:nowrap;overflow-x:auto;gap:8px;margin-inline:calc(var(--gutter) * -1);padding:2px 32px 2px var(--gutter);scroll-padding-inline:var(--gutter);
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 var(--gutter),#000 calc(100% - 28px),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 var(--gutter),#000 calc(100% - 28px),transparent 100%)}
+  .afilters::-webkit-scrollbar{display:none}
+  .afilters button{flex:none;white-space:nowrap;padding:8px 14px;font-size:13px}
+}
