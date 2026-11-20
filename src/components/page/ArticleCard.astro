@@ -1,0 +1,15 @@
+---
+import { imgAttrs, SIZES } from '../../lib/img-attrs';
+import type { Article } from '../../lib/types';
+const { a } = Astro.props as { a: Article };
+---
+<a class="acard rv" href={`/insights/${a.slug}/`} data-cat={a.category?.slug || ''}>
+  <div class="acard-img">
+    {a.image ? <img {...imgAttrs(a.image, SIZES.third)} alt="" loading="lazy" decoding="async" style={a.image.pos ? `object-position:${a.image.pos}` : undefined}> : <span class="acard-ph" aria-hidden="true"></span>}
+  </div>
+  <div class="acard-txt">
+    <p class="acard-meta">{[a.category?.title, a.date].filter(Boolean).join(' · ')}</p>
+    <h3>{a.title}</h3>
+    {a.excerpt && <p class="acard-ex">{a.excerpt}</p>}
+  </div>
+</a>

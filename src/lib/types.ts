@@ -82,6 +82,13 @@ export interface Home {
 
 export type EventItem = { title: string; tag: string; date: string; location: string; summary: string; website: string; image: Img | null; upcoming: boolean };
 
+export type Category = { title: string; slug: string };
+export type Article = {
+  slug: string; title: string; category: Category | null; date: string; dateISO: string;
+  author: { name: string; role: string; photo: Img | null } | null;
+  image: Img | null; excerpt: string; bodyHtml: string; seo: Seo;
+};
+
 type SectionBase = { eyebrow: string; heading: string; intro: string };
 export type Section =
   | (SectionBase & { _type: 'textSection'; paragraphs: string[]; chipsLabel: string; chips: string[]; image: Img | null; cta: Link | null })
@@ -94,6 +101,11 @@ export type Section =
   | (SectionBase & { _type: 'industriesSection'; picked?: IndustryTile[] | null })
   | (SectionBase & { _type: 'platformsSection'; picked?: Platform[] | null })
   | (SectionBase & { _type: 'clientsSection' })
+  | (SectionBase & {
+      _type: 'articlesSection'; categorySlug: string; showFilters: boolean; limit: number; button: Link | null; emptyText: string;
+      /** filled in once every article is loaded */
+      articles?: Article[]; categories?: Category[];
+    })
   | (SectionBase & {
       _type: 'contactSection'; formHeading: string; formIntro: string; formKey: string; successText: string; failText: string; phoneFieldLabel: string; countryLabel: string;
       emailLabel: string; email: string; phoneLabel: string; phones: { label: string; number: string }[];

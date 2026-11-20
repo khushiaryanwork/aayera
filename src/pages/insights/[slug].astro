@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import Cta from '../../components/Cta.astro';
+import Footer from '../../components/Footer.astro';
+import ArticleCard from '../../components/page/ArticleCard.astro';
+import { imgAttrs, SIZES } from '../../lib/img-attrs';
+import { getContent } from '../../lib/content';
+import type { Article } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const { articles } = await getContent();
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { slug: a.slug } }));
+}
+
+const { slug } = Astro.props as { slug: string };
+const { site, home, noindex, pages, articles } = await getContent();
+const a = articles.find((x) => x.slug === slug) as Article;
+const insights = pages.find((p) => p.slug === 'insights');
+const listLabel = insights?.title || 'Insights';
+const crumbs = [{ label: 'Home', href: '/' }, { label: listLabel, href: '/insights/' }, { label: a.title }];
+// more reading: same category first, then the newest others
+const others = articles.filter((x) => x.slug !== slug);
+const more = [...others.filter((x) => x.category?.slug && x.category.slug === a.category?.slug), ...others.filter((x) => !x.category?.slug || x.category.slug !== a.category?.slug)].slice(0, 3);
+const schema = JSON.stringify({
+  '@context': 'https://schema.org', '@type': 'Article', headline: a.title, description: a.excerpt || undefined,
+  datePublished: a.dateISO || undefined, image: a.seo.image || undefined, mainEntityOfPage: `${site.url}/insights/${a.slug}/`,
+  author: a.author ? { '@type': 'Person', name: a.author.name } : { '@type': 'Organization', name: 'AAYERA' },
+  publisher: { '@type': 'Organization', name: 'AAYERA', logo: site.logo?.src },
+}).replace(/</g, '\\u003c');
+---
+<Base site={site} noindex={noindex} seo={{ ...a.seo, schemaType: 'WebPage', schemaCustom: a.seo.schemaCustom || schema }} crumbs={crumbs}>
+  <Nav site={site} />
+  <main class="art">
+    <header class="art-head">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        {crumbs.map((c, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true">/</span>}
+            {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+          </>
+        ))}
+      </nav>
+      {a.category && <p class="eyebrow"><a href={`/insights/?category=${a.category.slug}#insights-all`}>{a.category.title}</a></p>}
+      <h1>{a.title}</h1>
+      {a.excerpt && <p class="art-lede">{a.excerpt}</p>}
+      <div class="art-by">
+        {a.author?.photo && <img src={a.author.photo.src} alt="" width="48" height="48" loading="lazy">}
+        <p>
+          {a.author && <span class="art-author">{a.author.name}{a.author.role && <span>, {a.author.role}</span>}</span>}
+          {a.date && <time datetime={a.dateISO}>{a.date}</time>}
+        </p>
+      </div>
+    </header>
+    {a.image && (
+      <figure class="art-cover">
+        <img {...imgAttrs(a.image, SIZES.content)} alt={a.image.alt} fetchpriority="high" style={a.image.pos ? `object-position:${a.image.pos}` : undefined}>
+      </figure>
+    )}
+    {a.bodyHtml && <div class="art-body" set:html={a.bodyHtml} />}
+    <p class="art-back"><a href="/insights/">← All {listLabel.toLowerCase()}</a></p>
+    {more.length > 0 && (
+      <section class="sec asec art-more">
+        <div class="sec-head"><p class="eyebrow">Keep reading</p></div>
+        <div class="agrid">{more.map((m) => <ArticleCard a={m} />)}</div>
+      </section>
+    )}
+  </main>
+  <Cta cta={home.cta} />
+  <Footer site={site} />
+</Base>

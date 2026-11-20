@@ -5,11 +5,12 @@
  */
 import { createClient } from '@sanity/client';
 import { createImageUrlBuilder } from '@sanity/image-url';
+import { toHTML, escapeHTML } from '@portabletext/to-html';
 import { optimiseImages, widthsFor, LARGE_MIN_WIDTH } from './images';
 import defaults from '../content/defaults.json';
 import pageDefaults from '../content/pages.json';
 import { projectId, dataset, apiVersion } from '../../sanity/env.mjs';
-import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head, FooterCol, Link, Seo } from './types';
+import type { Home, Img, SlideVideo, Site, EventCard, EventItem, WallTile, Logo, MosaicTile, Page, Section, Vertical, IndustryTile, Platform, Head, FooterCol, Link, Seo, Article, Category } from './types';
 import { FIXED_PAGES } from '../../sanity/fixedPages.mjs';
 
 const client = createClient({
@@ -28,6 +29,7 @@ const SECTION_PROJECTION: Record<string, string> = {
   verticalsSection: '{ ..., "cards": cards[]->{ ..., "key": slug.current } }',
   industriesSection: '{ ..., "cards": cards[]->{ ..., "key": slug.current } }',
   platformsSection: '{ ..., "cards": cards[]->{ ..., "key": slug.current } }',
+  articlesSection: '{ ..., "category": category->{ title, "slug": slug.current } }',
   eventsSection: `{ ..., "upcoming": upcoming[]->${EVENT_FIELDS}, "past": past[]->${EVENT_FIELDS} }`,
 };
 const FIXED_FIELDS = [...new Map<string, string>(FIXED_PAGES.flatMap((p: any) => p.sections.map((s: any) => [s.name, s.type] as [string, string]))).entries()]
@@ -55,7 +57,9 @@ const QUERY = /* groq */ `{
   "verticals": *[_type == "vertical" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
   "industries": *[_type == "industry" && !(_id in path("drafts.**"))] | order(order asc, name asc){ name, text, homeText },
   "platforms": *[_type == "platform" && !(_id in path("drafts.**"))] | order(order asc, name asc){ ..., "key": slug.current },
-  "allClients": *[_type == "client" && !(_id in path("drafts.**"))] | order(name asc){ name, logo, plainLogo }
+  "allClients": *[_type == "client" && !(_id in path("drafts.**"))] | order(name asc){ name, logo, plainLogo },
+  "articles": *[_type == "article" && defined(slug.current) && !(_id in path("drafts.**"))] | order(publishedAt desc, _createdAt desc){ ..., "slug": slug.current, "category": category->{ title, "slug": slug.current } },
+  "categories": *[_type == "insightCategory" && defined(slug.current) && !(_id in path("drafts.**"))] | order(order asc, title asc){ title, "slug": slug.current }
 }`;
 
 /* ---------- helpers ---------- */
@@ -192,6 +196,50 @@ function formatAddress(a: any) {
 
 const head = (c: any, d: any): Head => ({ eyebrow: pick(c?.eyebrow, d.eyebrow || ''), heading: pick(c?.heading, d.heading || ''), intro: pick(c?.intro, d.intro || '') });
 
+/* ---------- insights articles ---------- */
+const dayMonthYear = (iso: string) => {
+  const [y, m, d] = (iso || '').split('-').map(Number);
+  return y && m && d ? `${d} ${MONTHS[m - 1]} ${y}` : '';
+};
+/** Article body (Portable Text) to HTML: headings, lists, quotes, links and images. */
+function bodyHtml(blocks: any[]): string {
+  if (!Array.isArray(blocks) || !blocks.length) return '';
+  return toHTML(blocks, {
+    components: {
+      types: {
+        bodyImage: ({ value }: any) => {
+          const i = img(value, 1400, value.alt || '');
+          if (!i) return '';
+          const attrs = `src="${escapeHTML(i.src)}"${i.srcset ? ` srcset="${escapeHTML(i.srcset)}" sizes="(min-width: 900px) 760px, 100vw"` : ''}${i.width ? ` width="${i.width}" height="${i.height}"` : ''}`;
+          return `<figure class="art-fig"><img ${attrs} alt="${escapeHTML(i.alt || '')}" loading="lazy" decoding="async">${value.caption ? `<figcaption>${escapeHTML(value.caption)}</figcaption>` : ''}</figure>`;
+        },
+      },
+      marks: {
+        link: ({ children, value }: any) => {
+          const href = String(value?.href || '');
+          if (!href) return children;
+          const ext = /^https?:/i.test(href) && !/^https?:\/\/(www\.)?aayera\./i.test(href);
+          return `<a href="${escapeHTML(href)}"${ext ? ' target="_blank" rel="noopener"' : ''}>${children}</a>`;
+        },
+      },
+    },
+  });
+}
+function toArticle(a: any): Article {
+  const title = a.title || '';
+  const excerpt = a.excerpt || '';
+  const image = img(a.image, 1600, a.image?.alt || title);
+  const seo = toSeo(a.seo, `${title} | AAYERA Insights`, excerpt);
+  if (!seo.image && image) seo.image = img(a.image, 1200)?.src ?? null;
+  return {
+    slug: a.slug, title, excerpt, image, seo,
+    category: a.category?.title ? { title: a.category.title, slug: a.category.slug || '' } : null,
+    date: dayMonthYear(a.publishedAt), dateISO: a.publishedAt || '',
+    author: a.author?.name ? { name: a.author.name, role: a.author.role || '', photo: img(a.author.photo, 160, a.author.name) } : null,
+    bodyHtml: bodyHtml(a.body),
+  };
+}
+
 /* ---------- inner pages ---------- */
 const PD: any = pageDefaults;
 const today = new Date().toISOString().slice(0, 10);
@@ -239,6 +287,11 @@ function normSection(x: any): Section | null {
       return { _type: x._type, ...base, picked: (x.cards || []).filter((c: any) => c?.name) } as Section;
     case 'clientsSection':
       return { _type: 'clientsSection', ...base };
+    case 'articlesSection':
+      return {
+        _type: 'articlesSection', ...base, categorySlug: x.category?.slug || '', showFilters: !!x.showFilters, limit: Number(x.limit) || 0,
+        button: x.button?.label && x.button?.href ? { label: x.button.label, href: x.button.href } : null, emptyText: x.emptyText || '',
+      };
     case 'contactSection':
       return {
         _type: 'contactSection', ...base, formHeading: x.formHeading || '', formIntro: x.formIntro || '',
@@ -304,7 +357,7 @@ function load() {
   return cached;
 }
 
-type Content = { site: Site; home: Home; noindex: boolean; pages: Page[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; homeVerticals: Vertical[]; homeIndustries: IndustryTile[]; homePlatforms: Platform[]; industries: IndustryTile[]; platforms: Platform[] };
+type Content = { site: Site; home: Home; noindex: boolean; pages: Page[]; articles: Article[]; eventList: EventItem[]; allLogos: Logo[]; enquiryTopics: string[]; verticals: Vertical[]; homeVerticals: Vertical[]; homeIndustries: IndustryTile[]; homePlatforms: Platform[]; industries: IndustryTile[]; platforms: Platform[] };
 
 let content: Promise<Content> | null = null;
 /** All site content, built once per build and shared by every page. */
@@ -509,5 +562,16 @@ async function buildContent(): Promise<Content> {
     sec.picked = sec.picked?.length ? sec.picked.map(toCard[sec._type]) : null;
   }
 
-  return { site, home, noindex: s.searchVisibility === 'hidden', pages, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, homeVerticals, homeIndustries, homePlatforms, industries, platforms };
+  /* insights: every published article, newest first; article sections get their list */
+  const articles: Article[] = (data.articles || []).filter((a: any) => a?.slug && a?.title).map(toArticle);
+  const usedCats = new Set(articles.map((a) => a.category?.slug).filter(Boolean));
+  const categories: Category[] = (data.categories || []).filter((c: any) => c?.slug && usedCats.has(c.slug));
+  for (const pg of pages) for (const sec of pg.sections as any[]) {
+    if (sec._type !== 'articlesSection') continue;
+    const list = sec.categorySlug ? articles.filter((a) => a.category?.slug === sec.categorySlug) : articles;
+    sec.articles = sec.limit ? list.slice(0, sec.limit) : list;
+    sec.categories = sec.showFilters && !sec.categorySlug ? categories : [];
+  }
+
+  return { site, home, noindex: s.searchVisibility === 'hidden', pages, articles, eventList, allLogos, enquiryTopics: pick(s.enquiryTopics, PD.contact.interests), verticals, homeVerticals, homeIndustries, homePlatforms, industries, platforms };
 }

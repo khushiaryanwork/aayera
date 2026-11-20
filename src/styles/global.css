@@ -26,7 +26,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px var(--gutter);transition:background .4s,padding .4s,backdrop-filter .4s}
 .nav.solid{background:oklch(13% .012 260 / .72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding-block:12px}
 .nav img{height:44px;width:auto}
-@media (min-width:861px){
+@media (min-width:1181px){
   .nav::before{content:"";position:absolute;inset:0 0 -70px;z-index:-1;pointer-events:none;transition:opacity .4s;
     background:linear-gradient(180deg,oklch(8% .01 260 / .88) 0%,oklch(8% .01 260 / .55) 45%,oklch(8% .01 260 / 0) 100%)}
   .nav.solid::before{opacity:0}
@@ -39,7 +39,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .btn-gold:hover{background:var(--on);transform:translateY(-2px)}
 .btn-ghost{border:1px solid oklch(96% .004 260 / .4)}
 .btn-ghost:hover{background:var(--on);color:var(--black)}
-@media (max-width:860px){.nav ul{display:none}.nav .btn{padding:10px 16px}}
+@media (max-width:1180px){.nav ul{display:none}.nav .btn{padding:10px 16px}}
+@media (min-width:1181px) and (max-width:1320px){.nav ul{gap:22px}}
+.nav ul a{white-space:nowrap}
 
 /* ---------- HERO SLIDER ---------- */
 /* one screen: the slides → photo grid intro is played by a scroll gesture (GSAP Observer in Hero.tsx) */

@@ -15,6 +15,7 @@ import ContactSection from '../components/page/ContactSection.astro';
 import VerticalTiles from '../components/page/VerticalTiles.astro';
 import IndustryGrid from '../components/page/IndustryGrid.astro';
 import PlatformCards from '../components/page/PlatformCards.astro';
+import ArticlesSection from '../components/page/ArticlesSection.astro';
 import { getContent } from '../lib/content';
 import type { Page } from '../lib/types';
 
@@ -63,6 +64,7 @@ const crumbs = [
         case 'verticalsSection': return <VerticalTiles head={s} verticals={s.picked ?? verticals} />;
         case 'industriesSection': return <IndustryGrid head={s} industries={s.picked ?? industries} />;
         case 'platformsSection': return <PlatformCards head={s} platforms={s.picked ?? platforms} />;
+        case 'articlesSection': return <ArticlesSection s={s} />;
       }
     })}
   </main>

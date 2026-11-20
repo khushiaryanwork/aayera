@@ -68,7 +68,7 @@ const caret = '<svg viewBox="0 0 12 12" width="10" height="10" fill="none" strok
   btn.addEventListener('click', () => set(menu.hidden));
   menu.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) set(false); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) set(false); });
-  matchMedia('(min-width:861px)').addEventListener('change', (m) => { if (m.matches) set(false); });
+  matchMedia('(min-width:1181px)').addEventListener('change', (m) => { if (m.matches) set(false); });
 
   /* accordion: one group open at a time */
   const groups = [...menu.querySelectorAll<HTMLElement>('.macc')];

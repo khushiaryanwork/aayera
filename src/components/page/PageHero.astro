@@ -28,6 +28,6 @@ const { hero } = page;
     </nav>
     {hero.eyebrow && <p class="eyebrow">{hero.eyebrow}</p>}
     <h1><Rich text={hero.heading} /></h1>
-    {hero.intro && <p class="phero-intro">{hero.intro}</p>}
+    {hero.intro && hero.intro.split(/\n\s*\n/).map((p) => <p class="phero-intro">{p}</p>)}
   </div>
 </section>

@@ -1,0 +1,47 @@
+---
+import SecHead from './SecHead.astro';
+import ArticleCard from './ArticleCard.astro';
+const { s } = Astro.props as { s: any };
+const articles = s.articles || [];
+const cats = s.categories || [];
+const id = s.categorySlug ? `insights-${s.categorySlug}` : 'insights-all';
+---
+{(articles.length > 0 || s.emptyText) && (
+  <section class="sec asec" id={id}>
+    <SecHead eyebrow={s.eyebrow} heading={s.heading} intro={s.intro} />
+    {cats.length > 1 && (
+      <div class="afilters rv" role="toolbar" aria-label="Filter by category">
+        <button type="button" class="on" aria-pressed="true" data-cat="">All</button>
+        {cats.map((c: any) => <button type="button" aria-pressed="false" data-cat={c.slug}>{c.title}</button>)}
+      </div>
+    )}
+    {articles.length > 0
+      ? <div class="agrid">{articles.map((a: any) => <ArticleCard a={a} />)}</div>
+      : <p class="aempty rv">{s.emptyText}</p>}
+    {articles.length > 0 && s.button && <p class="sec-cta"><a class="btn btn-ghost" href={s.button.href}>{s.button.label}</a></p>}
+  </section>
+)}
+
+<script>
+  // category filters: buttons above the grid; ?category=<key> in the address opens one directly
+  document.querySelectorAll<HTMLElement>('.asec').forEach((sec) => {
+    const bar = sec.querySelector('.afilters');
+    if (!bar) return;
+    const btns = [...bar.querySelectorAll<HTMLButtonElement>('button')];
+    const cards = [...sec.querySelectorAll<HTMLElement>('.acard')];
+    const show = (cat: string) => {
+      btns.forEach((b) => { const on = b.dataset.cat === cat; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+      cards.forEach((c) => { c.hidden = !!cat && c.dataset.cat !== cat; });
+    };
+    bar.addEventListener('click', (e) => {
+      const b = (e.target as HTMLElement).closest('button');
+      if (!b) return;
+      show(b.dataset.cat || '');
+      const url = new URL(location.href);
+      b.dataset.cat ? url.searchParams.set('category', b.dataset.cat) : url.searchParams.delete('category');
+      history.replaceState(null, '', url);
+    });
+    const want = new URLSearchParams(location.search).get('category') || '';
+    if (want && btns.some((b) => b.dataset.cat === want)) show(want);
+  });
+</script>

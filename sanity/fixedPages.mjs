@@ -61,6 +61,17 @@ export const FIXED_PAGES = [
     { name: 'eventFormats', title: 'Event formats', type: 'featuresSection' },
     { name: 'events', title: 'Event track record', type: 'eventsSection' },
   ] },
+  { type: 'globalEngagementPage', slug: 'global-engagement', title: 'Global Engagement', sections: [
+    { name: 'business', title: 'Global business engagement', type: 'listSection' },
+    { name: 'partnerships', title: 'Strategic partnerships', type: 'listSection' },
+    { name: 'awards', title: 'Awards & recognition', type: 'listSection' },
+    { name: 'experiences', title: 'Corporate experiences', type: 'listSection' },
+    { name: 'research', title: 'Research & thought leadership', type: 'listSection' },
+  ] },
+  { type: 'insightsPage', slug: 'insights', title: 'Insights', sections: [
+    { name: 'featured', title: 'Featured insights', type: 'articlesSection' },
+    { name: 'news', title: 'News & updates', type: 'articlesSection' },
+  ] },
   { type: 'clientsPage', slug: 'clients', title: 'Clients', sections: [
     { name: 'clients', title: 'Client logos', type: 'clientsSection' },
   ] },
