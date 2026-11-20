@@ -344,3 +344,59 @@ footer a:hover{color:var(--gold)}
   .fx-unit{min-width:52px}.fx-unit b{font-size:26px}.fx-unit i{font-size:20px;top:2px}
   .fx-unit span{font-size:9px;letter-spacing:1px}
 }
+
+/* ---------- design preview: phone layout options for the film slide (?m=a|b|c|d) ---------- */
+.fx-mini,.fx-days{display:none}
+.fx-mini em{white-space:nowrap}
+@media (max-width:760px){
+  /* A · Minimal: title, one info line, gold button + round play button; most of the film visible */
+  .fx-copy.m-a .fx-chips,.fx-copy.m-a .fx-count{display:none}
+  .fx-copy.m-a{bottom:88px}
+  .fx-copy.m-a h2{font-size:clamp(44px,13vw,60px);margin:14px 0 12px}
+  .fx-copy.m-a .fx-mini{display:block;font-size:14px;line-height:1.5;color:oklch(92% .006 260);text-shadow:0 1px 6px oklch(0% 0 0 / .7)}
+  .fx-copy.m-a .fx-mini em{font-style:normal;color:var(--gold)}
+  .fx-copy.m-a .fx-actions{flex-wrap:nowrap;gap:12px;margin-top:22px}
+  .fx-copy.m-a .fx-watch-label{display:none}
+  .fx-copy.m-a .fx-play{width:46px;height:46px}
+
+  /* B · Glass card: everything in one frosted panel at the bottom */
+  .fx-copy.m-b{left:12px;right:12px;bottom:76px;padding:20px 18px 18px;border-radius:24px;background:oklch(10% .012 260 / .5);
+    border:1px solid oklch(96% .004 260 / .14);backdrop-filter:blur(18px) saturate(1.2);-webkit-backdrop-filter:blur(18px) saturate(1.2)}
+  .fx-copy.m-b .fx-tag{padding:0;border:0;background:none;backdrop-filter:none;-webkit-backdrop-filter:none;font-size:11px}
+  .fx-copy.m-b h2{font-size:clamp(34px,10vw,44px);margin:10px 0 12px;text-shadow:none}
+  .fx-copy.m-b .fx-chips{display:none}
+  .fx-copy.m-b .fx-mini{display:block;font-size:13px;color:var(--muted)}
+  .fx-copy.m-b .fx-mini em{font-style:normal;color:var(--gold)}
+  .fx-copy.m-b .fx-count{display:none}
+  .fx-copy.m-b .fx-actions{flex-wrap:nowrap;justify-content:space-between;margin-top:18px;padding-top:16px;border-top:1px solid oklch(96% .004 260 / .12)}
+  .fx-copy.m-b .fx-actions .btn{flex:1;justify-content:center}
+  .fx-copy.m-b .fx-watch-label{display:none}
+  .fx-copy.m-b .fx-play{width:46px;height:46px}
+
+  /* C · Centred: a cinematic title card with a big play button */
+  .fx-copy.m-c{display:flex;flex-direction:column;align-items:center;text-align:center;bottom:84px}
+  .fx-copy.m-c .fx-chips,.fx-copy.m-c .fx-count{display:none}
+  .fx-copy.m-c .fx-tag{justify-self:auto}
+  .fx-copy.m-c h2{font-size:clamp(46px,14vw,64px);margin:16px auto 12px;max-width:none}
+  .fx-copy.m-c .fx-mini{display:block;font-size:13px;letter-spacing:.3px;color:oklch(92% .006 260)}
+  .fx-copy.m-c .fx-mini em{font-style:normal;color:var(--gold)}
+  .fx-copy.m-c .fx-actions{flex-direction:column-reverse;align-items:center;gap:16px;margin-top:24px}
+  .fx-copy.m-c .fx-watch{flex-direction:column;gap:10px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase}
+  .fx-copy.m-c .fx-play{width:64px;height:64px;background:oklch(96% .004 260 / .14)}
+  .fx-copy.m-c .fx-play svg{width:18px;height:18px}
+  .fx-copy.m-c .fx-actions .btn{padding:12px 22px}
+
+  /* D · Countdown first: the days to the show as the headline number */
+  .fx-copy.m-d{bottom:88px}
+  .fx-copy.m-d .fx-chips,.fx-copy.m-d .fx-count,.fx-copy.m-d .fx-tag{display:none}
+  .fx-copy.m-d .fx-days{display:flex;align-items:flex-end;gap:12px}
+  .fx-copy.m-d .fx-days b{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(96px,30vw,132px);line-height:.8;color:var(--gold);letter-spacing:-.02em}
+  .fx-copy.m-d .fx-days span{font-size:12px;letter-spacing:2px;text-transform:uppercase;line-height:1.5;color:oklch(92% .006 260);padding-bottom:8px}
+  .fx-copy.m-d h2{font-size:clamp(30px,9vw,40px);margin:18px 0 8px}
+  .fx-copy.m-d h2 .serif{color:var(--on)}
+  .fx-copy.m-d .fx-mini{display:block;font-size:13px;color:var(--muted)}
+  .fx-copy.m-d .fx-mini em{display:none}
+  .fx-copy.m-d .fx-actions{flex-wrap:nowrap;gap:12px;margin-top:20px}
+  .fx-copy.m-d .fx-watch-label{display:none}
+  .fx-copy.m-d .fx-play{width:46px;height:46px}
+}

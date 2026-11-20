@@ -508,6 +508,10 @@ function FilmCopy({ slide, onWatch }: { slide: Props['slides'][number]; onWatch:
     const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, [when?.getTime()]);
+  // design preview: phone layout options, picked with ?m=a / b / c / d in the address
+  const [m, setM] = useState('');
+  useEffect(() => setM((new URLSearchParams(location.search).get('m') || '').toLowerCase()), []);
+  const days = left == null ? null : Math.floor(left / 864e5);
   const title = slide.short || slide.title;
   // the last word takes the gold serif accent, unless the title marks its own with *asterisks*
   const rich = title.includes('*') ? title : title.replace(/(\S+)$/, '*$1*');
@@ -518,9 +522,16 @@ function FilmCopy({ slide, onWatch }: { slide: Props['slides'][number]; onWatch:
     [Math.floor(left / 1e3) % 60, 'Sec'],
   ] as const;
   return (
-    <div className="slide-copy fx-copy">
+    <div className={'slide-copy fx-copy' + (m ? ` m-${m}` : '')}>
+      {days != null && days > 0 && (
+        <p className="fx-days" aria-hidden="true"><b>{days}</b><span>days to<br />the show</span></p>
+      )}
       <p className="fx-tag"><span className="fx-pulse" aria-hidden="true" />{slide.tag}</p>
       <h2><Rich text={rich} /></h2>
+      <p className="fx-mini">
+        {[dateIdx >= 0 ? parts[dateIdx] : '', ...parts.filter((_, k) => k !== dateIdx)].filter(Boolean).join(' · ')}
+        {days != null && days > 0 && <em> · {days} days to go</em>}
+      </p>
       {parts.length > 0 && (
         <ul className="fx-chips">
           {parts.map((p, k) => (
@@ -539,7 +550,7 @@ function FilmCopy({ slide, onWatch }: { slide: Props['slides'][number]; onWatch:
         {slide.cta && <a className="btn btn-gold" href={slide.cta.href}>{slide.cta.label}</a>}
         <button type="button" className="fx-watch" onClick={onWatch}>
           <span className="fx-play" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M5 3v10l8-5z" /></svg></span>
-          Watch the film
+          <span className="fx-watch-label">Watch the film</span>
         </button>
       </div>
       {units && left! > 0 && (
