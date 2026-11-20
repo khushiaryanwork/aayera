@@ -21,7 +21,7 @@ const listLabel = insights?.title || 'Insights';
 const crumbs = [{ label: 'Home', href: '/' }, { label: listLabel, href: '/insights/' }, { label: a.title }];
 // more reading: same category first, then the newest others
 const others = articles.filter((x) => x.slug !== slug);
-const more = [...others.filter((x) => x.category?.slug && x.category.slug === a.category?.slug), ...others.filter((x) => !x.category?.slug || x.category.slug !== a.category?.slug)].slice(0, 3);
+const more = [...others.filter((x) => x.category?.slug && x.category.slug === a.category?.slug), ...others.filter((x) => !x.category?.slug || x.category.slug !== a.category?.slug)].slice(0, 4);
 const schema = JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Article', headline: a.title, description: a.excerpt || undefined,
   datePublished: a.dateISO || undefined, image: a.seo.image || undefined, mainEntityOfPage: `${site.url}/insights/${a.slug}/`,
