@@ -301,7 +301,7 @@ footer a:hover{color:var(--gold)}
 @media (prefers-reduced-motion:reduce){.slide.fx .slide-media::after{animation:none}}
 
 .fx-copy{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"tag ." "title count" "chips count" "actions count";column-gap:40px;align-items:end}
-.fx-tag{grid-area:tag;display:inline-flex;align-items:center;gap:10px;justify-self:start;font-size:12px;letter-spacing:2.4px;text-transform:uppercase;font-weight:500;color:var(--gold);
+.fx-tag{grid-area:tag;display:inline-flex;align-items:center;gap:10px;justify-self:start;font-size:12px;letter-spacing:.5px;text-transform:uppercase;font-weight:500;color:var(--gold);
   padding:8px 16px 8px 12px;border-radius:999px;background:oklch(8% .01 260 / .55);border:1px solid oklch(81% .155 82 / .4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .fx-pulse{position:relative;width:8px;height:8px;border-radius:50%;background:var(--gold)}
 .fx-pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--gold);animation:fx-pulse 2s cubic-bezier(.2,.7,.2,1) infinite}
