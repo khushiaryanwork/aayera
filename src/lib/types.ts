@@ -95,7 +95,7 @@ export type Section =
   | (SectionBase & { _type: 'platformsSection'; picked?: Platform[] | null })
   | (SectionBase & { _type: 'clientsSection' })
   | (SectionBase & {
-      _type: 'contactSection'; formHeading: string; formIntro: string; formTo: string; phoneFieldLabel: string; countryLabel: string;
+      _type: 'contactSection'; formHeading: string; formIntro: string; formKey: string; successText: string; failText: string; phoneFieldLabel: string; countryLabel: string;
       emailLabel: string; email: string; phoneLabel: string; phones: { label: string; number: string }[];
       hoursLabel: string; hours: string; addressLabel: string; address: string;
       nameLabel: string; emailFieldLabel: string; orgLabel: string; topicLabel: string; topics: string[]; messageLabel: string;

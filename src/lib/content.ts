@@ -242,7 +242,9 @@ function normSection(x: any): Section | null {
     case 'contactSection':
       return {
         _type: 'contactSection', ...base, formHeading: x.formHeading || '', formIntro: x.formIntro || '',
-        formTo: (x.formTo || '').split(',').map((e: string) => e.trim()).filter(Boolean).join(','),
+        formKey: (x.formKey || '').trim(),
+        successText: x.successText || 'Thank you. Your enquiry has been sent and we will get back to you soon.',
+        failText: x.failText || 'Sorry, your enquiry could not be sent. Please try again or email us directly.',
         phoneFieldLabel: x.phoneFieldLabel || 'Phone number', countryLabel: x.countryLabel || 'Country',
         emailLabel: x.emailLabel || 'Email', email: x.email || '',
         phoneLabel: x.phoneLabel || 'Phone', phones: (x.phones || []).filter((p: any) => p?.label && p?.number).map((p: any) => ({ label: p.label, number: p.number })),
@@ -250,9 +252,10 @@ function normSection(x: any): Section | null {
         addressLabel: x.addressLabel || 'Company location', address: x.address || '',
         nameLabel: x.nameLabel || 'Name', emailFieldLabel: x.emailFieldLabel || 'Email', orgLabel: x.orgLabel || 'Organisation',
         topicLabel: x.topicLabel || "I'm interested in", topics: strs(x.topics), messageLabel: x.messageLabel || 'Message',
-        note: x.note || 'This opens your email app with the message ready to send.',
+        // with a Web3Forms key the form sends directly, so the email-app wording no longer applies
+        note: x.formKey?.trim() ? (x.note && !/email app/i.test(x.note) ? x.note : '') : x.note || 'This opens your email app with the message ready to send.',
         errorText: x.errorText || 'Please add your name, a valid email and a message.',
-        buttonLabel: x.buttonLabel || 'Prepare email',
+        buttonLabel: x.formKey?.trim() ? (x.buttonLabel && x.buttonLabel !== 'Prepare email' ? x.buttonLabel : 'Send enquiry') : x.buttonLabel || 'Prepare email',
       };
     default:
       return null;

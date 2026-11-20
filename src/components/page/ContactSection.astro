@@ -27,7 +27,7 @@ const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURICompone
         {address && <div><dt>{s.addressLabel}</dt><dd>{address}</dd></div>}
       </dl>
     </div>
-    <form class="cform rv" id="enquiry" data-to={s.formTo || email} novalidate>
+    <form class="cform rv" id="enquiry" data-to={email} data-key={s.formKey} novalidate>
       {s.formHeading && <h3>{s.formHeading}</h3>}
       {s.formIntro && <p class="cform-intro">{s.formIntro}</p>}
       <div class="frow2">
@@ -51,8 +51,12 @@ const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURICompone
       </div>
       <label>{s.messageLabel}<textarea name="message" rows="5" required></textarea></label>
       {s.note && <p class="cform-note">{s.note}</p>}
+      {/* hidden from people; bots that tick it are dropped */}
+      <input type="checkbox" name="botcheck" class="cform-hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <p class="cform-err" role="alert" hidden>{s.errorText}</p>
+      <p class="cform-fail" role="alert" hidden>{s.failText}</p>
       <button class="btn btn-gold" type="submit">{s.buttonLabel}</button>
+      <p class="cform-ok" role="status" hidden>{s.successText}</p>
     </form>
   </div>
   {mapSrc && (
@@ -64,16 +68,44 @@ const mapSrc = site.mapQuery ? `https://www.google.com/maps?q=${encodeURICompone
 
 <script>
   const form = document.getElementById('enquiry') as HTMLFormElement | null;
-  form?.addEventListener('submit', (e) => {
+  form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const f = new FormData(form);
     const v = (k: string) => String(f.get(k) || '').trim();
-    const err = form.querySelector<HTMLElement>('.cform-err')!;
-    const ok = v('name') && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')) && v('message');
-    err.hidden = !!ok;
-    if (!ok) return;
+    const q = <T extends HTMLElement>(sel: string) => form.querySelector<T>(sel)!;
+    const err = q('.cform-err'), fail = q('.cform-fail'), ok = q('.cform-ok');
+    const btn = q<HTMLButtonElement>('button[type=submit]');
+    const valid = v('name') && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email')) && v('message');
+    err.hidden = !!valid; fail.hidden = true; ok.hidden = true;
+    if (!valid) return;
     const subject = `Enquiry: ${v('topic')}${v('org') ? ` – ${v('org')}` : ''}`;
-    const body = [v('message'), '', v('name'), v('org'), v('email'), v('phone'), v('country')].filter((l, i) => i < 2 || l).join('\n');
-    location.href = `mailto:${form.dataset.to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const key = form.dataset.key;
+    if (!key) {
+      // no Web3Forms key set in Sanity: open the visitor's email app instead
+      const body = [v('message'), '', v('name'), v('org'), v('email'), v('phone'), v('country')].filter((l, i) => i < 2 || l).join('\n');
+      location.href = `mailto:${form.dataset.to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      return;
+    }
+    if (f.get('botcheck')) return;
+    btn.disabled = true;
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: key, subject, from_name: 'Aayera website',
+          name: v('name'), email: v('email'), organisation: v('org'), phone: v('phone'),
+          country: v('country'), interested_in: v('topic'), message: v('message'),
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) throw new Error(data.message || res.statusText);
+      form.reset();
+      ok.hidden = false;
+    } catch {
+      fail.hidden = false;
+    } finally {
+      btn.disabled = false;
+    }
   });
 </script>
