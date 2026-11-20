@@ -444,3 +444,4 @@ html:has(.hero-ui:not(.off)) .fsoc{opacity:0;transform:translateY(12px);pointer-
   .afilters::-webkit-scrollbar{display:none}
   .afilters button{flex:none;white-space:nowrap;padding:8px 14px;font-size:13px}
 }
+.foot-logo{align-self:flex-start}.foot-logo img{display:block;height:56px;width:auto} /* keeps the logo's own proportions */
