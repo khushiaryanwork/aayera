@@ -287,3 +287,60 @@ footer a:hover{color:var(--gold)}
    elements only, never toggled: once the grid is up the headline sits on top of them, and iOS kept a stale
    "can't pan" area under the headline when this was switched on and off on the whole hero. */
 .hero-frame,.hero-ui{touch-action:none}
+
+/* ---------- hero: film slide (cinematic) ---------- */
+/* colour grade: deeper corners, darker floor for the caption, a little film grain */
+.slide.fx::after{background:
+  radial-gradient(120% 90% at 70% 40%,transparent 45%,oklch(6% .01 260 / .55) 100%),
+  linear-gradient(90deg,oklch(7% .01 260 / .8) 0%,oklch(7% .01 260 / .35) 42%,transparent 68%),
+  linear-gradient(180deg,oklch(8% .01 260 / .55) 0%,transparent 22%,transparent 50%,oklch(6% .01 260 / .95) 100%)}
+.slide.fx .slide-media::after{content:"";position:absolute;inset:-50%;z-index:1;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:fx-grain 1s steps(6) infinite}
+@keyframes fx-grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-5%)}60%{transform:translate(-6%,-2%)}80%{transform:translate(5%,4%)}100%{transform:translate(0,0)}}
+@media (prefers-reduced-motion:reduce){.slide.fx .slide-media::after{animation:none}}
+
+.fx-copy{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"tag ." "title count" "chips count" "actions count";column-gap:40px;align-items:end}
+.fx-tag{grid-area:tag;display:inline-flex;align-items:center;gap:10px;justify-self:start;font-size:12px;letter-spacing:2.4px;text-transform:uppercase;font-weight:500;color:var(--gold);
+  padding:8px 16px 8px 12px;border-radius:999px;background:oklch(8% .01 260 / .55);border:1px solid oklch(81% .155 82 / .4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.fx-pulse{position:relative;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.fx-pulse::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--gold);animation:fx-pulse 2s cubic-bezier(.2,.7,.2,1) infinite}
+@keyframes fx-pulse{0%{transform:scale(.6);opacity:1}100%{transform:scale(2.2);opacity:0}}
+.fx-copy h2{grid-area:title;white-space:normal;overflow:visible;font-size:clamp(40px,6.4vw,104px);line-height:.95;letter-spacing:-.045em;margin:22px 0 22px;max-width:14ch}
+.fx-copy h2 .serif{color:var(--gold);letter-spacing:-.01em;padding-right:.06em}
+.fx-chips{grid-area:chips;list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+.fx-chips li{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;font-size:15px;
+  background:oklch(96% .004 260 / .08);border:1px solid oklch(96% .004 260 / .18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.fx-chips svg{width:15px;height:15px;fill:none;stroke:var(--gold);stroke-width:1.4;flex:none}
+.fx-actions{grid-area:actions;display:flex;flex-wrap:wrap;align-items:center;gap:14px 22px;margin-top:30px}
+.fx-actions .btn{margin-top:0}
+.fx-watch{display:inline-flex;align-items:center;gap:12px;font-size:15px;font-weight:500;color:var(--on)}
+.fx-play{position:relative;display:grid;place-items:center;width:48px;height:48px;border-radius:50%;border:1px solid oklch(96% .004 260 / .5);background:oklch(96% .004 260 / .08);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:background .25s,border-color .25s,transform .25s}
+.fx-play svg{width:14px;height:14px;fill:currentColor;margin-left:2px}
+.fx-play::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid oklch(96% .004 260 / .25);animation:fx-pulse 2.4s cubic-bezier(.2,.7,.2,1) infinite}
+.fx-watch:hover .fx-play{background:var(--gold);border-color:var(--gold);color:var(--black);transform:scale(1.06)}
+.fx-count{grid-area:count;align-self:end;padding:18px 22px 16px;border-radius:20px;background:oklch(10% .012 260 / .45);border:1px solid oklch(96% .004 260 / .16);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);margin-bottom:6px}
+.fx-count-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.fx-count-row{display:flex;margin-top:10px}
+.fx-unit{position:relative;display:flex;flex-direction:column;align-items:center;min-width:64px}
+.fx-unit b{font-size:40px;line-height:1;font-weight:500;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.fx-unit span{margin-top:6px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)}
+.fx-unit i{position:absolute;right:-4px;top:4px;font-style:normal;font-size:28px;color:oklch(81% .155 82 / .6)}
+/* the film's dot fills up as the film plays */
+.hero-dots button.fx-dot[aria-current="true"]::before{background:linear-gradient(90deg,var(--gold) calc(var(--film,0) * 100%),oklch(96% .004 260 / .35) 0)}
+
+@media (max-width:1100px){
+  .fx-copy{grid-template-columns:minmax(0,1fr);grid-template-areas:"tag" "title" "chips" "actions" "count"}
+  .fx-count{justify-self:start;margin:24px 0 0}
+}
+@media (max-width:760px){
+  .fx-copy{bottom:84px}
+  .fx-copy h2{font-size:clamp(40px,12vw,56px);margin:16px 0 16px}
+  .fx-chips li{font-size:13px;padding:7px 12px}
+  .fx-actions{margin-top:20px}
+  .fx-count{padding:12px 14px 10px;margin-top:18px;border-radius:16px}
+  .fx-unit{min-width:52px}.fx-unit b{font-size:26px}.fx-unit i{font-size:20px;top:2px}
+  .fx-unit span{font-size:9px;letter-spacing:1px}
+}

@@ -412,7 +412,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
         <div className="hero-frame" ref={frame}>
           <div>
             {slides.map((s, i) => (
-              <div className={'slide' + (i === cur ? ' on' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} key={i}>
+              <div className={'slide' + (i === cur ? ' on' : '') + (s.video?.kind === 'video' ? ' fx' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} key={i}>
                 {/* phones get the portrait image when one is set; the browser downloads only one of the two */}
                 <div className={'slide-media' + (s.video ? ' still' : '')}>
                   {(i === 0 || restLoaded) && (
@@ -431,9 +431,16 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
                       loop={count < 2}
                       onPlaying={() => i === cur && setVideoPlaying(true)}
                       onEnded={(v) => i === cur && onVideoEnded(v)}
+                      onProgress={(f) => i === cur && section.current?.style.setProperty('--film', String(f))}
                     />
                   )}
                 </div>
+                {s.video?.kind === 'video' && !(phone && s.video.phoneMode === 'button') ? (
+                  <FilmCopy
+                    slide={s}
+                    onWatch={() => setFilm((phone && s.video!.mobileSrc) || s.video!.src)}
+                  />
+                ) : (
                 <div className="slide-copy">
                   <p className="eyebrow">{s.tag}</p>
                   <h2>{s.short || s.title}</h2>
@@ -450,6 +457,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
                     s.cta && <a className="btn btn-gold" href={s.cta.href}>{s.cta.label}</a>
                   )}
                 </div>
+                )}
               </div>
             ))}
           </div>
@@ -476,13 +484,79 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
           </button>
           <div className="hero-dots" role="tablist" aria-label="Choose slide">
             {slides.map((s, i) => (
-              <button role="tab" key={i} aria-label={`Go to slide ${i + 1}: ${s.title}`} aria-current={i === cur} onClick={() => go(i)} />
+              <button role="tab" key={i} className={s.video?.kind === 'video' ? 'fx-dot' : undefined} aria-label={`Go to slide ${i + 1}: ${s.title}`} aria-current={i === cur} onClick={() => go(i)} />
             ))}
           </div>
         </div>
       </div>
       {film && createPortal(<FilmPlayer src={film} onClose={() => setFilm(null)} />, document.body)}
     </section>
+  );
+}
+
+/** The film slide's caption: tag, title, place / date chips, a live countdown to the event and two buttons. */
+function FilmCopy({ slide, onWatch }: { slide: Props['slides'][number]; onWatch: () => void }) {
+  const parts = (slide.meta || '').split(/\s+·\s+/).filter(Boolean);
+  // the event date is the part of the meta line that reads as a date, e.g. "3 December 2026"
+  const dateIdx = parts.findIndex((p) => /\d{4}/.test(p) && !Number.isNaN(Date.parse(p)));
+  const when = dateIdx >= 0 ? new Date(Date.parse(parts[dateIdx])) : null;
+  const [left, setLeft] = useState<number | null>(null);
+  useEffect(() => {
+    if (!when) return;
+    const tick = () => setLeft(Math.max(0, when.getTime() - Date.now()));
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [when?.getTime()]);
+  const title = slide.short || slide.title;
+  // the last word takes the gold serif accent, unless the title marks its own with *asterisks*
+  const rich = title.includes('*') ? title : title.replace(/(\S+)$/, '*$1*');
+  const units = left == null ? null : [
+    [Math.floor(left / 864e5), 'Days'],
+    [Math.floor(left / 36e5) % 24, 'Hours'],
+    [Math.floor(left / 6e4) % 60, 'Min'],
+    [Math.floor(left / 1e3) % 60, 'Sec'],
+  ] as const;
+  return (
+    <div className="slide-copy fx-copy">
+      <p className="fx-tag"><span className="fx-pulse" aria-hidden="true" />{slide.tag}</p>
+      <h2><Rich text={rich} /></h2>
+      {parts.length > 0 && (
+        <ul className="fx-chips">
+          {parts.map((p, k) => (
+            <li key={k}>
+              {k === dateIdx ? (
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="2" /><path d="M2 6.5h12M5.5 1.5v3M10.5 1.5v3" /></svg>
+              ) : (
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14.5s5-4.6 5-8.5a5 5 0 0 0-10 0c0 3.9 5 8.5 5 8.5z" /><circle cx="8" cy="6" r="1.8" /></svg>
+              )}
+              {p}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="fx-actions">
+        {slide.cta && <a className="btn btn-gold" href={slide.cta.href}>{slide.cta.label}</a>}
+        <button type="button" className="fx-watch" onClick={onWatch}>
+          <span className="fx-play" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M5 3v10l8-5z" /></svg></span>
+          Watch the film
+        </button>
+      </div>
+      {units && left! > 0 && (
+        <div className="fx-count" role="timer" aria-label={`${units[0][0]} days to go`}>
+          <p className="fx-count-label">Countdown to the show</p>
+          <div className="fx-count-row">
+            {units.map(([n, l], k) => (
+              <div key={l} className="fx-unit">
+                <b>{String(n).padStart(2, '0')}</b>
+                <span>{l}</span>
+                {k < 3 && <i aria-hidden="true">:</i>}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -513,13 +587,14 @@ function FilmPlayer({ src, onClose }: { src: string; onClose: () => void }) {
 }
 
 /** A slide's moving media: a GIF (plain <img>) or a muted, looping, inline <video>. */
-function SlideMotion({ video, phone, active, loop, onPlaying, onEnded }: {
+function SlideMotion({ video, phone, active, loop, onPlaying, onEnded, onProgress }: {
   video: NonNullable<Props['slides'][number]['video']>;
   phone: boolean;
   active: boolean;
   loop: boolean;
   onPlaying: () => void;
   onEnded: (v: HTMLVideoElement) => void;
+  onProgress?: (fraction: number) => void;
 }) {
   const [ready, setReady] = useState(false);
   const src = (phone && video.mobileSrc) || video.src;
@@ -563,6 +638,7 @@ function SlideMotion({ video, phone, active, loop, onPlaying, onEnded }: {
         onPlaying();
       }}
       onEnded={(e) => onEnded(e.currentTarget)}
+      onTimeUpdate={(e) => { const v = e.currentTarget; if (v.duration) onProgress?.(v.currentTime / v.duration); }}
     />
   );
 }
