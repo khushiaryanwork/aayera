@@ -14,7 +14,7 @@ type Props = Home['hero'];
 const SWIPE_MIN = 40;
 /** Slides → photo grid, played by GSAP Observer on one scroll / swipe gesture (seconds). */
 const INTRO = { duration: 1.8, tolerance: 10, settle: 0.2 } as const; // settle: quiet time (s) that ends a gesture
-const AUTOPLAY = { desktop: 4, mobile: 6, video: 10 } as const; // slides with a video/GIF stay up longer
+const AUTOPLAY = { desktop: 4, mobile: 6, video: 20 } as const; // slides with a video/GIF stay up longer
 // a playing video keeps its slide up until the film ends (then the slider moves on); `video` above is only
 // the wait for a GIF, or for a video that never starts (autoplay refused, slow network)
 const SLIDE = {
@@ -49,10 +49,13 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
   // which moving-media file to use (portrait on phones); decided on the client only
   const [phone, setPhone] = useState(false);
   const [stillOnly, setStillOnly] = useState(false); // reduced motion: keep the photo, skip video/GIF
+  // phone / desktop decided (first effect), so the first slide's film can start loading the right file at once
+  const [deviceKnown, setDeviceKnown] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(MOBILE_MEDIA);
     const update = () => setPhone(mq.matches);
     update();
+    setDeviceKnown(true);
     setStillOnly(prefersReducedMotion());
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
@@ -129,15 +132,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
     };
   }, [cur, hovering, film, count, restLoaded, stillOnly, videoPlaying]);
 
-  /* ---------- videos: only the visible slide plays, from the start ---------- */
-  useEffect(() => {
-    section.current?.querySelectorAll<HTMLVideoElement>('.slide video').forEach((v) => {
-      if (v.closest('.slide')?.classList.contains('on')) {
-        v.currentTime = 0;
-        v.play().catch(() => {}); // autoplay can be refused (e.g. low-power mode); the photo stays visible
-      } else v.pause();
-    });
-  }, [cur, restLoaded, phone]);
+  /* ---------- videos: only the visible slide plays, from the start (handled in SlideMotion) ---------- */
 
   /* ---------- slide change: crossfade, Ken Burns zoom, caption stagger ---------- */
   const firstRun = useRef(true);
@@ -425,11 +420,13 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
                       <img {...imgProps(s.image, SIZES.full)} alt={s.image.alt} {...(i ? {} : { fetchPriority: 'high' as const })} />
                     </picture>
                   )}
-                  {/* video / GIF: loads after the page, fades in over the photo once it can play */}
-                  {s.video && restLoaded && !stillOnly && !(phone && s.video.phoneMode === 'button') && (
+                  {/* video / GIF: the first slide's starts loading straight away, the others after the page;
+                      fades in over the photo once it plays */}
+                  {s.video && deviceKnown && (i === 0 || restLoaded) && !stillOnly && !(phone && s.video.phoneMode === 'button') && (
                     <SlideMotion
                       video={s.video}
                       phone={phone}
+                      active={i === cur}
                       loop={count < 2}
                       onPlaying={() => i === cur && setVideoPlaying(true)}
                       onEnded={(v) => i === cur && onVideoEnded(v)}
@@ -515,9 +512,10 @@ function FilmPlayer({ src, onClose }: { src: string; onClose: () => void }) {
 }
 
 /** A slide's moving media: a GIF (plain <img>) or a muted, looping, inline <video>. */
-function SlideMotion({ video, phone, loop, onPlaying, onEnded }: {
+function SlideMotion({ video, phone, active, loop, onPlaying, onEnded }: {
   video: NonNullable<Props['slides'][number]['video']>;
   phone: boolean;
+  active: boolean;
   loop: boolean;
   onPlaying: () => void;
   onEnded: (v: HTMLVideoElement) => void;
@@ -525,15 +523,36 @@ function SlideMotion({ video, phone, loop, onPlaying, onEnded }: {
   const [ready, setReady] = useState(false);
   const src = (phone && video.mobileSrc) || video.src;
   useEffect(() => setReady(false), [src]);
+  const ref = useRef<HTMLVideoElement>(null);
+  const tryPlay = () => {
+    const v = ref.current;
+    // muted as attribute and property: mobile browsers only autoplay videos they know are silent
+    if (!v || !v.paused) return;
+    v.defaultMuted = true;
+    v.muted = true;
+    v.setAttribute('muted', ''); // React only sets the property; some mobile browsers check the attribute
+    v.play().catch(() => {}); // can be refused (e.g. low-power mode); the photo stays visible
+  };
+  // only the visible slide plays, from the start
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (active) {
+      if (v.readyState > 0) v.currentTime = 0;
+      tryPlay();
+    } else v.pause();
+  }, [active, src]);
   const cls = 'slide-motion' + (ready ? ' ready' : '');
   return video.kind === 'gif' ? (
     <img key={src} className={cls} src={src} alt="" aria-hidden="true" decoding="async" onLoad={() => setReady(true)} />
   ) : (
     <video
+      ref={ref}
       key={src}
       className={cls}
       src={src}
       muted
+      onCanPlay={() => active && tryPlay()}
       loop={loop}
       playsInline
       preload="auto"
