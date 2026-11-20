@@ -344,3 +344,16 @@ footer a:hover{color:var(--gold)}
   .fx-unit{min-width:52px}.fx-unit b{font-size:26px}.fx-unit i{font-size:20px;top:2px}
   .fx-unit span{font-size:9px;letter-spacing:1px}
 }
+
+/* ---------- film slide on phones: title, one info line, gold button + round play button ---------- */
+.fx-mini{display:none}
+.fx-mini em{white-space:nowrap;font-style:normal;color:var(--gold)}
+@media (max-width:760px){
+  .fx-copy .fx-chips,.fx-copy .fx-count{display:none}
+  .fx-copy{bottom:88px}
+  .fx-copy h2{font-size:clamp(44px,13vw,60px);margin:14px 0 12px}
+  .fx-copy .fx-mini{display:block;font-size:14px;line-height:1.5;color:oklch(92% .006 260);text-shadow:0 1px 6px oklch(0% 0 0 / .7)}
+  .fx-copy .fx-actions{flex-wrap:nowrap;gap:12px;margin-top:22px}
+  .fx-copy .fx-watch-label{display:none}
+  .fx-copy .fx-play{width:46px;height:46px}
+}
