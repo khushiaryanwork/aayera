@@ -349,6 +349,7 @@ footer a:hover{color:var(--gold)}
 .fx-mini em{white-space:nowrap;font-style:normal;color:var(--gold)}
 @media (max-width:760px){
   .fx-copy .fx-chips,.fx-copy .fx-count{display:none}
+  .fx-tag{font-size:10px}
   .fx-copy{bottom:88px}
   .fx-copy .fx-mini{display:block;font-size:14px;line-height:1.5;color:oklch(92% .006 260);text-shadow:0 1px 6px oklch(0% 0 0 / .7)}
   .fx-copy .fx-actions{flex-wrap:nowrap;gap:12px;margin-top:22px}
