@@ -145,8 +145,9 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
       const reduce = prefersReducedMotion();
       const t = (seconds: number) => (reduce ? 0 : seconds);
       const captionOf = (el: HTMLElement) => el.querySelectorAll<HTMLElement>('.slide-copy > *');
+      // slow zoom on photo slides only; a film's thumbnail and video stay still at full size
       const kenBurns = (el: HTMLElement) => {
-        const img = el.querySelector('.slide-media');
+        const img = el.querySelector('.slide-media:not(.still)');
         if (img) gsap.fromTo(img, { scale: SLIDE.kenBurnsFrom }, { scale: 1, duration: t(SLIDE.kenBurns), ease: EASE.cssOut, overwrite: true });
       };
 
@@ -165,7 +166,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
 
       // outgoing slides: photo resets to its start zoom, caption drops away (no delay)
       others.forEach((el) => {
-        const img = el.querySelector('.slide-media');
+        const img = el.querySelector('.slide-media:not(.still)');
         if (img) {
           gsap.killTweensOf(img);
           gsap.set(img, { scale: SLIDE.kenBurnsFrom });
@@ -413,7 +414,7 @@ export default function Hero({ eyebrow, heading, intro, primaryCta, secondaryCta
             {slides.map((s, i) => (
               <div className={'slide' + (i === cur ? ' on' : '')} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${count}`} key={i}>
                 {/* phones get the portrait image when one is set; the browser downloads only one of the two */}
-                <div className="slide-media">
+                <div className={'slide-media' + (s.video ? ' still' : '')}>
                   {(i === 0 || restLoaded) && (
                     <picture>
                       {s.imageMobile && <source media={MOBILE_MEDIA} srcSet={s.imageMobile.srcset || s.imageMobile.src} sizes={SIZES.full} />}
