@@ -335,6 +335,7 @@ function toPage(def: any, cms: any): Page {
       intro: pick(ch.intro, dh.intro || ''),
       image: imgOr(ch.image, dh.image, 2400, dh.image?.alt || ''),
       imageMobile: imgOr(ch.imageMobile, dh.imageMobile, MOBILE_WIDTH, dh.image?.alt || ''),
+      shade: (['left', 'right', 'none'].includes(ch.shade) ? ch.shade : 'left') as 'left' | 'right' | 'none',
     },
     sections: sections.map(normSection).filter(Boolean) as Section[],
   };

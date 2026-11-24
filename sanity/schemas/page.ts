@@ -197,6 +197,11 @@ export const heroField = (group: string) => defineField({
         defineField({ name: 'intro', type: 'text', rows: 2 }),
         defineField({ name: 'image', title: 'Desktop photo', type: 'imageWithAlt', description: 'Landscape, at least 2400px wide.' }),
         defineField({ name: 'imageMobile', title: 'Mobile photo', type: 'imageWithAlt', description: 'Portrait (about 9:16), shown on phones. Leave empty to use the desktop photo.' }),
+        defineField({
+          name: 'shade', title: 'Photo shade', type: 'string', initialValue: 'left',
+          description: 'Darkens the photo so the text stays readable. Left is the usual; pick Right when the photo is darker or busier on that side.',
+          options: { list: [{ title: 'Left', value: 'left' }, { title: 'Right', value: 'right' }, { title: 'None', value: 'none' }], layout: 'radio', direction: 'horizontal' },
+        }),
       ],
 })
 

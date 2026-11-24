@@ -7,7 +7,7 @@ interface Props { page: Page; crumbs: { label: string; href?: string }[] }
 const { page, crumbs } = Astro.props;
 const { hero } = page;
 ---
-<section class="phero" id="phero">
+<section class={`phero shade-${hero.shade || 'left'}`} id="phero">
   <div class="phero-bg" aria-hidden="true">
     {hero.image && (
       <picture>

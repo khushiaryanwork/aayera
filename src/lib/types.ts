@@ -123,6 +123,6 @@ export interface Page {
   showCta: boolean;
   /** this page's own closing-banner text (empty parts use the homepage banner) */
   pageCta: { eyebrow: string; heading: string; text: string; button: Link | null } | null;
-  hero: { eyebrow: string; heading: string; intro: string; image: Img | null; imageMobile: Img | null };
+  hero: { eyebrow: string; heading: string; intro: string; image: Img | null; imageMobile: Img | null; shade: 'left' | 'right' | 'none' };
   sections: Section[];
 }
