@@ -78,7 +78,8 @@ const sanityDims = (ref: string): [number, number] | null => {
  * `width` is the widest the image is ever displayed; bundled images get their srcset later
  * (lib/images.ts), Sanity images get a CDN srcset here.
  */
-function img(v: any, width: number, fallbackAlt = ''): Img | null {
+/** alpha: keep transparency (logos) — never turned into a JPG */
+function img(v: any, width: number, fallbackAlt = '', alpha = false): Img | null {
   if (!v) return null;
   if (typeof v === 'string') return { src: v, alt: fallbackAlt, w: width };
   if (v.src) return { src: v.src, alt: v.alt ?? fallbackAlt, w: width, ...(v.position ? { pos: v.position } : {}) };
@@ -89,7 +90,7 @@ function img(v: any, width: number, fallbackAlt = ''): Img | null {
     const dims = sanityDims(v.asset._ref);
     // photos are stored as lossless PNGs: browsers get WebP/AVIF (auto=format), and anything that can't
     // take those gets a JPG rather than the multi-megabyte PNG. Small PNGs (logos) keep PNG for transparency.
-    const jpgFallback = /-png$/.test(v.asset._ref) && (dims?.[0] ?? 0) >= 700;
+    const jpgFallback = !alpha && /-png$/.test(v.asset._ref) && (dims?.[0] ?? 0) >= 700;
     const url = (w: number) => {
       const b = builder.image(v).width(w).fit('max').auto('format').quality(q);
       return (jpgFallback ? b.format('jpg') : b).url();
@@ -106,7 +107,7 @@ function img(v: any, width: number, fallbackAlt = ''): Img | null {
   }
   return null;
 }
-const imgOr = (v: any, def: any, width: number, alt = '') => img(v, width, alt) ?? img(def, width, alt);
+const imgOr = (v: any, def: any, width: number, alt = '', alpha = false) => img(v, width, alt, alpha) ?? img(def, width, alt, alpha);
 
 /** CDN URL of an uploaded Sanity file (ref looks like "file-<id>-<ext>"). */
 function fileUrl(f: any): string {
@@ -382,7 +383,7 @@ async function buildContent(): Promise<Content> {
     shareImage: img(s.shareImage, 1200)?.src ?? null,
     url: (s.siteUrl || 'https://aayera.pages.dev').replace(/\/+$/, ''),
     // Header document first, then the older Site settings fields, then the bundled defaults
-    logo: (img(hd.logo, 400, 'Aayera') ?? imgOr(s.logo, D.logo, 400, 'Aayera')) as Img,
+    logo: (img(hd.logo, 400, 'Aayera', true) ?? imgOr(s.logo, D.logo, 400, 'Aayera', true)) as Img,
     nav: pick(hd.nav, pick(s.nav, D.nav)),
     navCta: has(hd.navCta?.label) ? hd.navCta : has(s.navCta?.label) ? s.navCta : D.navCta,
     email: pick(s.email, D.email),
@@ -401,7 +402,7 @@ async function buildContent(): Promise<Content> {
   site.footerCols = footerColumns(has(ft.columns) ? ft.columns : h.footer?.columns, site);
   const ftPhones = (ft.phones || []).filter((p: any) => p?.label && p?.number).map((p: any) => ({ label: p.label, number: p.number }));
   site.footer = {
-    logo: img(ft.logo, 400, 'Aayera') ?? site.logo,
+    logo: img(ft.logo, 400, 'Aayera', true) ?? site.logo,
     address: ft.address || site.address,
     email: ft.email || site.email,
     phones: ftPhones.length ? ftPhones : site.phones,
@@ -451,7 +452,7 @@ async function buildContent(): Promise<Content> {
   const cs = h.clientsSection || {};
   const clientSource = has(cs.clients) ? cs.clients : data.allClients;
   const logos: Logo[] = has(clientSource)
-    ? clientSource.filter((c: any) => c?.logo).map((c: any) => ({ src: (img(c.logo, 460) as Img).src, alt: c.name || 'Client logo', plain: !!c.plainLogo }))
+    ? clientSource.filter((c: any) => c?.logo).map((c: any) => ({ src: (img(c.logo, 460, '', true) as Img).src, alt: c.name || 'Client logo', plain: !!c.plainLogo }))
     : DH.clients.logos.map((n) => ({ src: `/assets/clients/${n}.png`, alt: 'Client logo', plain: false }));
 
   const st = h.statement || {};
@@ -517,7 +518,7 @@ async function buildContent(): Promise<Content> {
 
   const eventList = (has(data.allEvents) ? data.allEvents : DH.events.items).map(toEventItem);
   const allLogos: Logo[] = has(data.allClients)
-    ? data.allClients.filter((c: any) => c?.logo).map((c: any) => ({ src: (img(c.logo, 460) as Img).src, alt: c.name || 'Client logo', plain: !!c.plainLogo }))
+    ? data.allClients.filter((c: any) => c?.logo).map((c: any) => ({ src: (img(c.logo, 460, '', true) as Img).src, alt: c.name || 'Client logo', plain: !!c.plainLogo }))
     : DH.clients.logos.map((n) => ({ src: `/assets/clients/${n}.png`, alt: 'Client logo', plain: false }));
 
   /* business verticals, industries, platforms: Sanity documents, or the brief's defaults */
